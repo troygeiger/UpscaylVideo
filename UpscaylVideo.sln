@@ -1,8 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo", "UpscaylVideo\UpscaylVideo.csproj", "{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77576CE9-FB70-457E-A6B5-BE306025038A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo.FFMpegWrap", "UpscaylVideo.FFMpegWrap\UpscaylVideo.FFMpegWrap.csproj", "{A4BB3F66-1433-4E39-B089-A163E8538AAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo.FFMpegWrap", "src\UpscaylVideo.FFMpegWrap\UpscaylVideo.FFMpegWrap.csproj", "{4BEBB82E-8883-49ED-8C3F-622EF9AF528A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo", "src\UpscaylVideo\UpscaylVideo.csproj", "{8F59AF1F-E325-4108-A0C3-FEB9AB384887}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,13 +12,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BEBB82E-8883-49ED-8C3F-622EF9AF528A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BEBB82E-8883-49ED-8C3F-622EF9AF528A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BEBB82E-8883-49ED-8C3F-622EF9AF528A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BEBB82E-8883-49ED-8C3F-622EF9AF528A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F59AF1F-E325-4108-A0C3-FEB9AB384887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F59AF1F-E325-4108-A0C3-FEB9AB384887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F59AF1F-E325-4108-A0C3-FEB9AB384887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F59AF1F-E325-4108-A0C3-FEB9AB384887}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BEBB82E-8883-49ED-8C3F-622EF9AF528A} = {77576CE9-FB70-457E-A6B5-BE306025038A}
+		{8F59AF1F-E325-4108-A0C3-FEB9AB384887} = {77576CE9-FB70-457E-A6B5-BE306025038A}
 	EndGlobalSection
 EndGlobal
