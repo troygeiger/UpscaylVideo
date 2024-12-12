@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
@@ -5,7 +6,7 @@ using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.ViewModels;
 
-public partial class JobPageViewModel : PageBase
+public partial class JobPageViewModel : PageBase, IDisposable
 {
     private readonly FFProbeResult _probeResult;
     CancellationTokenSource _tokenSource = new();
@@ -26,5 +27,9 @@ public partial class JobPageViewModel : PageBase
     {
         _tokenSource.Cancel();
     }
-    
+
+    public void Dispose()
+    {
+        
+    }
 }

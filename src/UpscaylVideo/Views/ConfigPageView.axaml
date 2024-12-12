@@ -41,6 +41,17 @@
                 </TextBox.InnerRightContent>
             </TextBox>
         </DockPanel>
+        
+        <DockPanel>
+            <Label Content="FFMpeg Binaries Path:"/>
+            <TextBox Text="{Binding Path=Configuration.FFmpegBinariesPath}">
+                <TextBox.InnerRightContent>
+                    <Button Classes="txtButton" 
+                            Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                            Command="{Binding Path=BrowseFFMpegCommand, Mode=OneWay}"/>
+                </TextBox.InnerRightContent>
+            </TextBox>
+        </DockPanel>
        
     </StackPanel>
 </UserControl>

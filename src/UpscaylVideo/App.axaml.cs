@@ -5,6 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using UpscaylVideo.Models;
 using UpscaylVideo.ViewModels;
 using UpscaylVideo.Views;
 
@@ -30,6 +31,7 @@ public partial class App : Application
             {
                 DataContext = new MainWindowViewModel(),
             };
+            PageManager.Instance.SetPage(typeof(MainPageViewModel));
         }
 
         base.OnFrameworkInitializationCompleted();

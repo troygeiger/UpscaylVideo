@@ -13,10 +13,10 @@ public partial class PageManager : ObservableObject
 
     private readonly Dictionary<Type, ViewModelBase> _loadedPages = new();
 
-    private PageManager()
+    /*private PageManager()
     {
         SetPage(typeof(MainPageViewModel));
-    }
+    }*/
     
     public IEnumerable<Type> AvailablePages { get; } =
     [
@@ -38,6 +38,9 @@ public partial class PageManager : ObservableObject
         if (!_loadedPages.TryGetValue(pageType, out var viewModel))
         {
             viewModel = Activator.CreateInstance(pageType) as ViewModelBase;
+            if (viewModel == null)
+                return;
+            _loadedPages.Add(pageType, viewModel);
         }
 
         SetPage(viewModel);
@@ -46,6 +49,9 @@ public partial class PageManager : ObservableObject
     public void SetPage(ViewModelBase? viewModel)
     {
         if (viewModel is null)
+            return;
+
+        if (CurrentPage is PageBase currentPage && NotifyClosePage(currentPage))
             return;
 
         CurrentPage = viewModel;
@@ -61,5 +67,29 @@ public partial class PageManager : ObservableObject
         }
         
         Title = string.IsNullOrEmpty(pageTitle) ? GlobalConst.AppTitle : $"{GlobalConst.AppTitle} - {pageTitle}";
+    }
+
+    /// <summary>
+    /// Notifies the page that it is closing page. Returns true if cancelled by page.
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    private bool NotifyClosePage(PageBase page)
+    {
+        var pageType = page.GetType();
+        var args = new PageBase.PageDisappearingArgs();
+        page.OnDisappearing(args);
+
+        if (args.ShouldDispose && _loadedPages.ContainsKey(pageType))
+        {
+            _loadedPages.Remove(pageType);
+        }
+
+        if (args.ShouldDispose && page is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+        
+        return args.Cancel;
     }
 }

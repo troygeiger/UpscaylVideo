@@ -8,6 +8,8 @@ namespace UpscaylVideo.ViewModels;
 
 public partial class MainPageViewModel : PageBase
 {
+    private bool isFirstLoad = true;
+    
     public MainPageViewModel()
     {
         base.ToolStripButtonDefinitions =
@@ -18,6 +20,21 @@ public partial class MainPageViewModel : PageBase
             },
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand)
         ];
+        
+    }
+
+    public override void OnAppearing()
+    {
+        if (!isFirstLoad)
+        {
+            return;
+        }
+        isFirstLoad = false;
+        var config = AppConfiguration.Instance;
+        if (string.IsNullOrWhiteSpace(config.FFmpegBinariesPath) || string.IsNullOrWhiteSpace(config.UpscaylPath))
+        {
+            Settings();
+        }
     }
 
     [ObservableProperty] private bool _readyToRun = true;

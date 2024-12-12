@@ -23,4 +23,16 @@ public abstract class PageBase : ViewModelBase
     {
         
     }
+
+    public virtual void OnDisappearing(PageDisappearingArgs args)
+    {
+        
+    }
+
+    public class PageDisappearingArgs
+    {
+        public bool Cancel { get; set; }
+        
+        public bool ShouldDispose { get; set; }
+    }
 }

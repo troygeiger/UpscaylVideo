@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -26,7 +27,7 @@ public partial class ConfigPageViewModel : PageBase
 
     public override void OnAppearing()
     {
-        this.Configuration = ConfigurationHelper.LoadConfig(AppConfigurationJsonContext.Default.AppConfiguration);
+        this.Configuration = AppConfiguration.Instance;
     }
 
     [RelayCommand]
@@ -42,21 +43,40 @@ public partial class ConfigPageViewModel : PageBase
         Back();
     }
 
-    [RelayCommand]
-    private async Task BrowseUpscayl()
+    private async Task<string?> BrowseFolder()
     {
         var provider = App.Window?.StorageProvider;
         if (provider is null)
-            return;
+            return null;
         var folder = await provider.OpenFolderPickerAsync(new()
         {
             
         });
         
         if (!folder.Any())
+            return null;
+        
+        return Uri.UnescapeDataString(folder.First().Path.AbsolutePath);
+    }
+    
+    [RelayCommand]
+    private async Task BrowseUpscayl()
+    {
+        var result = await BrowseFolder();
+        if (result is null)
             return;
         
-        Configuration.UpscaylPath = folder.First().Path.AbsolutePath;
+        Configuration.UpscaylPath = Uri.UnescapeDataString(result);
+    }
+
+    [RelayCommand]
+    private async Task BrowseFFMpeg()
+    {
+        var result = await BrowseFolder();
+        if (result is null)
+            return;
+        
+        Configuration.FFmpegBinariesPath = Uri.UnescapeDataString(result);
     }
     
 }
