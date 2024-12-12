@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:UpscaylVideo.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="UpscaylVideo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{Binding PageManager.Title, Mode=OneWay}">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ToolStripBackground">LightGray</SolidColorBrush>    
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ToolStripBackground">Black</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+        <!--ToolStrip-->
+        <Border Grid.Row="0"
+                Padding="6"
+                Background="{DynamicResource ToolStripBackground}"
+                CornerRadius="6"
+        >
+            <Grid ColumnDefinitions="*, Auto">
+                <ItemsControl Grid.Column="0"
+                              ItemsSource="{Binding Path=PageManager.LeftToolbarButtons, Mode=OneWay}"
+                              HorizontalAlignment="Left">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
+                                    Command="{Binding Path=Command, Mode=OneWay}"
+                                    Padding="8">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
+                                                                Width="24"
+                                                                Height="24"/>
+                                    <TextBlock IsVisible="{Binding ShowText, Mode=OneWay}"
+                                               Text="{Binding Text, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl Grid.Column="1"
+                              ItemsSource="{Binding Path=PageManager.RightToolbarButtons, Mode=OneWay}"
+                              HorizontalAlignment="Right">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
+                                    Command="{Binding Path=Command, Mode=OneWay}"
+                                    Padding="8">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center">
+                                    <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
+                                                                Width="24"
+                                                                Height="24"/>
+                                    <TextBlock IsVisible="{Binding ShowText, Mode=OneWay}"
+                                               Text="{Binding Text, Mode=OneWay}"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+        <ScrollViewer Grid.Row="1">
+            <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage}"
+                                         Margin="8">
+
+            </TransitioningContentControl>
+        </ScrollViewer>
+    </Grid>
+
+
+</Window>

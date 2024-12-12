@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo", "UpscaylVideo\UpscaylVideo.csproj", "{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaylVideo.FFMpegWrap", "UpscaylVideo.FFMpegWrap\UpscaylVideo.FFMpegWrap.csproj", "{A4BB3F66-1433-4E39-B089-A163E8538AAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8804E749-FF40-4A95-BFAB-1EB1C0CE34BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4BB3F66-1433-4E39-B089-A163E8538AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
