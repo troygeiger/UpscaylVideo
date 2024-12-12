@@ -45,8 +45,7 @@
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
                                     Padding="8">
-                                <StackPanel Orientation="Horizontal"
-                                            >
+                                <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"
                                                                 Height="24"/>
@@ -68,13 +67,14 @@
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
                                     Padding="8">
-                                <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"
                                                                 Height="24"/>
                                     <TextBlock IsVisible="{Binding ShowText, Mode=OneWay}"
-                                               Text="{Binding Text, Mode=OneWay}"/>
+                                               Text="{Binding Text, Mode=OneWay}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Right"/>
                                 </StackPanel>
                             </Button>
                         </DataTemplate>

@@ -2,7 +2,45 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:DataType="vm:ConfigPageViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UpscaylVideo.Views.ConfigPageView">
-    Configuration
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:ConfigPageViewModel />
+    </Design.DataContext>
+    <StackPanel Orientation="Vertical"
+                Margin="8">
+        <StackPanel.Styles>
+            <Style Selector="DockPanel Label">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0 0 4 0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style Selector="Button.txtButton">
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Theme" Value="{StaticResource MaterialFlatButton}"/>
+            </Style>
+            <Style Selector="Button.txtButton materialIcons|MaterialIcon">
+                <Setter Property="Width" Value="24"/>
+                <Setter Property="Height" Value="24"/>
+            </Style>
+        </StackPanel.Styles>
+        
+        <DockPanel>
+            <Label Content="Upscayl Path:"/>
+            <TextBox Text="{Binding Path=Configuration.UpscaylPath}">
+                <TextBox.InnerRightContent>
+                    <Button Classes="txtButton" 
+                            Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                            Command="{Binding Path=BrowseUpscaylCommand, Mode=OneWay}"/>
+                </TextBox.InnerRightContent>
+            </TextBox>
+        </DockPanel>
+       
+    </StackPanel>
 </UserControl>

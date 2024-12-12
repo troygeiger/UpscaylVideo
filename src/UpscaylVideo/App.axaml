@@ -13,7 +13,7 @@
   
     <Application.Styles>
         <FluentTheme />
-        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Blue" SecondaryColor="Lime" />
+        <themes:MaterialTheme PrimaryColor="Blue" SecondaryColor="Lime" />
         <materialIcons:MaterialIconStyles />
     </Application.Styles>
 </Application>

@@ -18,4 +18,9 @@ public abstract class PageBase : ViewModelBase
     public IEnumerable<ToolStripButtonDefinition> ToolStripButtonDefinitions { get; protected set; } = [];
     
     public string PageTitle { get; protected set; } = string.Empty;
+
+    public virtual void OnAppearing()
+    {
+        
+    }
 }

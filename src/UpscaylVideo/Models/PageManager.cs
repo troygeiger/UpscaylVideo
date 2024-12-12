@@ -57,6 +57,7 @@ public partial class PageManager : ObservableObject
             LeftToolbarButtons = page.ToolStripButtonDefinitions.Where(d => d.Location == ToolStripButtonLocations.Left).ToArray();
             RightToolbarButtons = page.ToolStripButtonDefinitions.Where(d => d.Location == ToolStripButtonLocations.Right).ToArray();
             pageTitle = page.PageTitle;
+            page.OnAppearing();
         }
         
         Title = string.IsNullOrEmpty(pageTitle) ? GlobalConst.AppTitle : $"{GlobalConst.AppTitle} - {pageTitle}";
