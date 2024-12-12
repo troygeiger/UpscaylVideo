@@ -12,46 +12,49 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:ConfigPageViewModel />
     </Design.DataContext>
-    <StackPanel Orientation="Vertical"
-                Margin="8">
-        <StackPanel.Styles>
-            <Style Selector="DockPanel Label">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="0 0 4 0"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-            </Style>
-            <Style Selector="Button.txtButton">
-                <Setter Property="Padding" Value="8"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Theme" Value="{StaticResource MaterialFlatButton}"/>
-            </Style>
-            <Style Selector="Button.txtButton materialIcons|MaterialIcon">
-                <Setter Property="Width" Value="24"/>
-                <Setter Property="Height" Value="24"/>
-            </Style>
-        </StackPanel.Styles>
+    <UserControl.Styles>
         
-        <DockPanel>
-            <Label Content="Upscayl Path:"/>
-            <TextBox Text="{Binding Path=Configuration.UpscaylPath}">
-                <TextBox.InnerRightContent>
-                    <Button Classes="txtButton" 
-                            Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
-                            Command="{Binding Path=BrowseUpscaylCommand, Mode=OneWay}"/>
-                </TextBox.InnerRightContent>
-            </TextBox>
-        </DockPanel>
-        
-        <DockPanel>
-            <Label Content="FFMpeg Binaries Path:"/>
-            <TextBox Text="{Binding Path=Configuration.FFmpegBinariesPath}">
-                <TextBox.InnerRightContent>
-                    <Button Classes="txtButton" 
-                            Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
-                            Command="{Binding Path=BrowseFFMpegCommand, Mode=OneWay}"/>
-                </TextBox.InnerRightContent>
-            </TextBox>
-        </DockPanel>
-       
-    </StackPanel>
+        <Style Selector="TextBox.fw-300">
+            <Setter Property="MaxWidth" Value="300"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Styles>
+    <TabControl Margin="8">
+        <TabItem Header="Paths">
+            <Grid ColumnDefinitions="Auto, *"
+                  RowDefinitions="Auto, Auto, Auto">
+
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Classes="form-label"
+                       Content="Upscayl Path:" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Classes=""
+                         Text="{Binding Path=Configuration.UpscaylPath}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button"
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseUpscaylCommand, Mode=OneWay}" />
+                    </TextBox.InnerRightContent>
+                </TextBox>
+
+                <Label Grid.Row="1" Grid.Column="0" 
+                       Classes="form-label"
+                       Content="FFMpeg Binaries Path:"/>
+                <TextBox Grid.Row="1" Grid.Column="1" 
+                         Text="{Binding Path=Configuration.FFmpegBinariesPath}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button" 
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseFFMpegCommand, Mode=OneWay}"/>
+                    </TextBox.InnerRightContent>
+                </TextBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="UI">
+
+        </TabItem>
+    </TabControl>
+
 </UserControl>

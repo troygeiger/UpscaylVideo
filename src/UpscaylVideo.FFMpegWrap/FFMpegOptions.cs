@@ -12,13 +12,13 @@ public class FFMpegOptions
 
     public string GetFFMpegBinaryPath()
     {
-        var bin = OperatingSystem.IsWindows() ? "ffmpeg.exe" : "ffmpeg";
+        var bin = FFMpegHelper.FFMpegExecutable;
         return string.IsNullOrEmpty(FFMpegFolder) ? bin : Path.Combine(FFMpegFolder, bin);
     }
 
     public string GetFFProbeBinaryPath()
     {
-        var bin = OperatingSystem.IsWindows() ? "ffprobe.exe" : "ffprobe";
+        var bin = FFMpegHelper.FFMpegExecutable;
         return string.IsNullOrEmpty(FFMpegFolder) ? bin : Path.Combine(FFMpegFolder, bin);
     }
 }

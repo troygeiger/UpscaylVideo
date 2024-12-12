@@ -1,7 +1,10 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
+using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Models;
 
 namespace UpscaylVideo.ViewModels;
@@ -9,18 +12,18 @@ namespace UpscaylVideo.ViewModels;
 public partial class MainPageViewModel : PageBase
 {
     private bool isFirstLoad = true;
-    
+    [ObservableProperty] private UpscaleJob _job = new();
+
     public MainPageViewModel()
     {
         base.ToolStripButtonDefinitions =
         [
-            new(ToolStripButtonLocations.Left, MaterialIconKind.PlayArrow, "Start", RunCommand)
+            new(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", RunCommand)
             {
                 ShowText = true
             },
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand)
         ];
-        
     }
 
     public override void OnAppearing()
@@ -29,12 +32,33 @@ public partial class MainPageViewModel : PageBase
         {
             return;
         }
+
         isFirstLoad = false;
         var config = AppConfiguration.Instance;
-        if (string.IsNullOrWhiteSpace(config.FFmpegBinariesPath) || string.IsNullOrWhiteSpace(config.UpscaylPath))
+        TryFindFFmpegBinariesPath();
+        if ((string.IsNullOrWhiteSpace(config.FFmpegBinariesPath) && !TryFindFFmpegBinariesPath()) || string.IsNullOrWhiteSpace(config.UpscaylPath))
         {
             Settings();
         }
+    }
+
+    private bool TryFindFFmpegBinariesPath()
+    {
+        var envPath = Environment.GetEnvironmentVariable("PATH")?.Split(OperatingSystem.IsWindows() ? ';' : ':');
+        if (envPath == null)
+            return false;
+
+        foreach (var path in envPath)
+        {
+            var testPath = Path.Combine(path, FFMpegHelper.FFMpegExecutable);
+            if (File.Exists(testPath))
+            {
+                AppConfiguration.Instance.FFmpegBinariesPath = path;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     [ObservableProperty] private bool _readyToRun = true;

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Helpers;
 
 namespace UpscaylVideo.Models;
@@ -19,7 +20,6 @@ public partial class AppConfiguration : ObservableObject
     }
     
     private string? _upscaylPath;
-    private string? _ffmpegBinariesPath;
 
     public string? UpscaylPath
     {
@@ -29,8 +29,12 @@ public partial class AppConfiguration : ObservableObject
 
     public string? FFmpegBinariesPath
     {
-        get => _ffmpegBinariesPath;
-        set => SetProperty(ref _ffmpegBinariesPath, value);
+        get => FFMpegOptions.Global.FFMpegFolder;
+        set
+        {
+            FFMpegOptions.Global.FFMpegFolder = value ?? string.Empty;
+            OnPropertyChanged(nameof(FFmpegBinariesPath));  
+        } 
     }
 }
 

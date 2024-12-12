@@ -15,5 +15,20 @@
         <FluentTheme />
         <themes:MaterialTheme PrimaryColor="Blue" SecondaryColor="Lime" />
         <materialIcons:MaterialIconStyles />
+        
+        <Style Selector="Label.form-label">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+        <Style Selector="Button.textbox-button">
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Theme" Value="{StaticResource MaterialFlatButton}"/>
+        </Style>
+        <Style Selector="Button.textbox-button materialIcons|MaterialIcon">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+        </Style>
     </Application.Styles>
 </Application>
