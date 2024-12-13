@@ -1,4 +1,5 @@
 using System.Text.Json;
+using CliWrap;
 using CliWrap.Buffered;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
 
@@ -6,7 +7,8 @@ namespace UpscaylVideo.FFMpegWrap;
 
 public static class FFProbe
 {
-    public static async Task<FFProbeResult> AnalyseAsync(string mediaPath, FFMpegOptions? options = null)
+    public static async Task<(bool success, CommandResult cmdResult, FFProbeResult? result)> AnalyseAsync(string mediaPath,
+        FFMpegOptions? options = null)
     {
         var cmd = FFMpegHelper.GetFFProbe(options ?? FFMpegOptions.Global)
             .WithArguments([
@@ -18,6 +20,12 @@ public static class FFProbe
                 mediaPath
             ]);
         var result = await cmd.ExecuteBufferedAsync().ConfigureAwait(false);
-        return JsonSerializer.Deserialize<FFProbeResult>(result.StandardOutput.AsSpan()) ?? new();
+        if (result.ExitCode != 0)
+            return (false, result, null);
+        return (
+            success: result.ExitCode == 0, 
+            cmdResult: result,
+            result: JsonSerializer.Deserialize<FFProbeResult>(result.StandardOutput.AsSpan())
+            );
     }
 }

@@ -18,7 +18,7 @@ public class FFMpegOptions
 
     public string GetFFProbeBinaryPath()
     {
-        var bin = FFMpegHelper.FFMpegExecutable;
+        var bin = FFMpegHelper.FFProbeExecutable;
         return string.IsNullOrEmpty(FFMpegFolder) ? bin : Path.Combine(FFMpegFolder, bin);
     }
 }

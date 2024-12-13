@@ -44,7 +44,8 @@
                         <DataTemplate>
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
-                                    Padding="8">
+                                    Padding="8"
+                                    Margin="3 0">
                                 <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"
@@ -61,12 +62,20 @@
                 </ItemsControl>
                 <ItemsControl Grid.Column="1"
                               ItemsSource="{Binding Path=PageManager.RightToolbarButtons, Mode=OneWay}"
-                              HorizontalAlignment="Right">
+                              HorizontalAlignment="Right"
+                              >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
-                                    Padding="8">
+                                    Padding="8"
+                                    Margin="3,0">
                                 <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"

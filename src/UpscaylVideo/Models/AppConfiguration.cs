@@ -36,6 +36,15 @@ public partial class AppConfiguration : ObservableObject
             OnPropertyChanged(nameof(FFmpegBinariesPath));  
         } 
     }
+
+    public int LastScale { get; set; } = 4;
+    
+    public int LastClipSeconds { get; set; } = 30;
+    
+    public void Save()
+    {
+        ConfigurationHelper.SaveConfig(this, AppConfigurationJsonContext.Default.AppConfiguration);
+    }
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]

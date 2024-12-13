@@ -1,34 +1,34 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
-             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia" 
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="UpscaylVideo.App"
              xmlns:local="using:UpscaylVideo"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-  
+
     <Application.Styles>
         <FluentTheme />
         <themes:MaterialTheme PrimaryColor="Blue" SecondaryColor="Lime" />
         <materialIcons:MaterialIconStyles />
-        
+
         <Style Selector="Label.form-label">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
         <Style Selector="Button.textbox-button">
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Theme" Value="{StaticResource MaterialFlatButton}"/>
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Theme" Value="{StaticResource MaterialFlatButton}" />
         </Style>
         <Style Selector="Button.textbox-button materialIcons|MaterialIcon">
-            <Setter Property="Width" Value="24"/>
-            <Setter Property="Height" Value="24"/>
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
         </Style>
     </Application.Styles>
 </Application>

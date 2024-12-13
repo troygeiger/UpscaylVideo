@@ -2,7 +2,108 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:MainPageViewModel"
              x:Class="UpscaylVideo.Views.MainPageView">
-    
+    <Design.DataContext>
+        <vm:MainPageViewModel />
+    </Design.DataContext>
+    <StackPanel Margin="16">
+        <Grid ColumnDefinitions="*, *"
+              RowDefinitions="Auto">
+            <StackPanel Grid.Column="0"
+                        Spacing="16">
+                <TextBox p1:TextFieldAssist.Label="Video File"
+                         Text="{Binding Path=Job.VideoPath}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button"
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseVideosCommand, Mode=OneWay}" />
+                    </TextBox.InnerRightContent>
+                </TextBox>
+                
+                <TextBox p1:TextFieldAssist.Label="Working Folder"
+                         Text="{Binding Path=Job.WorkingFolder}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button"
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseWorkingPathCommand, Mode=OneWay}" />
+                    </TextBox.InnerRightContent>
+                </TextBox>
+
+                <StackPanel Spacing="10"
+                            Width="300"
+                            HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Path=Job.SelectedScale, StringFormat='Image Scale ({0}x)', Mode=OneWay}"
+                               FontWeight="Bold" />
+                    <Slider IsSnapToTickEnabled="True"
+                            Maximum="16"
+                            Minimum="2"
+                            TickFrequency="1"
+                            TickPlacement="Outside"
+                            Value="{Binding Path=Job.SelectedScale}" />
+                </StackPanel>
+
+                <ComboBox Width="300"
+                          HorizontalAlignment="Left"
+                          Theme="{StaticResource MaterialOutlineComboBox}"
+                          p1:ComboBoxAssist.Label="Model"
+                          SelectedValue="{Binding Path=Job.SelectedModel}"
+                          ItemsSource="{Binding Path=ModelOptions, Mode=OneWay}"
+                          DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}"/>
+                
+                <TextBox Width="300"
+                         HorizontalAlignment="Left"
+                         UseFloatingWatermark="True"
+                         p1:TextFieldAssist.Label="Clip Time (Seconds)"
+                         Text="{Binding Path=Job.ClipSeconds}"/>
+            </StackPanel>
+            <controls:Card Grid.Column="1"
+                           Margin="4"
+                           IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}">
+                <Grid ColumnDefinitions="Auto, *"
+                      RowDefinitions="Auto, Auto, Auto, Auto">
+                    <Label Classes="form-label"
+                        Content="Frame Count:" />
+                    <TextBlock Grid.Column="1" 
+                               Grid.Row="0" 
+                        Text="{Binding Path=Job.VideoStream.NbFrames, FallbackValue='', Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Column="0"
+                           Grid.Row="1"
+                           Classes="form-label"
+                           Content="Original Dimension:"/>
+                    <TextBlock Grid.Column="1"
+                               Grid.Row="1"
+                               Text="{Binding Path=Job.OriginalDimension, Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Column="0"
+                           Grid.Row="2"
+                           Classes="form-label"
+                           Content="Scaled Dimension:" />
+                    <TextBlock Grid.Column="1"
+                               Grid.Row="2"
+                               Text="{Binding Path=Job.ScaledDimensions, Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Classes="form-label"
+                           Content="Duration:"/>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Text="{Binding Path=Job.VideoStream.Duration, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                </Grid>
+            </controls:Card>
+
+
+        </Grid>
+    </StackPanel>
 </UserControl>
