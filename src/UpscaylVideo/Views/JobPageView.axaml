@@ -2,7 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:JobPageViewModel"
              x:Class="UpscaylVideo.Views.JobPageView">
-    Job
+    <Design.DataContext><vm:MainPageViewModel></vm:MainPageViewModel></Design.DataContext>
+    <Grid RowDefinitions="Auto, Auto, Auto, *"
+          Margin="16">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Path=Status, Mode=OneWay}"/>
+
+        <StackPanel Grid.Row="1">
+            <Label Content="Overall Progress"/>
+            <ProgressBar Value="{Binding Progress}"
+                         ShowProgressText="True" />
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2">
+            <Label Content="Overall Progress"/>
+            <ProgressBar Value="{Binding ProgressOverall}"
+                         ShowProgressText="True"/>    
+        </StackPanel>
+        
+    </Grid>
 </UserControl>

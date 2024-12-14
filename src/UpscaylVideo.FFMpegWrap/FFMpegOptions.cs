@@ -10,6 +10,8 @@ public class FFMpegOptions
     
     public string FFMpegFolder { get; set; } = string.Empty;
 
+    public string TempFolder { get; set; } = Path.GetTempPath();
+
     public string GetFFMpegBinaryPath()
     {
         var bin = FFMpegHelper.FFMpegExecutable;

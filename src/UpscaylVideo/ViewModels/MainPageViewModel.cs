@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
@@ -95,19 +96,12 @@ public partial class MainPageViewModel : PageBase
         {
             Title = "Select video file",
             AllowMultiple = false,
-            FileTypeFilter = [new("Videos")
+            FileTypeFilter = [ new("Videos")
             {
-                MimeTypes = [
-                    "video/mp4",
-                    "videa/mvk",
-                    "video/m4v",
-                    "video/x-msvideo",
-                    "video/mpeg",
-                    "video/ogg",
-                    "video/webm",
-                ],
-            },
-        ]});
+                Patterns = ["*.mp4", "*.mkv", "*.m4v", "*.avi", "*.wmv", "*.webm"],
+            }, 
+                FilePickerFileTypes.All,
+            ]});
         var selected = result.FirstOrDefault();
         if (selected is null)
             return;
@@ -133,7 +127,7 @@ public partial class MainPageViewModel : PageBase
     [RelayCommand(CanExecute = nameof(ReadyToRun))]
     private async Task Run()
     {
-        var job = new JobPageViewModel(new());
+        var job = new JobPageViewModel(Job);
         PageManager.Instance.SetPage(job);
         await job.RunAsync();
         PageManager.Instance.SetPage(this);
