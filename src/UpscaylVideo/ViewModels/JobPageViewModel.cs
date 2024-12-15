@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Documents;
@@ -20,15 +22,22 @@ namespace UpscaylVideo.ViewModels;
 
 public partial class JobPageViewModel : PageBase, IDisposable
 {
-    private const string upscaledSuccessMsg = "?? Upscayled Successfully!";
-    CancellationTokenSource _tokenSource = new();
+    private const string TimespanFormat = @"d\.hh\:mm\:ss";
+    private readonly CancellationTokenSource _tokenSource = new();
+    private readonly Stopwatch _elapsedStopwatch = new();
+    private readonly Stopwatch _upscaleTimeStopwatch = new();
+    
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private string _status = string.Empty;
     [ObservableProperty] private int _progressOverall;
-    [ObservableProperty] private float _progress;
+    [ObservableProperty] private int _progress;
     [ObservableProperty] private BindingList<string> _log = new();
     [ObservableProperty] private int _totalFrames;
     [ObservableProperty] private int _completedFrames;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))] private TimeSpan _elapsedTime = TimeSpan.Zero;
+    
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(DspEta))] private TimeSpan _eta = TimeSpan.Zero;
+    [ObservableProperty] private DateTime _expectedCompletionTime;
 
     /// <inheritdoc/>
     public JobPageViewModel(UpscaleJob job)
@@ -42,7 +51,10 @@ public partial class JobPageViewModel : PageBase, IDisposable
             },
         ];
     }
-
+    
+    public string DspElapsedTime => ElapsedTime.ToString(TimespanFormat);
+    public string DspEta => Eta.ToString(TimespanFormat);
+    
 
     public UpscaleJob Job { get; }
 
@@ -62,69 +74,132 @@ public partial class JobPageViewModel : PageBase, IDisposable
         string modelsPath = Path.Combine(AppConfiguration.Instance.UpscaylPath, "resources", "models");
         if (!Directory.Exists(modelsPath))
             return;
+        
+        var srcVideoFolder = Path.GetDirectoryName(Job.VideoPath);
+        if (srcVideoFolder == null)
+            return; // TODO: Add some kind of messaging indicating why it exited early.
 
         IsRunning = true;
         Status = "Starting...";
-
+        _elapsedStopwatch.Start();
         var stream = Job.VideoStream;
-        TotalFrames = stream.NbFrames;
+        TotalFrames = Job.VideoStream.CalcNbFrames;
+        
         Task progressUpdateTask = Task.Run(() => UpdateProgress(_tokenSource.Token));
         try
         {
+            
             Directory.CreateDirectory(Job.WorkingFolder);
 
             var framesFolder = Path.Combine(Job.WorkingFolder, "Frames");
+            var upscaleWorking = Path.Combine(Job.WorkingFolder, "Upscale");
             var upscaledFramesFolder = Path.Combine(Job.WorkingFolder, "Frames_Upscaled");
-            var clipsFolder = Path.Combine(Job.WorkingFolder, "Clips");
+
+            var extension = Path.GetExtension(Job.VideoPath);
 
             Directory.CreateDirectory(framesFolder);
+            Directory.CreateDirectory(upscaleWorking);
             Directory.CreateDirectory(upscaledFramesFolder);
-            Directory.CreateDirectory(clipsFolder);
-            await Task.Run(() => ClearFolders(clipsFolder));
-            TimeSpan durationRemaining = stream.Duration;
-            TimeSpan clipLength = Job.ClipSeconds <= 0 ? durationRemaining : TimeSpan.FromSeconds(Job.ClipSeconds);
-            TimeSpan clipStart = TimeSpan.Zero;
-            TimeSpan clipEnd = TimeSpan.Zero;
-            int clipNumber = 1;
-            var frameFilesx = await Task.Run(() => Directory.GetFiles(upscaledFramesFolder, "*.png"));
 
-            while (durationRemaining > TimeSpan.Zero && !_tokenSource.IsCancellationRequested)
+            Stopwatch processingStopwatch = new();
+
+            processingStopwatch.Restart();
+            
+            var audioFile = Path.Combine(Job.WorkingFolder, $"Audio.{extension}");
+            var metadataFile = Path.Combine(Job.WorkingFolder, $"Metadata.ffmeta");
+            Status = "Extracting audio...";
+            if (await FFMpeg.CopyStreams(Job.VideoPath,
+                    audioFile,
+                    Job.VideoDetails.Streams.Where(d => d.CodecType != "video"),
+                    cancellationToken: _tokenSource.Token) == false)
             {
-                Status = "Clearing frames...";
-                await Task.Run(() => ClearFolders(framesFolder)).ConfigureAwait(false);
-                await Task.Run(() => ClearFolders(upscaledFramesFolder)).ConfigureAwait(false);
-                clipEnd = clipStart + clipLength;
+                return;
+            }
+            
+            Status = "Extracting chapter metadata...";
+            if (await FFMpeg.ExtractFFMetadata(Job.VideoPath,
+                    metadataFile, cancellationToken: _tokenSource.Token) == false)
+            {
+                return;
+            }
+            
+            Status = "Clearing frames...";
+            await ClearFoldersAsync(framesFolder).ConfigureAwait(false);
+            await ClearFoldersAsync(upscaleWorking).ConfigureAwait(false);
+            await ClearFoldersAsync(upscaledFramesFolder).ConfigureAwait(false);
 
-                Status = "Extracting next batch of frames...";
-                if (await FFMpeg.ExtractFrames(Job.VideoPath, framesFolder, clipStart, clipEnd, stream.RFrameRate, null, _tokenSource.Token)
-                        .ConfigureAwait(false) == false)
-                {
-                    return;
-                }
 
-                Status = "Upscaling frames...";
-                if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaledFramesFolder, _tokenSource.Token).ConfigureAwait(false) == false)
-                {
-                    return;
-                }
-
-                var frameFiles = await Task.Run(() => Directory.GetFiles(upscaledFramesFolder, "*.png"));
-
-                if (await FFMpeg.CreateVideoFromFrames(frameFiles, Path.Combine(clipsFolder, $"{clipNumber:00000000}.mkv"), stream.RFrameRate,
-                        cancellationToken: _tokenSource.Token).ConfigureAwait(false) == false)
-                {
-                    return;
-                }
-
-                CompletedFrames += frameFiles.Length;
-
-                durationRemaining -= clipLength;
-                clipStart += clipLength;
-                clipNumber++;
+            Status = "Extracting frames...";
+            if (await FFMpeg.ExtractFrames(Job.VideoPath,
+                        framesFolder,
+                        stream.CalcRFrameRate,
+                        _tokenSource.Token,
+                        progressAction: ProcessFFMpegProgress)
+                    .ConfigureAwait(false) == false)
+            {
+                return;
             }
 
-            await Task.Run(() => ClearFolders(framesFolder)).ConfigureAwait(false);
-            await Task.Run(() => ClearFolders(upscaledFramesFolder)).ConfigureAwait(false);
+            var frameFiles = await Task.Run(() => Directory.GetFiles(framesFolder, "*.png"));
+            Array.Sort(frameFiles);
+            Progress = 0;
+            TotalFrames = frameFiles.Length;
+
+            Status = "Upscaling frames...";
+
+
+            int chunkSkip = 0;
+            int chunkSize = Job.UpscaleFrameChunkSize == 0 ? TotalFrames : Job.UpscaleFrameChunkSize;
+            var frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
+            _upscaleTimeStopwatch.Start();
+            while (frameChunk.Any() && _tokenSource.Token.IsCancellationRequested == false)
+            {
+                foreach (var src in frameChunk)
+                {
+                    var dest = Path.Combine(upscaleWorking, Path.GetFileName(src));
+                    File.Move(src, dest);
+                }
+
+                if (await RunUpscayl(upscaylBin, modelsPath, upscaleWorking, upscaledFramesFolder, _tokenSource.Token).ConfigureAwait(false) == false)
+                {
+                    return;
+                }
+
+                await ClearFoldersAsync(upscaleWorking).ConfigureAwait(false);
+
+                chunkSkip += chunkSize;
+                frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
+            }
+            _upscaleTimeStopwatch.Stop();
+
+            CompletedFrames = 0;
+            frameFiles = await Task.Run(() => Directory.GetFiles(upscaledFramesFolder, "*.png"));
+            Array.Sort(frameFiles);
+
+            string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video.{extension}");
+            Progress = 0;
+            Status = $"Generating video file...";
+            if (await FFMpeg.CreateVideoFromFrames(frameFiles, upscaledVideoPath, stream.CalcRFrameRate,
+                    cancellationToken: _tokenSource.Token, progressAction: ProcessFFMpegProgress).ConfigureAwait(false) == false)
+            {
+                return;
+            }
+            
+            Status = "Generating final video file...";
+            string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled.{extension}");
+
+            await FFMpeg.MergeFiles([upscaledVideoPath, audioFile, metadataFile], final, cancellationToken: _tokenSource.Token);
+            
+            
+            processingStopwatch.Stop();
+
+            CompletedFrames += frameFiles.Length;
+
+            Directory.Delete(Job.WorkingFolder, true);
+        }
+        catch (OperationCanceledException)
+        {
+            // Silently catch cancellation
         }
         catch (Exception e)
         {
@@ -134,6 +209,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
         {
             IsRunning = false;
             _tokenSource.Cancel();
+            _elapsedStopwatch.Stop();
         }
     }
 
@@ -144,18 +220,69 @@ public partial class JobPageViewModel : PageBase, IDisposable
             File.Delete(file);
         }
     }
+    
+    private Task ClearFoldersAsync(string folder) => Task.Run(() => ClearFolders(folder));
 
     private async Task UpdateProgress(CancellationToken token)
     {
         if (TotalFrames == 0)
             return;
+        var fpsStopwatch = new Stopwatch();
+        int previousFrameCount = 0;
+        TimeSpan timePerFrame = TimeSpan.Zero;
         do
         {
-            var progress = (int)((decimal)CompletedFrames / TotalFrames * 100);
+            var frameCount = CompletedFrames;
+            ElapsedTime = _elapsedStopwatch.Elapsed;
+            var progress = (int)((decimal)frameCount / TotalFrames * 100);
             ProgressOverall = progress > 100 ? 100 : progress;
+
+            if (_upscaleTimeStopwatch.IsRunning && frameCount > 0)
+            {
+                var diff = frameCount - previousFrameCount;
+                if (diff > 0)
+                {
+                    timePerFrame = fpsStopwatch.Elapsed / diff;
+                }
+                var remaining = TotalFrames - frameCount;
+                Eta = TotalFrames * timePerFrame - _upscaleTimeStopwatch.Elapsed;
+            }
+            
+            if (_upscaleTimeStopwatch.IsRunning)
+            {
+                previousFrameCount = frameCount;
+                fpsStopwatch.Restart();
+            }
+            
+            /*
+            if (Eta > TimeSpan.Zero)
+            {
+                ExpectedCompletionTime = DateTime.Now.Add(Eta);
+            }*/
 
             await TaskHelpers.Wait(1000, token).ConfigureAwait(false);
         } while (!token.IsCancellationRequested && IsRunning);
+    }
+
+    private void ProcessFFMpegProgress(string line)
+    {
+        var span = line.AsSpan();
+        var equalPos = span.IndexOf('=');
+        if (equalPos <= 0)
+            return;
+        var key = span.Slice(0, equalPos);
+        var value = span.Slice(equalPos + 1);
+
+        switch (key)
+        {
+            case "frame":
+                var framesCount = double.Parse(value);
+                Progress = framesCount > 0 && TotalFrames > 0 ? (int)(framesCount / TotalFrames * 100) % 101: 0;
+                break;
+            default:
+                break;
+        }
+        
     }
 
     private async Task<bool> RunUpscayl(string upscaylBinPath, string modelsPath, string framesFolder, string upscaledFolder,
@@ -174,15 +301,23 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 "-n",
                 Job.SelectedModel?.Name ?? string.Empty,
             ])
+            .WithValidation(CommandResultValidation.None)
             .WithStandardErrorPipe(PipeTarget.ToDelegate(line =>
             {
+                if (line.EndsWith("Successfully!"))
+                {
+                    CompletedFrames++;
+                }
                 var match = GlobalRegex.UpscaylPercent().Match(line);
                 if (!match.Success)
+                {
+                    Console.WriteLine(line);
                     return;
+                }
                 if (float.TryParse(match.Groups[1].Value, out var value))
-                    Progress = value;
+                    Progress = (int)Math.Round(value);
             }));
-        var result = await cmd.ExecuteAsync();
+        var result = await cmd.ExecuteAsync(cancellationToken);
         return result.ExitCode == 0;
     }
 

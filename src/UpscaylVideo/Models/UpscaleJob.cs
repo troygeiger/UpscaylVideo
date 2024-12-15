@@ -23,6 +23,7 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private BindingList<string> _messages = new();
     [ObservableProperty] private bool _isLoaded;
     [ObservableProperty] private int _clipSeconds = AppConfiguration.Instance.LastClipSeconds;
+    [ObservableProperty] private int _upscaleFrameChunkSize = 1000;
     [ObservableProperty] private string? _workingFolder;
     
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ScaledDimensions))] 

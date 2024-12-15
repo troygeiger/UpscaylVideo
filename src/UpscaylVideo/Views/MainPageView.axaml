@@ -56,11 +56,24 @@
                           ItemsSource="{Binding Path=ModelOptions, Mode=OneWay}"
                           DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}"/>
                 
-                <TextBox Width="300"
-                         HorizontalAlignment="Left"
-                         UseFloatingWatermark="True"
-                         p1:TextFieldAssist.Label="Clip Time (Seconds)"
-                         Text="{Binding Path=Job.ClipSeconds}"/>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Upscale Chunk Size"/>
+                        <Label Background="CornflowerBlue"
+                               Content=" ? "
+                               CornerRadius="16"
+                               ToolTip.Tip="This is the number of frame to process at a time. Since there is currently a memory leak in Upscayl's Cli process, a high number may use up system memory.
+                               0 processes all at once."
+                               />
+                    </StackPanel>
+                    <NumericUpDown Width="300"
+                                   HorizontalAlignment="Left"
+                                   Theme="{StaticResource OutlineNumericUpDown}" 
+                                   ButtonSpinnerLocation="Left"
+                                   Value="{Binding Path=Job.UpscaleFrameChunkSize}"
+                                   Minimum="0"
+                                   />
+                </StackPanel>
             </StackPanel>
             <controls:Card Grid.Column="1"
                            Margin="4"

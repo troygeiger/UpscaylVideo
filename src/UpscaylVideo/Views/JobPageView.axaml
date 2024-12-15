@@ -8,21 +8,37 @@
              x:Class="UpscaylVideo.Views.JobPageView">
     <Design.DataContext><vm:MainPageViewModel></vm:MainPageViewModel></Design.DataContext>
     <Grid RowDefinitions="Auto, Auto, Auto, *"
+          ColumnDefinitions="*, 200"
           Margin="16">
-        <TextBlock Grid.Row="0"
+        <TextBlock Grid.Column="0" Grid.Row="0"
                    Text="{Binding Path=Status, Mode=OneWay}"/>
 
-        <StackPanel Grid.Row="1">
-            <Label Content="Overall Progress"/>
+        <StackPanel  Grid.Column="0" Grid.Row="1">
+            <Label Content="Clip Progress"/>
             <ProgressBar Value="{Binding Progress}"
-                         ShowProgressText="True" />
+                         ShowProgressText="True"
+                         CornerRadius="6"/>
         </StackPanel>
         
-        <StackPanel Grid.Row="2">
+        <StackPanel  Grid.Column="0" Grid.Row="2">
             <Label Content="Overall Progress"/>
             <ProgressBar Value="{Binding ProgressOverall}"
-                         ShowProgressText="True"/>    
+                         ShowProgressText="True"
+                         CornerRadius="6"/>    
         </StackPanel>
+        
+        <Grid Column="1"
+              Grid.Row="1"
+              RowDefinitions="Auto, Auto"
+              Margin="6">
+            
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Path=DspEta, StringFormat='ETA: {0}'}"/>
+            
+            <TextBlock Grid.Row="1"
+                       Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}'}"/>
+            
+        </Grid>
         
     </Grid>
 </UserControl>

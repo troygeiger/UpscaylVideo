@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UpscaylVideo.FFMpegWrap.Internal;
 using UpscaylVideo.FFMpegWrap.Models.Converters;
 
 namespace UpscaylVideo.FFMpegWrap.Models.Probe;
@@ -84,22 +85,24 @@ public class FFProbeStream
     public string IsAvc { get; set; }
 
     [JsonPropertyName("nal_length_size")]
-    public string NalLengthSize { get; set; }
+    public string? NalLengthSize { get; set; }
 
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
-    [JsonPropertyName("r_frame_rate")]
-    [JsonConverter(typeof(DivisionConverter))]
-    public double RFrameRate { get; set; }
+    [JsonPropertyName("r_frame_rate")] public string RFrameRate { get; set; } = string.Empty;
+    
+    public double CalcRFrameRate => CalculationHelpers.CalcStringDivideExpression(RFrameRate); 
 
     [JsonPropertyName("avg_frame_rate")]
-    [JsonConverter(typeof(DivisionConverter))]
-    public double AvgFrameRate { get; set; }
+    public string AvgFrameRate { get; set; } = string.Empty;
+    
+    public double CalcAvgFrameRate => CalculationHelpers.CalcStringDivideExpression(AvgFrameRate);
 
     [JsonPropertyName("time_base")]
-    [JsonConverter(typeof(DivisionConverter))]
-    public double TimeBase { get; set; }
+    public string TimeBase { get; set; } = string.Empty;
+    
+    public double CalcTimeBase => CalculationHelpers.CalcStringDivideExpression(TimeBase);
 
     [JsonPropertyName("start_pts")]
     public int StartPts { get; set; }
@@ -122,8 +125,12 @@ public class FFProbeStream
     public int BitsPerRawSample { get; set; }
 
     [JsonPropertyName("nb_frames")]
-    [JsonConverter(typeof(StringToIntConverter))]
-    public int NbFrames { get; set; }
+    public string? NbFrames { get; set; }
+    
+    [JsonPropertyName("nb_read_frames")]
+    public string? NbReadFrames { get; set; }
+    
+    public int CalcNbFrames => CalculationHelpers.TryStringToInt(NbFrames) ?? CalculationHelpers.TryStringToInt(NbReadFrames) ?? 0;
 
     [JsonPropertyName("extradata_size")]
     public int ExtradataSize { get; set; }

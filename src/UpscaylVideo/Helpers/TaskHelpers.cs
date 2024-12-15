@@ -6,9 +6,9 @@ namespace UpscaylVideo.Helpers;
 
 public static class TaskHelpers
     {
-        public static Action<Exception> GlobalOnException { get; set; }
+        public static Action<Exception>? GlobalOnException { get; set; }
 
-        private static bool HandleException(Exception exception, Action<Exception> handler)
+        private static bool HandleException(Exception? exception, Action<Exception>? handler)
         {
             if (exception == null)
                 return false;
@@ -24,7 +24,7 @@ public static class TaskHelpers
         /// <param name="token">Cancellation token to cancel the wait.</param>
         /// <param name="handleExceptionAction">An optional action to call if there is an exception.</param>
         /// <returns>Task of boolean.</returns>
-        public static Task<bool> Wait(TimeSpan timeout, CancellationToken token = default, Action<Exception> handleExceptionAction = null) =>
+        public static Task<bool> Wait(TimeSpan timeout, CancellationToken token = default, Action<Exception>? handleExceptionAction = null) =>
             Task.Delay(timeout, token).ContinueWith(tsk => HandleException(tsk.Exception, handleExceptionAction));
 
         /// <summary>
@@ -34,7 +34,7 @@ public static class TaskHelpers
         /// <param name="token">Cancellation token to cancel the wait.</param>
         /// <param name="handleExceptionAction">An optional action to call if there is an exception.</param>
         /// <returns>Task of boolean.</returns>
-        public static Task<bool> Wait(int timeoutMs, CancellationToken token = default, Action<Exception> handleExceptionAction = null) =>
+        public static Task<bool> Wait(int timeoutMs, CancellationToken token = default, Action<Exception>? handleExceptionAction = null) =>
             Task.Delay(timeoutMs, token).ContinueWith(tsk => HandleException(tsk.Exception, handleExceptionAction));
 
         /// <summary>
@@ -43,7 +43,7 @@ public static class TaskHelpers
         /// <param name="task">The task to run</param>
         /// <param name="configureAwait">true to attempt to marshal the continuation back to the original context captured; otherwise, false. Default true.</param>
         /// <param name="handleExceptionAction">An action to call if there is an exception.</param>
-        public static async void FireAndForget(this Task task, bool configureAwait = true, Action<Exception> handleExceptionAction = null)
+        public static async void FireAndForget(this Task task, bool configureAwait = true, Action<Exception>? handleExceptionAction = null)
         {
             try
             {
@@ -62,7 +62,7 @@ public static class TaskHelpers
         /// <param name="configureAwait">true to attempt to marshal the continuation back to the original context captured; otherwise, false. Default true.</param>
         /// <param name="completedAction">The action to call with the returned object of T.</param>
         /// <param name="handleExceptionAction">An action to call if there is an exception.</param>
-        public static async void FireAndForget<T>(this Task<T> task, bool configureAwait = true, Action<T> completedAction = null,  Action<Exception> handleExceptionAction = null)
+        public static async void FireAndForget<T>(this Task<T> task, bool configureAwait = true, Action<T>? completedAction = null,  Action<Exception>? handleExceptionAction = null)
         {
             try
             {
