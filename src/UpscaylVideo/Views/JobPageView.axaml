@@ -2,43 +2,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:JobPageViewModel"
              x:Class="UpscaylVideo.Views.JobPageView">
-    <Design.DataContext><vm:MainPageViewModel></vm:MainPageViewModel></Design.DataContext>
-    <Grid RowDefinitions="Auto, Auto, Auto, *"
-          ColumnDefinitions="*, 200"
-          Margin="16">
-        <TextBlock Grid.Column="0" Grid.Row="0"
-                   Text="{Binding Path=Status, Mode=OneWay}"/>
+    <Design.DataContext>
+        <vm:MainPageViewModel></vm:MainPageViewModel>
+    </Design.DataContext>
 
-        <StackPanel  Grid.Column="0" Grid.Row="1">
-            <Label Content="Clip Progress"/>
+    <StackPanel Margin="16"
+                Spacing="8">
+        <Button HorizontalAlignment="Left"
+                Command="{Binding Path=PauseCommand, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal"
+                        Spacing="5">
+                <materialIcons:MaterialIcon Kind="Pause" />
+                <TextBlock Text="{Binding Path=PauseButtonText, Mode=OneWay}" />
+            </StackPanel>
+        </Button>
+        <TextBlock Text="{Binding Path=Status, Mode=OneWay}" />
+
+        <StackPanel>
+            <Label Content="Clip Progress" />
             <ProgressBar Value="{Binding Progress}"
                          ShowProgressText="True"
-                         CornerRadius="6"/>
+                         CornerRadius="6" />
         </StackPanel>
-        
-        <StackPanel  Grid.Column="0" Grid.Row="2">
-            <Label Content="Overall Progress"/>
+
+        <StackPanel>
+            <Label Content="Overall Progress" />
             <ProgressBar Value="{Binding ProgressOverall}"
                          ShowProgressText="True"
-                         CornerRadius="6"/>    
+                         CornerRadius="6" />
         </StackPanel>
-        
-        <Grid Column="1"
-              Grid.Row="1"
-              RowDefinitions="Auto, Auto"
-              Margin="6">
-            
-            <TextBlock Grid.Row="0"
-                       Text="{Binding Path=DspEta, StringFormat='ETA: {0}'}"/>
-            
-            <TextBlock Grid.Row="1"
-                       Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}'}"/>
-            
-        </Grid>
-        
-    </Grid>
+
+        <TextBlock Text="{Binding Path=DspEta, StringFormat='ETA: {0}'}" />
+
+        <TextBlock Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}'}" />
+    </StackPanel>
+
 </UserControl>
