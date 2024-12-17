@@ -26,7 +26,10 @@ public partial class JobPageViewModel : PageBase, IDisposable
     private readonly CancellationTokenSource _tokenSource = new();
     private CancellationTokenSource _pauseTokenSource;
     private readonly Stopwatch _elapsedStopwatch = new();
-    private readonly Stopwatch _upscaleTimeStopwatch = new();
+    private readonly Stopwatch _upscaleFrameStopwatch = new();
+    private readonly Stopwatch _upscaleRuntimeStopwatch = new();
+    private AverageProvider<long> _averageProvider = new();
+    
 
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private string _status = string.Empty;
@@ -35,12 +38,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
     [ObservableProperty] private BindingList<string> _log = new();
     [ObservableProperty] private int _totalFrames;
     [ObservableProperty] private int _completedFrames;
-
+    [ObservableProperty] private TimeSpan? _avgFrameRate;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))]
     private TimeSpan _elapsedTime = TimeSpan.Zero;
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspEta))]
-    private TimeSpan _eta = TimeSpan.Zero;
+    private TimeSpan? _eta;
 
     [ObservableProperty] private DateTime _expectedCompletionTime;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(PauseButtonText)), NotifyPropertyChangedFor(nameof(PauseButtonIcon))] 
@@ -65,7 +68,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
     public string DspElapsedTime => ElapsedTime.ToString(TimespanFormat);
 
-    public string DspEta => Eta.ToString(TimespanFormat);
+    public string DspEta => Eta.HasValue ? Eta.Value.ToString(TimespanFormat) : "Calculating";
     
     public string PauseButtonText => IsPaused ? "Resume" : "Pause";
 
@@ -164,10 +167,11 @@ public partial class JobPageViewModel : PageBase, IDisposable
             int chunkSkip = 0;
             int chunkSize = Job.UpscaleFrameChunkSize == 0 ? TotalFrames : Job.UpscaleFrameChunkSize;
             var frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
-            _upscaleTimeStopwatch.Start();
+            
             bool shouldResume = false;
 
             CanPause = true;
+            _upscaleRuntimeStopwatch.Restart();
             while (frameChunk.Any() && _tokenSource.Token.IsCancellationRequested == false)
             {
                 foreach (var src in frameChunk)
@@ -202,8 +206,8 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
             }
             CanPause = false;
-
-            _upscaleTimeStopwatch.Stop();
+            _upscaleRuntimeStopwatch.Stop();
+            
             if (_tokenSource.IsCancellationRequested)
                 return;
             
@@ -245,6 +249,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             IsRunning = false;
             _tokenSource.Cancel();
             _elapsedStopwatch.Stop();
+            _upscaleRuntimeStopwatch.Reset();
         }
     }
 
@@ -271,9 +276,6 @@ public partial class JobPageViewModel : PageBase, IDisposable
     {
         if (TotalFrames == 0)
             return;
-        var fpsStopwatch = new Stopwatch();
-        int previousFrameCount = 0;
-        TimeSpan timePerFrame = TimeSpan.Zero;
         do
         {
             var frameCount = CompletedFrames;
@@ -281,22 +283,15 @@ public partial class JobPageViewModel : PageBase, IDisposable
             var progress = (int)((decimal)frameCount / TotalFrames * 100);
             ProgressOverall = progress > 100 ? 100 : progress;
 
-            if (_upscaleTimeStopwatch.IsRunning && frameCount > 0)
+            if (_upscaleFrameStopwatch.IsRunning && _averageProvider.AverageReady && frameCount > 0)
             {
-                var diff = frameCount - previousFrameCount;
-                if (diff > 0)
-                {
-                    timePerFrame = fpsStopwatch.Elapsed / diff;
-                }
-
-                var remaining = TotalFrames - frameCount;
-                Eta = TotalFrames * timePerFrame - _upscaleTimeStopwatch.Elapsed;
+                AvgFrameRate = TimeSpan.FromTicks(_averageProvider.GetAverage(true));
             }
 
-            if (_upscaleTimeStopwatch.IsRunning)
+            if (_upscaleFrameStopwatch.IsRunning && AvgFrameRate.HasValue)
             {
-                previousFrameCount = frameCount;
-                fpsStopwatch.Restart();
+                var remaining = TotalFrames - frameCount;
+                Eta = remaining * AvgFrameRate.Value;
             }
 
             /*
@@ -340,6 +335,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     private async Task<bool> RunUpscayl(string upscaylBinPath, string modelsPath, string framesFolder, string upscaledFolder,
         CancellationToken cancellationToken)
     {
+        _upscaleFrameStopwatch.Restart();
         try
         {
             var cmd = Cli.Wrap(upscaylBinPath)
@@ -361,6 +357,8 @@ public partial class JobPageViewModel : PageBase, IDisposable
                     if (line.EndsWith("Successfully!"))
                     {
                         CompletedFrames++;
+                        _averageProvider.Push(_upscaleFrameStopwatch.Elapsed.Ticks);
+                        _upscaleFrameStopwatch.Restart();
                     }
 
                     var match = GlobalRegex.UpscaylPercent().Match(line);
@@ -384,6 +382,11 @@ public partial class JobPageViewModel : PageBase, IDisposable
         catch (Exception e)
         {
             throw;
+        }
+        finally
+        {
+            _upscaleFrameStopwatch.Stop();
+            _averageProvider.Reset();
         }
     }
 
