@@ -143,7 +143,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Status = "Extracting audio...";
             if (await FFMpeg.CopyStreams(Job.VideoPath,
                     audioFile,
-                    Job.VideoDetails.Streams.Where(d => d.CodecType != "video"),
+                    Job.VideoDetails.Streams.Where(d => d.CodecType != "video" && d.CodecName != "dvd_subtitle" && d.CodecName != "bin_data"),
                     cancellationToken: _tokenSource.Token) == false)
             {
                 return;
