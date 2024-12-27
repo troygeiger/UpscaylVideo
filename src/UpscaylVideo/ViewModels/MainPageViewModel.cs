@@ -130,7 +130,6 @@ public partial class MainPageViewModel : PageBase
         var job = new JobPageViewModel(Job);
         PageManager.Instance.SetPage(job);
         await job.RunAsync();
-        PageManager.Instance.SetPage(this);
     }
 
     [RelayCommand]

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              x:Class="UpscaylVideo.App"
              xmlns:local="using:UpscaylVideo"
              RequestedThemeVariant="Default">
@@ -15,6 +16,7 @@
         <FluentTheme />
         <themes:MaterialTheme PrimaryColor="Blue" SecondaryColor="Lime" />
         <materialIcons:MaterialIconStyles />
+        <dialogHostAvalonia:DialogHostStyles />
 
         <Style Selector="Label.form-label">
             <Setter Property="VerticalAlignment" Value="Center" />

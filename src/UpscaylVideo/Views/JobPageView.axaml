@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
+             xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:JobPageViewModel"
              x:Class="UpscaylVideo.Views.JobPageView">
@@ -11,35 +12,51 @@
         <vm:MainPageViewModel></vm:MainPageViewModel>
     </Design.DataContext>
 
-    <StackPanel Margin="16"
-                Spacing="8">
-        <Button HorizontalAlignment="Left"
-                Command="{Binding Path=PauseCommand, Mode=OneWay}">
-            <StackPanel Orientation="Horizontal"
-                        Spacing="5">
-                <materialIcons:MaterialIcon Kind="Pause" />
-                <TextBlock Text="{Binding Path=PauseButtonText, Mode=OneWay}" />
+    <dialogHost:DialogHost CloseOnClickAway="True"
+                           IsOpen="{Binding DialogShown}">
+        <dialogHost:DialogHost.DialogContent>
+            <StackPanel Margin="16"
+                        Spacing="8">
+                <TextBlock Text="{Binding Path=DialogMessage, Mode=OneWay}"/>
+                <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHost:DialogHost}, Path=CloseDialogCommand}"
+                        Content="OK"/>
             </StackPanel>
-        </Button>
-        <TextBlock Text="{Binding Path=Status, Mode=OneWay}" />
+        </dialogHost:DialogHost.DialogContent>
 
-        <StackPanel>
-            <Label Content="Clip Progress" />
-            <ProgressBar Value="{Binding Progress}"
-                         ShowProgressText="True"
-                         CornerRadius="6" />
+        <StackPanel Margin="16"
+                    Spacing="8">
+
+            <Button HorizontalAlignment="Left"
+                    Command="{Binding Path=PauseCommand, Mode=OneWay}">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="5">
+                    <materialIcons:MaterialIcon Kind="Pause" />
+                    <TextBlock Text="{Binding Path=PauseButtonText, Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+            <TextBlock Text="{Binding Path=Status, Mode=OneWay}" />
+
+            <StackPanel>
+                <Label Content="Clip Progress" />
+                <ProgressBar Value="{Binding Progress, Mode=OneWay}"
+                             ShowProgressText="True"
+                             CornerRadius="6" />
+            </StackPanel>
+
+            <StackPanel>
+                <Label Content="Overall Progress" />
+                <ProgressBar Value="{Binding ProgressOverall, Mode=OneWay}"
+                             ShowProgressText="True"
+                             CornerRadius="6" />
+            </StackPanel>
+
+            <TextBlock Text="{Binding Path=DspEta, StringFormat='ETA: {0}', Mode=OneWay}" />
+
+            <TextBlock Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}', Mode=OneWay}" />
+
+            <TextBlock Text="{Binding Path=CompletedFrames, StringFormat='Completed Frames: {0}', Mode=OneWay}" />
+
+            <TextBlock Text="{Binding Path=TotalFrames, StringFormat='Total Frames: {0}', Mode=OneWay}" />
         </StackPanel>
-
-        <StackPanel>
-            <Label Content="Overall Progress" />
-            <ProgressBar Value="{Binding ProgressOverall}"
-                         ShowProgressText="True"
-                         CornerRadius="6" />
-        </StackPanel>
-
-        <TextBlock Text="{Binding Path=DspEta, StringFormat='ETA: {0}'}" />
-
-        <TextBlock Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}'}" />
-    </StackPanel>
-
+    </dialogHost:DialogHost>
 </UserControl>

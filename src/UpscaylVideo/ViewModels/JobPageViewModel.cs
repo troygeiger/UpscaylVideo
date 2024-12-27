@@ -8,9 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Shapes;
+using Avalonia.Interactivity;
 using CliWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DialogHostAvalonia;
+using DynamicData.Binding;
 using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
@@ -39,11 +42,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
     [ObservableProperty] private long _totalFrames;
     [ObservableProperty] private int _completedFrames;
     [ObservableProperty] private TimeSpan? _avgFrameRate;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))]
-    private TimeSpan _elapsedTime = TimeSpan.Zero;
-
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))] private TimeSpan _elapsedTime = TimeSpan.Zero;
+    [ObservableProperty] private string _dialogMessage;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspEta))]
     private TimeSpan? _eta;
+
+    [ObservableProperty] private bool _dialogShown;
 
     [ObservableProperty] private DateTime _expectedCompletionTime;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(PauseButtonText)), NotifyPropertyChangedFor(nameof(PauseButtonIcon))] 
@@ -64,6 +68,14 @@ public partial class JobPageViewModel : PageBase, IDisposable
             }
         ];
         _pauseTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
+        this.WhenPropertyChanged(p => p.DialogShown, false)
+            .Subscribe(p =>
+            {
+                if (p.Value == false)
+                {
+                    GoToMain();
+                }
+            });
     }
 
     public string DspElapsedTime => ElapsedTime.ToString(TimespanFormat);
@@ -124,9 +136,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Directory.CreateDirectory(framesFolder);
             Directory.CreateDirectory(upscaleOutput);
 
-            Stopwatch processingStopwatch = new();
-
-            processingStopwatch.Restart();
+           
 
             var audioFile = Path.Combine(Job.WorkingFolder, $"Audio.{extension}");
             var metadataFile = Path.Combine(Job.WorkingFolder, $"Metadata.ffmeta");
@@ -222,11 +232,8 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
             await FFMpeg.MergeFiles([upscaledVideoPath, audioFile, metadataFile], final, cancellationToken: _tokenSource.Token);
 
-
-            processingStopwatch.Stop();
-
-            
             Directory.Delete(Job.WorkingFolder, true);
+            DialogMessage = "Upscale Completed!";
         }
         catch (OperationCanceledException)
         {
@@ -235,9 +242,11 @@ public partial class JobPageViewModel : PageBase, IDisposable
         catch (Exception e)
         {
             Console.Error.WriteLine(e);
+            DialogMessage = "An error occured while processing!";
         }
         finally
         {
+            bool wasCancelled = _tokenSource.IsCancellationRequested;
             IsRunning = false;
             _tokenSource.Cancel();
             _elapsedStopwatch.Stop();
@@ -254,6 +263,13 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 inputProcess.Kill();
             }
             _averageProvider.Reset();
+
+            DialogShown = wasCancelled == false;
+
+            if (wasCancelled)
+            {
+                GoToMain();
+            }
         }
     }
 
@@ -410,6 +426,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
         {
             _pauseTokenSource.Cancel();
         }
+    }
+
+    [RelayCommand]
+    private void GoToMain()
+    {
+        PageManager.Instance.SetPage(typeof(MainPageViewModel));
     }
 
     public void Dispose()
