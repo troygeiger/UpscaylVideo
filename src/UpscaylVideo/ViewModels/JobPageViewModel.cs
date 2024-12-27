@@ -36,7 +36,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     [ObservableProperty] private int _progressOverall;
     [ObservableProperty] private int _progress;
     [ObservableProperty] private BindingList<string> _log = new();
-    [ObservableProperty] private int _totalFrames;
+    [ObservableProperty] private long _totalFrames;
     [ObservableProperty] private int _completedFrames;
     [ObservableProperty] private TimeSpan? _avgFrameRate;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))]
@@ -101,7 +101,14 @@ public partial class JobPageViewModel : PageBase, IDisposable
         Status = "Starting...";
         _elapsedStopwatch.Start();
         var stream = Job.VideoStream;
-        TotalFrames = Job.VideoStream.CalcNbFrames;
+        TimeSpan duration = Job.VideoDetails.GetDuration();
+        TotalFrames = (long)Math.Round(duration.TotalSeconds * Job.VideoStream.CalcRFrameRate);
+        var reportedNumberFrames = Job.VideoStream.CalcNbFrames;
+        Stream? pngStream = null;
+        Stream? outVideoStream = null;
+        Process? inputProcess = null;
+        Process? outputProcess = null;
+        
 
         Task progressUpdateTask = Task.Run(() => UpdateProgress(_tokenSource.Token));
         try
@@ -109,14 +116,13 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Directory.CreateDirectory(Job.WorkingFolder);
 
             var framesFolder = Path.Combine(Job.WorkingFolder, "Frames");
-            var upscaleWorking = Path.Combine(Job.WorkingFolder, "Upscale");
-            var upscaledFramesFolder = Path.Combine(Job.WorkingFolder, "Frames_Upscaled");
+            var upscaleOutput = Path.Combine(Job.WorkingFolder, "Upscale");
+            
 
             var extension = Path.GetExtension(Job.VideoPath);
 
             Directory.CreateDirectory(framesFolder);
-            Directory.CreateDirectory(upscaleWorking);
-            Directory.CreateDirectory(upscaledFramesFolder);
+            Directory.CreateDirectory(upscaleOutput);
 
             Stopwatch processingStopwatch = new();
 
@@ -140,49 +146,40 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 return;
             }
 
-            Status = "Clearing frames...";
-            await ClearFoldersAsync(framesFolder);
-            await ClearFoldersAsync(upscaleWorking);
-            await ClearFoldersAsync(upscaledFramesFolder);
-
-
-            Status = "Extracting frames...";
-            if (await FFMpeg.ExtractFrames(Job.VideoPath,
-                        framesFolder,
-                        stream.CalcRFrameRate,
-                        _tokenSource.Token,
-                        progressAction: ProcessFFMpegProgress) == false)
-            {
-                return;
-            }
-
-            var frameFiles = await Task.Run(() => Directory.GetFiles(framesFolder, "*.png"));
-            Array.Sort(frameFiles);
-            Progress = 0;
-            TotalFrames = frameFiles.Length;
-
-            Status = "Upscaling frames...";
-
-
-            int chunkSkip = 0;
-            int chunkSize = Job.UpscaleFrameChunkSize == 0 ? TotalFrames : Job.UpscaleFrameChunkSize;
-            var frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
             
-            bool shouldResume = false;
+            
+            Status = "Upscaling frames..."; 
+            string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
+            (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcRFrameRate);
+            (outputProcess, outVideoStream) = FFMpeg.StartPngFramesToVideoPipe(upscaledVideoPath, Job.VideoStream.CalcRFrameRate);
 
             CanPause = true;
             _upscaleRuntimeStopwatch.Restart();
-            while (frameChunk.Any() && _tokenSource.Token.IsCancellationRequested == false)
+            long outFrameNumber = 0;
+            while (_tokenSource.Token.IsCancellationRequested == false && outputProcess.HasExited == false)
             {
-                foreach (var src in frameChunk)
+                Status = "Clearing frames...";
+                await ClearFoldersAsync(framesFolder);
+                await ClearFoldersAsync(upscaleOutput);
+                var shouldResume = false; var hasNewFrames = false;
+                for (int i = 0; i < Job.UpscaleFrameChunkSize; i++)
                 {
-                    var dest = Path.Combine(upscaleWorking, Path.GetFileName(src));
-                    File.Move(src, dest);
+                    using var frameStream = await pngStream.ReadNextPngAsync();
+                    hasNewFrames |= frameStream.Length > 0;
+                    if (frameStream.Length == 0)
+                        break;
+                    outFrameNumber++;
+                    await using var frameFileStream = File.Create(Path.Combine(framesFolder, $"{outFrameNumber:00000000}.png"));
+                    await frameStream.CopyToAsync(frameFileStream, _tokenSource.Token);
+                    
                 }
+                if (!hasNewFrames)
+                    break;
 
                 do
                 {
-                    if (await RunUpscayl(upscaylBin, modelsPath, upscaleWorking, upscaledFramesFolder, _pauseTokenSource.Token) == false)
+                    Status = "Upscaling frames...";
+                    if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleOutput, _pauseTokenSource.Token) == false)
                     {
                         return;
                     }
@@ -190,50 +187,45 @@ public partial class JobPageViewModel : PageBase, IDisposable
                     if (IsPaused && _tokenSource.Token.IsCancellationRequested == false)
                     {
                         Status = "Paused";
-                        ClearCompletedUpscaled(upscaleWorking, upscaledFramesFolder);
+                        ClearCompletedUpscaled(framesFolder, upscaleOutput);
                         await WaitUntilUnpaused(_tokenSource.Token);
                         _pauseTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
                         shouldResume = true;
-                        Status = "Upscaling frames...";
+                        
                     }
                     
                 } while (shouldResume && _tokenSource.Token.IsCancellationRequested == false);
 
+                _tokenSource.Token.ThrowIfCancellationRequested();
+                var frameFiles = await Task.Run(() => Directory.GetFiles(upscaleOutput, "*.png"));
+                Array.Sort(frameFiles);
 
-                await ClearFoldersAsync(upscaleWorking);
-
-                chunkSkip += chunkSize;
-                frameChunk = frameFiles.Skip(chunkSkip).Take(chunkSize);
+                foreach (var frameFile in frameFiles)
+                {
+                    using var frameStream = File.OpenRead(frameFile);
+                    await frameStream.CopyToAsync(outVideoStream, _tokenSource.Token);
+                }
+                
             }
             CanPause = false;
             _upscaleRuntimeStopwatch.Stop();
+            outVideoStream.Dispose();
+            
+            await outputProcess.WaitForExitAsync(_tokenSource.Token);
             
             if (_tokenSource.IsCancellationRequested)
                 return;
             
-            CompletedFrames = 0;
-            frameFiles = await Task.Run(() => Directory.GetFiles(upscaledFramesFolder, "*.png"));
-            Array.Sort(frameFiles);
-
-            string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video.{extension}");
-            Progress = 0;
-            Status = $"Generating video file...";
-            if (await FFMpeg.CreateVideoFromFrames(frameFiles, upscaledVideoPath, stream.CalcRFrameRate,
-                    cancellationToken: _tokenSource.Token, progressAction: ProcessFFMpegProgress) == false)
-            {
-                return;
-            }
-
+            
             Status = "Generating final video file...";
-            string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled.{extension}");
+            string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled{extension}");
 
             await FFMpeg.MergeFiles([upscaledVideoPath, audioFile, metadataFile], final, cancellationToken: _tokenSource.Token);
 
 
             processingStopwatch.Stop();
 
-            CompletedFrames += frameFiles.Length;
-
+            
             Directory.Delete(Job.WorkingFolder, true);
         }
         catch (OperationCanceledException)
@@ -250,6 +242,18 @@ public partial class JobPageViewModel : PageBase, IDisposable
             _tokenSource.Cancel();
             _elapsedStopwatch.Stop();
             _upscaleRuntimeStopwatch.Reset();
+            pngStream?.Dispose();
+            outVideoStream?.Dispose();
+            if (outputProcess != null && !outputProcess.HasExited)
+            {
+                outputProcess.Kill();
+            }
+
+            if (inputProcess != null && !inputProcess.HasExited)
+            {
+                inputProcess.Kill();
+            }
+            _averageProvider.Reset();
         }
     }
 
@@ -276,6 +280,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     {
         if (TotalFrames == 0)
             return;
+        var timeSinceLastAverage = new Stopwatch();
         do
         {
             var frameCount = CompletedFrames;
@@ -286,12 +291,13 @@ public partial class JobPageViewModel : PageBase, IDisposable
             if (_upscaleFrameStopwatch.IsRunning && _averageProvider.AverageReady && frameCount > 0)
             {
                 AvgFrameRate = TimeSpan.FromTicks(_averageProvider.GetAverage(true));
+                timeSinceLastAverage.Restart();
             }
 
             if (_upscaleFrameStopwatch.IsRunning && AvgFrameRate.HasValue)
             {
                 var remaining = TotalFrames - frameCount;
-                Eta = remaining * AvgFrameRate.Value;
+                Eta = (remaining * AvgFrameRate.Value) - timeSinceLastAverage.Elapsed;
             }
 
             /*
@@ -302,6 +308,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
             await TaskHelpers.Wait(1000, token).ConfigureAwait(false);
         } while (!token.IsCancellationRequested && IsRunning);
+        timeSinceLastAverage.Stop();
     }
 
     private async Task WaitUntilUnpaused(CancellationToken token)
@@ -386,7 +393,6 @@ public partial class JobPageViewModel : PageBase, IDisposable
         finally
         {
             _upscaleFrameStopwatch.Stop();
-            _averageProvider.Reset();
         }
     }
 

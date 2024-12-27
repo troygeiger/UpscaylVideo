@@ -9,4 +9,11 @@ public class FFProbeResult
 
     [JsonPropertyName("format")] 
     public Format Format { get; set; } = new Format();
+
+    public TimeSpan GetDuration()
+    {
+        var videoStream = Streams.FirstOrDefault(s => s.CodecType == "video");
+        TimeSpan result = videoStream?.Duration ?? TimeSpan.Zero;
+        return result == TimeSpan.Zero ? Format.Duration : result;
+    }
 }

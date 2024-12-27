@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Security.Cryptography;
 using CliWrap;
 using CliWrap.Buffered;
@@ -9,6 +10,8 @@ namespace UpscaylVideo.FFMpegWrap;
 
 public static class FFMpeg
 {
+    
+    
     public static Task<bool> ExtractFrames(
         string inputFilePath,
         string outputFilePath,
@@ -210,5 +213,49 @@ public static class FFMpeg
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         return result.ExitCode == 0;
+    }
+
+    public static (Process ffProcess, Stream stdOutStream)  StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
+    {
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
+            "-i",
+            inputFilePath,
+            "-r", framerate.ToString(CultureInfo.InvariantCulture),
+            "-c:v",
+            "png", "-f", "image2pipe",
+            "-",
+        ])
+        {
+            RedirectStandardOutput = true
+        };
+        //ffstate.RedirectStandardError = true;
+        var process = Process.Start(ffStart);
+        if (process == null)
+            throw new Exception("Unable to start FFMpeg");
+        return (process, new BufferedStream(process.StandardOutput.BaseStream));
+    }
+
+    public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(string outputFilePath, double framerate, FFMpegOptions? options = null)
+    {
+        var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options),[
+            "-y",
+            "-framerate",
+            strFramerate,
+            "-f", "image2pipe",
+            "-c:v", "png",
+            "-i", "-",
+            "-r",
+            strFramerate,
+            "-vf", "format=yuv420p",
+            outputFilePath,
+        ])
+        {
+            RedirectStandardInput = true
+        };
+        var process = Process.Start(ffStart);
+        if (process == null)
+            throw new Exception("Unable to start FFMpeg");
+        return (process, process.StandardInput.BaseStream);
     }
 }

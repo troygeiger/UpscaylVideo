@@ -62,8 +62,7 @@
                         <Label Background="CornflowerBlue"
                                Content=" ? "
                                CornerRadius="16"
-                               ToolTip.Tip="This is the number of frame to process at a time. Since there is currently a memory leak in Upscayl's Cli process, a high number may use up system memory.
-                               0 processes all at once."
+                               ToolTip.Tip="This is the number of frame to process at a time. Since there is currently a memory leak in Upscayl's Cli process, a high number may use up system memory."
                                />
                     </StackPanel>
                     <NumericUpDown Width="300"
@@ -71,7 +70,7 @@
                                    Theme="{StaticResource OutlineNumericUpDown}" 
                                    ButtonSpinnerLocation="Left"
                                    Value="{Binding Path=Job.UpscaleFrameChunkSize}"
-                                   Minimum="0"
+                                   Minimum="1"
                                    />
                 </StackPanel>
             </StackPanel>
