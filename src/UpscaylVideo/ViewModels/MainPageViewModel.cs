@@ -50,7 +50,19 @@ public partial class MainPageViewModel : PageBase
         isFirstLoad = false;
         var config = AppConfiguration.Instance;
         TryFindFFmpegBinariesPath();
-        if ((string.IsNullOrWhiteSpace(config.FFmpegBinariesPath) && !TryFindFFmpegBinariesPath()) || string.IsNullOrWhiteSpace(config.UpscaylPath))
+        if ((string.IsNullOrWhiteSpace(config.FFmpegBinariesPath) && !TryFindFFmpegBinariesPath()))
+        {
+            Settings();
+            return;
+        }
+
+        if (!Directory.Exists(config.FFmpegBinariesPath))
+        {
+            Settings();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(config.UpscaylPath) || (!string.IsNullOrEmpty(config.UpscaylPath) && !Directory.Exists(config.UpscaylPath)))
         {
             Settings();
         }
@@ -127,9 +139,15 @@ public partial class MainPageViewModel : PageBase
     [RelayCommand(CanExecute = nameof(ReadyToRun))]
     private async Task Run()
     {
-        var job = new JobPageViewModel(Job);
-        PageManager.Instance.SetPage(job);
-        await job.RunAsync();
+        var config = AppConfiguration.Instance;
+        config.LastScale = Job.SelectedScale;
+        config.LastUpscaleFrameChunkSize = Job.UpscaleFrameChunkSize;
+
+        config.Save();
+        
+        var jobViewModel = new JobPageViewModel(Job);
+        PageManager.Instance.SetPage(jobViewModel);
+        await jobViewModel.RunAsync();
     }
 
     [RelayCommand]

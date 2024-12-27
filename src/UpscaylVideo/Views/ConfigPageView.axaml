@@ -22,7 +22,7 @@
     <TabControl Margin="8">
         <TabItem Header="Paths">
             <Grid ColumnDefinitions="Auto, *"
-                  RowDefinitions="Auto, Auto, Auto">
+                  RowDefinitions="Auto, Auto, Auto, Auto">
 
                 <Label Grid.Row="0"
                        Grid.Column="0"
@@ -50,11 +50,23 @@
                                 Command="{Binding Path=BrowseFFMpegCommand, Mode=OneWay}"/>
                     </TextBox.InnerRightContent>
                 </TextBox>
+                
+                <Label Grid.Row="2" Grid.Column="0" 
+                       Classes="form-label"
+                       Content="Temporary Working Folder:"/>
+                <TextBox Grid.Row="2" Grid.Column="1" 
+                         Text="{Binding Path=Configuration.TempWorkingFolder}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button" 
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseWorkingFolderCommand, Mode=OneTime}"/>
+                    </TextBox.InnerRightContent>
+                </TextBox>
             </Grid>
         </TabItem>
-        <TabItem Header="UI">
+        <!--<TabItem Header="UI">
 
-        </TabItem>
+        </TabItem>-->
     </TabControl>
 
 </UserControl>

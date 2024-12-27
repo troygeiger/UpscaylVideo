@@ -38,8 +38,15 @@ public partial class AppConfiguration : ObservableObject
     }
 
     public int LastScale { get; set; } = 4;
-    
-    public int LastClipSeconds { get; set; } = 30;
+
+    public int LastUpscaleFrameChunkSize { get; set; } = 1000;
+
+    private string? _tempWorkingFolder;
+    public string? TempWorkingFolder
+    {
+        get => _tempWorkingFolder;
+        set => SetProperty(ref _tempWorkingFolder, value);
+    }
     
     public void Save()
     {

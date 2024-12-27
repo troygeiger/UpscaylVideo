@@ -78,5 +78,15 @@ public partial class ConfigPageViewModel : PageBase
         
         Configuration.FFmpegBinariesPath = Uri.UnescapeDataString(result);
     }
+
+    [RelayCommand]
+    private async Task BrowseWorkingFolder()
+    {
+        var result = await BrowseFolder();
+        if (result is null)
+            return;
+
+        Configuration.TempWorkingFolder = Uri.UnescapeDataString(result);
+    }
     
 }

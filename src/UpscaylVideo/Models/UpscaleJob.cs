@@ -15,20 +15,21 @@ namespace UpscaylVideo.Models;
 
 public partial class UpscaleJob : ObservableObject
 {
+    private string? _previousVideoPath;
     [ObservableProperty] private string? _videoPath;
     [ObservableProperty] private FFProbeResult _videoDetails = new();
-    
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(OriginalDimension)), NotifyPropertyChangedFor(nameof(ScaledDimensions))] 
+
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(OriginalDimension)), NotifyPropertyChangedFor(nameof(ScaledDimensions))]
     private FFProbeStream? _videoStream;
+
     [ObservableProperty] private BindingList<string> _messages = new();
     [ObservableProperty] private bool _isLoaded;
-    [ObservableProperty] private int _clipSeconds = AppConfiguration.Instance.LastClipSeconds;
-    [ObservableProperty] private int _upscaleFrameChunkSize = 1000;
+    [ObservableProperty] private int _upscaleFrameChunkSize = AppConfiguration.Instance.LastUpscaleFrameChunkSize;
     [ObservableProperty] private string? _workingFolder;
-    
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(ScaledDimensions))] 
+
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(ScaledDimensions))]
     private int _selectedScale = AppConfiguration.Instance.LastScale;
-    
+
     [ObservableProperty] private AIModelOption? _selectedModel;
 
     public UpscaleJob()
@@ -37,17 +38,20 @@ public partial class UpscaleJob : ObservableObject
             .Subscribe(async void (p) =>
             {
                 await LoadVideoDetails();
-                if (string.IsNullOrWhiteSpace(WorkingFolder) && File.Exists(p.Value) && VideoStream is not null)
+                if (_previousVideoPath != p.Value && File.Exists(p.Value) && VideoStream is not null)
                 {
                     var fileName = Path.GetFileNameWithoutExtension(p.Value);
-                    var folder = Path.GetDirectoryName(p.Value);
+                    var folder = Directory.Exists(AppConfiguration.Instance.TempWorkingFolder)
+                        ? AppConfiguration.Instance.TempWorkingFolder
+                        : Path.GetDirectoryName(p.Value);
                     WorkingFolder = folder is null ? WorkingFolder : Path.Combine(folder, $"{fileName}_Working", string.Empty);
                 }
+
+                _previousVideoPath = p.Value;
             });
 
         this.WhenPropertyChanged(p => p.VideoStream)
             .Subscribe(stream => { IsLoaded = _videoStream is not null; });
-        
     }
 
     public string OriginalDimension =>
