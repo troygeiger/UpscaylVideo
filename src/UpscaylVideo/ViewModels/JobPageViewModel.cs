@@ -114,12 +114,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
         _elapsedStopwatch.Start();
         var stream = Job.VideoStream;
         TimeSpan duration = Job.VideoDetails.GetDuration();
-        TotalFrames = (long)Math.Round(duration.TotalSeconds * Job.VideoStream.CalcRFrameRate);
+        TotalFrames = (long)Math.Floor(duration.TotalSeconds * Job.VideoStream.CalcRFrameRate);
         var reportedNumberFrames = Job.VideoStream.CalcNbFrames;
         Stream? pngStream = null;
-        Stream? outVideoStream = null;
+        //Stream? outVideoStream = null;
         Process? inputProcess = null;
-        Process? outputProcess = null;
+        //Process? outputProcess = null;
         
 
         Task progressUpdateTask = Task.Run(() => UpdateProgress(_tokenSource.Token));
@@ -161,16 +161,20 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Status = "Upscaling frames..."; 
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcRFrameRate);
-            (outputProcess, outVideoStream) = FFMpeg.StartPngFramesToVideoPipe(upscaledVideoPath, Job.VideoStream.CalcRFrameRate);
+            //(outputProcess, outVideoStream) = FFMpeg.StartPngFramesToVideoPipe(upscaledVideoPath, Job.VideoStream.CalcRFrameRate);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcRFrameRate, _tokenSource.Token);
+            
+            pngVideo.Start();
 
             CanPause = true;
             _upscaleRuntimeStopwatch.Restart();
             long outFrameNumber = 0;
-            while (_tokenSource.Token.IsCancellationRequested == false && outputProcess.HasExited == false)
+            while (_tokenSource.Token.IsCancellationRequested == false && pngVideo.IsRunning)
             {
                 Status = "Clearing frames...";
                 await ClearFoldersAsync(framesFolder);
-                await ClearFoldersAsync(upscaleOutput);
+                string upscaleChunkFolder = Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
+                Directory.CreateDirectory(upscaleChunkFolder);
                 var shouldResume = false; var hasNewFrames = false;
                 for (int i = 0; i < Job.UpscaleFrameChunkSize; i++)
                 {
@@ -189,7 +193,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 do
                 {
                     Status = "Upscaling frames...";
-                    if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleOutput, _pauseTokenSource.Token) == false)
+                    if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, _pauseTokenSource.Token) == false)
                     {
                         return;
                     }
@@ -207,21 +211,24 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 } while (shouldResume && _tokenSource.Token.IsCancellationRequested == false);
 
                 _tokenSource.Token.ThrowIfCancellationRequested();
-                var frameFiles = await Task.Run(() => Directory.GetFiles(upscaleOutput, "*.png"));
+                
+                pngVideo.EnqueueFramePath(upscaleChunkFolder);
+                /*var frameFiles = await Task.Run(() => Directory.GetFiles(upscaleOutput, "*.png"));
                 Array.Sort(frameFiles);
 
                 foreach (var frameFile in frameFiles)
                 {
                     using var frameStream = File.OpenRead(frameFile);
                     await frameStream.CopyToAsync(outVideoStream, _tokenSource.Token);
-                }
+                }*/
                 
             }
             CanPause = false;
             _upscaleRuntimeStopwatch.Stop();
-            outVideoStream.Dispose();
+            //outVideoStream.Dispose();
             
-            await outputProcess.WaitForExitAsync(_tokenSource.Token);
+            //await outputProcess.WaitForExitAsync(_tokenSource.Token);
+            await pngVideo.CompleteAsync();
             
             if (_tokenSource.IsCancellationRequested)
                 return;
@@ -252,11 +259,11 @@ public partial class JobPageViewModel : PageBase, IDisposable
             _elapsedStopwatch.Stop();
             _upscaleRuntimeStopwatch.Reset();
             pngStream?.Dispose();
-            outVideoStream?.Dispose();
+            /*outVideoStream?.Dispose();
             if (outputProcess != null && !outputProcess.HasExited)
             {
                 outputProcess.Kill();
-            }
+            }*/
 
             if (inputProcess != null && !inputProcess.HasExited)
             {

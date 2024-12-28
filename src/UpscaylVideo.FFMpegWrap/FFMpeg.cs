@@ -226,32 +226,57 @@ public static class FFMpeg
             "-",
         ])
         {
-            RedirectStandardOutput = true
+            RedirectStandardOutput = true,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            CreateNoWindow = false,
         };
-        //ffstate.RedirectStandardError = true;
         var process = Process.Start(ffStart);
         if (process == null)
             throw new Exception("Unable to start FFMpeg");
         return (process, new BufferedStream(process.StandardOutput.BaseStream));
     }
 
-    public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(string outputFilePath, double framerate, FFMpegOptions? options = null)
+    public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(
+        string outputFilePath, 
+        double framerate,
+        FFMpegOptions? options = null, 
+        int? frameInterpolationFps = null)
     {
         var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
-        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options),[
+        List<string> args = new List<string>()
+        {
             "-y",
             "-framerate",
             strFramerate,
             "-f", "image2pipe",
             "-c:v", "png",
             "-i", "-",
-            "-r",
-            strFramerate,
-            "-vf", "format=yuv420p",
-            outputFilePath,
-        ])
+        };
+        List<string> formats = new(){"yuv420p"};
+
+        if (frameInterpolationFps.HasValue)
         {
-            RedirectStandardInput = true
+            formats.Add($"minterpolate='fps={frameInterpolationFps.Value}'");
+        }
+        else
+        {
+            args.AddRange([
+                "-r",
+                strFramerate,
+            ]);
+        }
+        
+        args.AddRange([
+            "-vf", $"format={string.Join(',', formats)}",
+            outputFilePath
+        ]);
+        
+        
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), args)
+        {
+            RedirectStandardInput = true,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            CreateNoWindow = false,
         };
         var process = Process.Start(ffStart);
         if (process == null)

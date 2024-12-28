@@ -43,7 +43,7 @@ public static class ConfigurationHelper
         var path = Path.Combine(_appDataFolder, $"{type.Name}.json");
         try
         {
-            using var stream = File.OpenWrite(path);
+            using var stream = File.Create(path);
             if (typeInfo is null)
                 JsonSerializer.Serialize(stream, value);
             else
