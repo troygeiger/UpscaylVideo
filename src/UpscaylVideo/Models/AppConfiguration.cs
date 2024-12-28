@@ -40,6 +40,8 @@ public partial class AppConfiguration : ObservableObject
     public int LastScale { get; set; } = 4;
 
     public int LastUpscaleFrameChunkSize { get; set; } = 1000;
+    
+    public string? LastModelUsed { get; set; }
 
     private string? _tempWorkingFolder;
     public string? TempWorkingFolder

@@ -147,7 +147,7 @@ public partial class MainPageViewModel : PageBase
         var config = AppConfiguration.Instance;
         config.LastScale = Job.SelectedScale;
         config.LastUpscaleFrameChunkSize = Job.UpscaleFrameChunkSize;
-
+        config.LastModelUsed = Job.SelectedModel?.Name;
         config.Save();
         
         var jobViewModel = new JobPageViewModel(Job);
@@ -159,6 +159,7 @@ public partial class MainPageViewModel : PageBase
     private void NewJob()
     {
         Job = new();
+        UpdateSelectedModel();
     }
     
     private void LoadModelOptions(string? upscaylPath)
@@ -178,5 +179,16 @@ public partial class MainPageViewModel : PageBase
         ModelOptions = bins.Select(f => Path.GetFileNameWithoutExtension(f) ?? string.Empty)
             .Select(f => new AIModelOption(f, f.ToUpperInvariant()))
             .ToArray();
+        
+        UpdateSelectedModel();
+    }
+
+    private void UpdateSelectedModel()
+    {
+        if (string.IsNullOrEmpty(AppConfiguration.Instance.LastModelUsed))
+            return;
+        if (Job.SelectedModel is not null)
+            return;
+        Job.SelectedModel = ModelOptions.FirstOrDefault(m => m.Name == AppConfiguration.Instance.LastModelUsed);
     }
 }
