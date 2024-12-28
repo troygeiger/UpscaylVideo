@@ -18,12 +18,12 @@ public class PngVideoHelper : IDisposable
     private readonly string _outputPath;
     private readonly double _framerate;
     private readonly CancellationToken _parentCancellationToken;
-    private readonly int? _frameInterpolationFps;
+    private readonly double? _frameInterpolationFps;
     private CancellationTokenSource _cancellationTokenSource;
     private CancellationToken _cancellationToken;
 
 
-    public PngVideoHelper(string outputPath, double framerate, CancellationToken parentCancellationToken, int? frameInterpolationFps = null)
+    public PngVideoHelper(string outputPath, double framerate, CancellationToken parentCancellationToken, double? frameInterpolationFps = null)
     {
         _outputPath = outputPath;
         _framerate = framerate;

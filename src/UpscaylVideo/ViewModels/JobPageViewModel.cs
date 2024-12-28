@@ -156,13 +156,9 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 return;
             }
 
-            
-            
-            Status = "Upscaling frames..."; 
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcRFrameRate);
-            //(outputProcess, outVideoStream) = FFMpeg.StartPngFramesToVideoPipe(upscaledVideoPath, Job.VideoStream.CalcRFrameRate);
-            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcRFrameRate, _tokenSource.Token);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcRFrameRate, _tokenSource.Token, Job.SelectedInterpolatedFps.FrameRate);
             
             pngVideo.Start();
 
@@ -213,21 +209,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 _tokenSource.Token.ThrowIfCancellationRequested();
                 
                 pngVideo.EnqueueFramePath(upscaleChunkFolder);
-                /*var frameFiles = await Task.Run(() => Directory.GetFiles(upscaleOutput, "*.png"));
-                Array.Sort(frameFiles);
-
-                foreach (var frameFile in frameFiles)
-                {
-                    using var frameStream = File.OpenRead(frameFile);
-                    await frameStream.CopyToAsync(outVideoStream, _tokenSource.Token);
-                }*/
-                
+              
             }
             CanPause = false;
             _upscaleRuntimeStopwatch.Stop();
-            //outVideoStream.Dispose();
-            
-            //await outputProcess.WaitForExitAsync(_tokenSource.Token);
+
+            Status = "Finishing video generation...";
             await pngVideo.CompleteAsync();
             
             if (_tokenSource.IsCancellationRequested)
@@ -259,11 +246,9 @@ public partial class JobPageViewModel : PageBase, IDisposable
             _elapsedStopwatch.Stop();
             _upscaleRuntimeStopwatch.Reset();
             pngStream?.Dispose();
-            /*outVideoStream?.Dispose();
-            if (outputProcess != null && !outputProcess.HasExited)
-            {
-                outputProcess.Kill();
-            }*/
+            
+            if (string.IsNullOrEmpty(DialogMessage))
+                DialogMessage = "Processing did not complete successfully!";
 
             if (inputProcess != null && !inputProcess.HasExited)
             {

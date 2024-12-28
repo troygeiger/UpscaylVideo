@@ -29,7 +29,7 @@ public partial class UpscaleJob : ObservableObject
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ScaledDimensions))]
     private int _selectedScale = AppConfiguration.Instance.LastScale;
-
+    [ObservableProperty] private InterpolatedFps _selectedInterpolatedFps;
     [ObservableProperty] private AIModelOption? _selectedModel;
 
     public UpscaleJob()
@@ -52,6 +52,31 @@ public partial class UpscaleJob : ObservableObject
 
         this.WhenPropertyChanged(p => p.VideoStream)
             .Subscribe(stream => { IsLoaded = _videoStream is not null; });
+        
+        InterpolatedFpsOptions =
+        [
+            new(null, "No Interpolation (Same as source)"),
+            new(5),
+            new(10),
+            new(12),
+            new(15),
+            new(20),
+            new(23.976, "23.976 (NTSC Film)"),
+            new(24),
+            new(25, "25 (PAL Film/Video)"),
+            new(29.97, "29.97 (NTSC Video)"),
+            new(30),
+            new(48),
+            new(50),
+            new (59.94),
+            new(60),
+            new(72),
+            new(75),
+            new (90),
+            new(100),
+            new (120)
+        ];
+        SelectedInterpolatedFps = InterpolatedFpsOptions.First(i => !i.FrameRate.HasValue);
     }
 
     public string OriginalDimension =>
@@ -60,6 +85,8 @@ public partial class UpscaleJob : ObservableObject
     public string ScaledDimensions =>
         VideoStream is null ? string.Empty : $"{(VideoStream.Width * SelectedScale)} x {(VideoStream.Height * SelectedScale)}";
 
+    public IEnumerable<InterpolatedFps> InterpolatedFpsOptions { get; }
+    
     private async Task LoadVideoDetails()
     {
         VideoStream = null;

@@ -240,7 +240,7 @@ public static class FFMpeg
         string outputFilePath, 
         double framerate,
         FFMpegOptions? options = null, 
-        int? frameInterpolationFps = null)
+        double? frameInterpolationFps = null)
     {
         var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
         List<string> args = new List<string>()
@@ -256,7 +256,7 @@ public static class FFMpeg
 
         if (frameInterpolationFps.HasValue)
         {
-            formats.Add($"minterpolate='fps={frameInterpolationFps.Value}'");
+            formats.Add($"minterpolate='fps={frameInterpolationFps.Value.ToString(CultureInfo.InvariantCulture)}'");
         }
         else
         {

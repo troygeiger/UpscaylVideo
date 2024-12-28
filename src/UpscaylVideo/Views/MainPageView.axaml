@@ -73,12 +73,22 @@
                                    Minimum="1"
                                    />
                 </StackPanel>
+                
+                <ComboBox Width="300"
+                          HorizontalAlignment="Left"
+                          Theme="{StaticResource MaterialOutlineComboBox}"
+                          p1:ComboBoxAssist.Label="Interpolated FPS"
+                          SelectedValue="{Binding Path=Job.SelectedInterpolatedFps}"
+                          ItemsSource="{Binding Path=Job.InterpolatedFpsOptions, Mode=OneWay}"
+                          DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}">
+                    
+                </ComboBox>
             </StackPanel>
             <controls:Card Grid.Column="1"
                            Margin="4"
                            IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}">
                 <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto">
+                      RowDefinitions="Auto, Auto, Auto, Auto, Auto">
                     <Label Classes="form-label"
                         Content="Frame Count:" />
                     <TextBlock Grid.Column="1" 
@@ -112,6 +122,15 @@
                                Grid.Column="1"
                                VerticalAlignment="Center"
                                Text="{Binding Path=Job.VideoStream.Duration, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                    
+                    <Label Grid.Row="4"
+                           Grid.Column="0"
+                           Classes="form-label"
+                           Content="Framerate:"/>
+                    <TextBlock Grid.Row="4"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Text="{Binding Path=Job.VideoStream.CalcRFrameRate, Mode=OneWay, FallbackValue='Not Loaded'}"/>
                 </Grid>
             </controls:Card>
 

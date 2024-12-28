@@ -19,6 +19,7 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private IEnumerable<AIModelOption> _modelOptions = [];
     [ObservableProperty] private UpscaleJob _job = new();
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
+    
 
     public MainPageViewModel()
     {
@@ -38,7 +39,11 @@ public partial class MainPageViewModel : PageBase
             .Subscribe(p => CheckReadyToRun());
         AppConfiguration.Instance.WhenPropertyChanged(p => p.UpscaylPath)
             .Subscribe(p => LoadModelOptions(p.Value));
+
+        
     }
+    
+    
 
     public override void OnAppearing()
     {
