@@ -54,9 +54,9 @@
 
             <TextBlock Text="{Binding Path=DspElapsedTime, StringFormat='Elapsed: {0}', Mode=OneWay}" />
 
-            <TextBlock Text="{Binding Path=CompletedFrames, StringFormat='Completed Frames: {0}', Mode=OneWay}" />
+            <TextBlock Text="{Binding Path=CompletedFrames, StringFormat='Completed Frames: {0:N0}', Mode=OneWay}" />
 
-            <TextBlock Text="{Binding Path=TotalFrames, StringFormat='Total Frames: {0}', Mode=OneWay}" />
+            <TextBlock Text="{Binding Path=TotalFrames, StringFormat='Total Frames: {0:N0}', Mode=OneWay}" />
         </StackPanel>
     </dialogHost:DialogHost>
 </UserControl>

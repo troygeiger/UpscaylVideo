@@ -169,6 +169,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             {
                 Status = "Clearing frames...";
                 await ClearFoldersAsync(framesFolder);
+                Status = "Extracting next batch of frames...";
                 string upscaleChunkFolder = Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
                 Directory.CreateDirectory(upscaleChunkFolder);
                 var shouldResume = false; var hasNewFrames = false;
