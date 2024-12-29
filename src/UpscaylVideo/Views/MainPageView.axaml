@@ -83,6 +83,14 @@
                           DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}">
                     
                 </ComboBox>
+                
+                <TextBox p1:TextFieldAssist.Label="Gpu #(Blank for auto or comma separated for multiple)"
+                         UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                         Text="{Binding Path=GpuNumberList}"
+                         HorizontalAlignment="Left"
+                         />
+                
+                
             </StackPanel>
             <controls:Card Grid.Column="1"
                            Margin="4"

@@ -36,10 +36,20 @@ public partial class AppConfiguration : ObservableObject
             OnPropertyChanged(nameof(FFmpegBinariesPath));  
         } 
     }
+    
+    private int[] _gpuNumbers = [];
+
+    public int[] GpuNumbers
+    {
+        get => _gpuNumbers;
+        set => SetProperty(ref _gpuNumbers, value);
+    }
 
     public int LastScale { get; set; } = 4;
 
     public int LastUpscaleFrameChunkSize { get; set; } = 1000;
+    
+    
     
     public string? LastModelUsed { get; set; }
 
@@ -49,6 +59,8 @@ public partial class AppConfiguration : ObservableObject
         get => _tempWorkingFolder;
         set => SetProperty(ref _tempWorkingFolder, value);
     }
+    
+    
     
     public void Save()
     {

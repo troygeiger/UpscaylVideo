@@ -19,6 +19,7 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private IEnumerable<AIModelOption> _modelOptions = [];
     [ObservableProperty] private UpscaleJob _job = new();
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
+    [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
     
 
     public MainPageViewModel()
@@ -40,7 +41,31 @@ public partial class MainPageViewModel : PageBase
         AppConfiguration.Instance.WhenPropertyChanged(p => p.UpscaylPath)
             .Subscribe(p => LoadModelOptions(p.Value));
 
-        
+        this.WhenPropertyChanged(p => GpuNumberList, false)
+            .Subscribe(p =>
+            {
+                if (string.IsNullOrWhiteSpace(p.Value))
+                {
+                    Job.GpuNumber = [];
+                    return;
+                }
+                bool anyInvalid = false;
+                var numberStrings = p.Value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                List<int> results = new(numberStrings.Length);
+                foreach (var numStr in numberStrings)
+                {
+                    if (int.TryParse(numStr, out var value))
+                    {
+                        results.Add(value);
+                        continue;
+                    }
+                    anyInvalid = true;
+                }
+                if (anyInvalid)
+                    throw new ArgumentException("Invalid number string");
+                Job.GpuNumber = results.ToArray();
+                
+            });
     }
     
     
@@ -148,6 +173,7 @@ public partial class MainPageViewModel : PageBase
         config.LastScale = Job.SelectedScale;
         config.LastUpscaleFrameChunkSize = Job.UpscaleFrameChunkSize;
         config.LastModelUsed = Job.SelectedModel?.Name;
+        config.GpuNumbers = Job.GpuNumber;
         config.Save();
         
         var jobViewModel = new JobPageViewModel(Job);

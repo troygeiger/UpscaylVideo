@@ -189,7 +189,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 do
                 {
                     Status = "Upscaling frames...";
-                    if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, _pauseTokenSource.Token) == false)
+                    if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, Job.GpuNumber, _pauseTokenSource.Token) == false)
                     {
                         return;
                     }
@@ -347,25 +347,33 @@ public partial class JobPageViewModel : PageBase, IDisposable
         }
     }
 
-    private async Task<bool> RunUpscayl(string upscaylBinPath, string modelsPath, string framesFolder, string upscaledFolder,
+    private async Task<bool> RunUpscayl(string upscaylBinPath, string modelsPath, string framesFolder, string upscaledFolder, int[] gpuNumbers,
         CancellationToken cancellationToken)
     {
         _upscaleFrameStopwatch.Restart();
         try
         {
+            var args = new List<string>([
+                "-i",
+                framesFolder,
+                "-o",
+                upscaledFolder,
+                "-s",
+                Job.SelectedScale.ToString(),
+                "-m",
+                modelsPath,
+                "-n",
+                Job.SelectedModel?.Name ?? string.Empty,
+            ]);
+
+            if (gpuNumbers.Any())
+            {
+                args.AddRange(["-g", string.Join(',', gpuNumbers)]);
+            }
+            
+            
             var cmd = Cli.Wrap(upscaylBinPath)
-                .WithArguments([
-                    "-i",
-                    framesFolder,
-                    "-o",
-                    upscaledFolder,
-                    "-s",
-                    Job.SelectedScale.ToString(),
-                    "-m",
-                    modelsPath,
-                    "-n",
-                    Job.SelectedModel?.Name ?? string.Empty,
-                ])
+                .WithArguments(args)
                 .WithValidation(CommandResultValidation.None)
                 .WithStandardErrorPipe(PipeTarget.ToDelegate(line =>
                 {

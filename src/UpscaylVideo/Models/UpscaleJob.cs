@@ -31,6 +31,7 @@ public partial class UpscaleJob : ObservableObject
     private int _selectedScale = AppConfiguration.Instance.LastScale;
     [ObservableProperty] private InterpolatedFps _selectedInterpolatedFps;
     [ObservableProperty] private AIModelOption? _selectedModel;
+    [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
 
     public UpscaleJob()
     {
