@@ -114,7 +114,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
         _elapsedStopwatch.Start();
         var stream = Job.VideoStream;
         TimeSpan duration = Job.VideoDetails.GetDuration();
-        TotalFrames = (long)Math.Floor(duration.TotalSeconds * Job.VideoStream.CalcRFrameRate);
+        TotalFrames = (long)Math.Floor(duration.TotalSeconds * Job.VideoStream.CalcAvgFrameRate);
         var reportedNumberFrames = Job.VideoStream.CalcNbFrames;
         Stream? pngStream = null;
         //Stream? outVideoStream = null;
@@ -157,10 +157,10 @@ public partial class JobPageViewModel : PageBase, IDisposable
             }
 
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
-            (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcRFrameRate);
-            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcRFrameRate, _tokenSource.Token, Job.SelectedInterpolatedFps.FrameRate);
+            (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcAvgFrameRate);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, _tokenSource.Token, Job.SelectedInterpolatedFps.FrameRate);
             
-            pngVideo.Start();
+            await pngVideo.StartAsync();
 
             CanPause = true;
             _upscaleRuntimeStopwatch.Restart();
@@ -189,6 +189,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
                 do
                 {
+                    shouldResume = false;
                     Status = "Upscaling frames...";
                     if (await RunUpscayl(upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, Job.GpuNumber, _pauseTokenSource.Token) == false)
                     {
@@ -198,8 +199,8 @@ public partial class JobPageViewModel : PageBase, IDisposable
                     if (IsPaused && _tokenSource.Token.IsCancellationRequested == false)
                     {
                         Status = "Paused";
-                        ClearCompletedUpscaled(framesFolder, upscaleOutput);
                         await WaitUntilUnpaused(_tokenSource.Token);
+                        ClearCompletedUpscaled(framesFolder, upscaleChunkFolder);
                         _pauseTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
                         shouldResume = true;
                         
@@ -220,7 +221,20 @@ public partial class JobPageViewModel : PageBase, IDisposable
             
             if (_tokenSource.IsCancellationRequested)
                 return;
-            
+
+            if (RegexHelper.AspectRatioRegex.IsMatch(Job.VideoStream.DisplayAspectRatio))
+            {
+                Status = "Updating aspect ratio...";
+                string aspect = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-aspect{extension}");
+
+                if (await FFMpeg.CopyWithAspectRatio(upscaledVideoPath, aspect, Job.VideoStream.DisplayAspectRatio, null, _tokenSource.Token) ==
+                    false)
+                {
+                    return;
+                }
+
+                upscaledVideoPath = aspect;
+            }
             
             Status = "Generating final video file...";
             string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled{extension}");
@@ -385,7 +399,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
                         _upscaleFrameStopwatch.Restart();
                     }
 
-                    var match = GlobalRegex.UpscaylPercent().Match(line);
+                    var match = RegexHelper.UpscaylPercent.Match(line);
                     if (!match.Success)
                     {
                         Console.WriteLine(line);

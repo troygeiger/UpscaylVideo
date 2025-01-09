@@ -10,8 +10,6 @@ namespace UpscaylVideo.FFMpegWrap;
 
 public static class FFMpeg
 {
-    
-    
     public static Task<bool> ExtractFrames(
         string inputFilePath,
         string outputFilePath,
@@ -41,15 +39,18 @@ public static class FFMpeg
         {
             args.AddRange(["-ss", start.Value.ToString()]);
         }
+
         if (end.HasValue)
         {
             args.AddRange(["-ss", end.Value.ToString()]);
         }
+
         args.AddRange(["-i", inputFilePath]);
         if (framerate.HasValue)
         {
             args.AddRange(["-r", framerate.Value.ToString(CultureInfo.InvariantCulture)]);
         }
+
         args.AddRange([
             "-progress",
             "pipe:1",
@@ -153,13 +154,14 @@ public static class FFMpeg
                 "-map", $"0:{stream.Index}"
             ]);
         }
+
         args.AddRange([
             "-c", "copy",
             "-progress",
             "pipe:1",
             outputFilePath,
         ]);
-        
+
         var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
             .WithArguments(args)
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
@@ -202,12 +204,13 @@ public static class FFMpeg
         {
             args.AddRange(["-i", inputFilePath,]);
         }
+
         args.AddRange([
             "-c", "copy",
             "-progress", "pipe:1",
             outputFilePath,
         ]);
-        
+
         var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
             .WithArguments(args)
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
@@ -215,7 +218,7 @@ public static class FFMpeg
         return result.ExitCode == 0;
     }
 
-    public static (Process ffProcess, Stream stdOutStream)  StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
+    public static (Process ffProcess, Stream stdOutStream) StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
     {
         ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
             "-i",
@@ -237,9 +240,9 @@ public static class FFMpeg
     }
 
     public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(
-        string outputFilePath, 
+        string outputFilePath,
         double framerate,
-        FFMpegOptions? options = null, 
+        FFMpegOptions? options = null,
         double? frameInterpolationFps = null)
     {
         var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
@@ -252,7 +255,7 @@ public static class FFMpeg
             "-c:v", "png",
             "-i", "-",
         };
-        List<string> formats = new(){"yuv420p"};
+        List<string> formats = new() { "yuv420p" };
 
         if (frameInterpolationFps.HasValue)
         {
@@ -265,13 +268,13 @@ public static class FFMpeg
                 strFramerate,
             ]);
         }
-        
+
         args.AddRange([
             "-vf", $"format={string.Join(',', formats)}",
             outputFilePath
         ]);
-        
-        
+
+
         ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), args)
         {
             RedirectStandardInput = true,
@@ -282,5 +285,28 @@ public static class FFMpeg
         if (process == null)
             throw new Exception("Unable to start FFMpeg");
         return (process, process.StandardInput.BaseStream);
+    }
+
+    public static async Task<bool> CopyWithAspectRatio(
+        string inputFilePath,
+        string outputFilePath,
+        string aspectRatioValue,
+        FFMpegOptions? options = null,
+        CancellationToken cancellationToken = default,
+        Action<string>? progressAction = null)
+    {
+        var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
+            .WithArguments([
+                "-i",
+                inputFilePath,
+                "-aspect",
+                aspectRatioValue,
+                "-progress",
+                "pipe:1",
+                outputFilePath,
+            ])
+            .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
+        var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
+        return result.ExitCode == 0;
     }
 }

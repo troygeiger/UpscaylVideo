@@ -6,15 +6,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UpscaylVideo.FFMpegWrap;
+using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.Helpers;
 
 public class PngVideoHelper : IDisposable
 {
     private Process? _ffmpegProcess;
-    private Task _ffmpegProcessTask = Task.CompletedTask;
+    private Thread? _ffmpegProcessTask;
     private Queue<string> _frameQueue = new();
     private bool _isRuning = false;
+    private bool _shouldStop = false;
     private readonly string _outputPath;
     private readonly double _framerate;
     private readonly CancellationToken _parentCancellationToken;
@@ -45,17 +47,22 @@ public class PngVideoHelper : IDisposable
         _frameQueue.Enqueue(framePath);
     }
 
-    public void Start()
+    public async Task StartAsync()
     {
         if (_isRuning)
             return;
-        _isRuning = true;
-        _ffmpegProcessTask = QueueRunner();
+        ThreadPool.QueueUserWorkItem(QueueRunner);
+        var delayToken = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        while (!_isRuning)
+        {
+            await Task.Delay(100, delayToken.Token).ConfigureAwait(false);
+        }
     }
 
-    private async Task QueueRunner()
+    private void QueueRunner(object? state)
     {
-        (var ffProcess, var ffmpegStream) = FFMpeg.StartPngFramesToVideoPipe(_outputPath, _framerate, null, _frameInterpolationFps);
+        _isRuning = true;
+        (var ffProcess, var ffmpegStream) = FFMpeg.StartPngFramesToVideoPipe(_outputPath, Framerate, null, _frameInterpolationFps);
 
         try
         {
@@ -65,19 +72,21 @@ public class PngVideoHelper : IDisposable
                 {
                     AddFrames(path, ffmpegStream);
                 }
-                
-                if (_isRuning == false && !_frameQueue.Any())
+
+                if (_shouldStop && !_frameQueue.Any())
                     break;
 
-                await TaskHelpers.Wait(1000, _cancellationToken);
+                Thread.Sleep(1000);
             }
         }
         catch (OperationCanceledException)
         {
             // Ignore cancellation
         }
+
         ffmpegStream.Dispose();
-        await ffProcess.WaitForExitAsync(_cancellationToken);
+        
+        ffProcess.WaitForExit();
         _isRuning = false;
     }
 
@@ -91,17 +100,18 @@ public class PngVideoHelper : IDisposable
             using var frameStream = File.OpenRead(frameFile);
             frameStream.CopyTo(outVideoStream);
         }
-        
+
         Directory.Delete(framePath, true);
     }
 
     public async Task CompleteAsync()
     {
-        _isRuning = false;
-        await _ffmpegProcessTask.ConfigureAwait(false);
+        _shouldStop = true;
+        while (_isRuning)
+        {
+            await TaskHelpers.Wait(500, _cancellationToken);
+        }
     }
-
-    public Task WaitForCompleteAsync() => _ffmpegProcessTask;
 
     public void Dispose()
     {

@@ -74,7 +74,7 @@
                                    />
                 </StackPanel>
                 
-                <ComboBox Width="300"
+                <!--<ComboBox Width="300"
                           HorizontalAlignment="Left"
                           Theme="{StaticResource MaterialOutlineComboBox}"
                           p1:ComboBoxAssist.Label="Interpolated FPS"
@@ -82,7 +82,7 @@
                           ItemsSource="{Binding Path=Job.InterpolatedFpsOptions, Mode=OneWay}"
                           DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}">
                     
-                </ComboBox>
+                </ComboBox>-->
                 
                 <TextBox p1:TextFieldAssist.Label="Gpu #(Blank for auto or comma separated for multiple)"
                          UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
@@ -138,7 +138,7 @@
                     <TextBlock Grid.Row="4"
                                Grid.Column="1"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoStream.CalcRFrameRate, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                               Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue='Not Loaded'}"/>
                 </Grid>
             </controls:Card>
 
