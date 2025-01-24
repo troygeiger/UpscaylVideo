@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UpscaylVideo.FFMpegWrap.Models.Converters;
 
 namespace UpscaylVideo.FFMpegWrap.Models.Probe;
 
@@ -23,10 +24,16 @@ public class Format
     public string FormatLongName { get; set; }
 
     [JsonPropertyName("start_time")]
-    public TimeSpan StartTime { get; set; }
+    [JsonConverter(typeof(StringToDoubleConverter))]
+    public double StartTimeDouble { get; set; }
+    
+    public TimeSpan StartTime => TimeSpan.FromSeconds(StartTimeDouble);
 
     [JsonPropertyName("duration")]
-    public TimeSpan Duration { get; set; }
+    [JsonConverter(typeof(StringToDoubleConverter))]
+    public double DurationDouble { get; set; }
+    
+    public TimeSpan Duration => TimeSpan.FromSeconds(DurationDouble);
 
     [JsonPropertyName("size")]
     [JsonConverter(typeof(Converters.StringToIntConverter))]

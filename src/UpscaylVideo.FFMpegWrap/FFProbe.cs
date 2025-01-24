@@ -15,7 +15,7 @@ public static class FFProbe
                 "-print_format",
                 "json",
                 "-show_format",
-                "-sexagesimal",
+                //"-sexagesimal",
                 "-show_streams",
                 mediaPath
             ]);

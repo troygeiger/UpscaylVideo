@@ -129,7 +129,7 @@
                     <TextBlock Grid.Row="3"
                                Grid.Column="1"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoStream.Duration, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                               Text="{Binding Path=Job.VideoDetails.Format.Duration, Mode=OneWay, FallbackValue='Not Loaded'}"/>
                     
                     <Label Grid.Row="4"
                            Grid.Column="0"

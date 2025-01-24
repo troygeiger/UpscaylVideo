@@ -88,7 +88,7 @@ public class FFProbeStream
     public string? NalLengthSize { get; set; }
 
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string? Id { get; set; }
 
     [JsonPropertyName("r_frame_rate")] public string RFrameRate { get; set; } = string.Empty;
     
@@ -108,13 +108,17 @@ public class FFProbeStream
     public int StartPts { get; set; }
 
     [JsonPropertyName("start_time")]
-    public TimeSpan StartTime { get; set; }
+    [JsonConverter(typeof(StringToDoubleConverter))]
+    public double StartTime { get; set; }
 
     [JsonPropertyName("duration_ts")]
     public int DurationTs { get; set; }
 
     [JsonPropertyName("duration")]
-    public TimeSpan Duration { get; set; }
+    [JsonConverter(typeof(StringToDoubleConverter))]
+    public double DurationDouble { get; set; }
+    
+    public TimeSpan Duration => TimeSpan.FromSeconds(DurationDouble);
 
     [JsonPropertyName("bit_rate")]
     [JsonConverter(typeof(StringToIntConverter))]
