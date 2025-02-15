@@ -217,6 +217,32 @@ public static class FFMpeg
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         return result.ExitCode == 0;
     }
+    
+    public static async Task<bool> MergeFiles(
+        string videoFile,
+        string audioFile,
+        string metadataFile,
+        string outputFilePath,
+        FFMpegOptions? options = null,
+        CancellationToken cancellationToken = default,
+        Action<string>? progressAction = null)
+    {
+        var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
+            .WithArguments([
+                "-y",
+                "-i", videoFile,
+                "-i", audioFile,
+                "-i", metadataFile,
+                "-map", "0:v",
+                "-map", "1:a",
+                "-c", "copy",
+                "-progress", "pipe:1",
+                outputFilePath
+            ])
+            .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
+        var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
+        return result.ExitCode == 0;
+    }
 
     public static (Process ffProcess, Stream stdOutStream) StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
     {

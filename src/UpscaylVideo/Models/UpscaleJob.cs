@@ -32,6 +32,7 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private InterpolatedFps _selectedInterpolatedFps;
     [ObservableProperty] private AIModelOption? _selectedModel;
     [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
+    [ObservableProperty] private bool _deleteWorkingFolderWhenCompleted = true;
 
     public UpscaleJob()
     {

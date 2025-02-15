@@ -138,7 +138,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
            
 
-            var audioFile = Path.Combine(Job.WorkingFolder, $"Audio.{extension}");
+            var audioFile = Path.Combine(Job.WorkingFolder, $"Audio{extension}");
             var metadataFile = Path.Combine(Job.WorkingFolder, $"Metadata.ffmeta");
             Status = "Extracting audio...";
             if (await FFMpeg.CopyStreams(Job.VideoPath,
@@ -239,9 +239,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Status = "Generating final video file...";
             string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled{extension}");
 
-            await FFMpeg.MergeFiles([upscaledVideoPath, audioFile, metadataFile], final, cancellationToken: _tokenSource.Token);
+            await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: _tokenSource.Token);
 
-            Directory.Delete(Job.WorkingFolder, true);
+            if (Job.DeleteWorkingFolderWhenCompleted)
+            {
+                Directory.Delete(Job.WorkingFolder, true);
+            }
             DialogMessage = "Upscale Completed!";
         }
         catch (OperationCanceledException)

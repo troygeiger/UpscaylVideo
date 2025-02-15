@@ -90,6 +90,7 @@
                          HorizontalAlignment="Left"
                          />
                 
+                <CheckBox IsChecked="{Binding Job.DeleteWorkingFolderWhenCompleted}">Delete working folder when completed?</CheckBox>
                 
             </StackPanel>
             <controls:Card Grid.Column="1"
@@ -139,6 +140,8 @@
                                Grid.Column="1"
                                VerticalAlignment="Center"
                                Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                    
+                    
                 </Grid>
             </controls:Card>
 
