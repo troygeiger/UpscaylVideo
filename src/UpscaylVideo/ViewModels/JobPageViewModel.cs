@@ -222,20 +222,6 @@ public partial class JobPageViewModel : PageBase, IDisposable
             if (_tokenSource.IsCancellationRequested)
                 return;
 
-            if (RegexHelper.AspectRatioRegex.IsMatch(Job.VideoStream.DisplayAspectRatio))
-            {
-                Status = "Updating aspect ratio...";
-                string aspect = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-aspect{extension}");
-
-                if (await FFMpeg.CopyWithAspectRatio(upscaledVideoPath, aspect, Job.VideoStream.DisplayAspectRatio, null, _tokenSource.Token) ==
-                    false)
-                {
-                    return;
-                }
-
-                upscaledVideoPath = aspect;
-            }
-            
             Status = "Generating final video file...";
             string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled{extension}");
 

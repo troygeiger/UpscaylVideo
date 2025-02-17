@@ -250,6 +250,8 @@ public static class FFMpeg
             "-i",
             inputFilePath,
             "-r", framerate.ToString(CultureInfo.InvariantCulture),
+            "-vf",
+            "scale='max(iw,iw*sar)':'max(ih,ih/sar)'",
             "-c:v",
             "png", "-f", "image2pipe",
             "-",
