@@ -22,6 +22,7 @@
                   Margin="8"
                   IsReadOnly="True">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
                 <DataGridTextColumn Header="Video Path" Binding="{Binding VideoPath}" Width="3*"/>
                 <DataGridTextColumn Header="Model" Binding="{Binding SelectedModel.Name}" Width="*"/>
                 <DataGridTextColumn Header="Scale" Binding="{Binding SelectedScale}" Width="*"/>

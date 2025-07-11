@@ -27,6 +27,7 @@ public partial class JobQueueService : ObservableObject
     [ObservableProperty] private TimeSpan? _avgFrameRate;
     [ObservableProperty] private TimeSpan? _eta;
     [ObservableProperty] private TimeSpan _elapsedTime = TimeSpan.Zero;
+    [ObservableProperty] private string _statusMessage = string.Empty;
     private CancellationTokenSource? _cancellationTokenSource;
     private Task? _processingTask;
 
@@ -95,12 +96,23 @@ public partial class JobQueueService : ObservableObject
             while (index < JobQueue.Count)
             {
                 var job = JobQueue[index];
+                if (job.Status != UpscaleJobStatus.Queued)
+                {
+                    index++;
+                    continue;
+                }
                 CurrentJob = job;
+                job.Status = UpscaleJobStatus.Running;
                 await RunJobAsync(job, _cancellationTokenSource.Token);
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
+                    job.Status = UpscaleJobStatus.Queued;
                     // Do not remove current job, just stop processing
                     break;
+                }
+                else
+                {
+                    job.Status = UpscaleJobStatus.Completed;
                 }
                 // Only remove if not cancelled
                 index++;
@@ -114,6 +126,7 @@ public partial class JobQueueService : ObservableObject
             if (JobQueue.Count == 0 || (JobQueue.Count == 1 && JobQueue[0] == CurrentJob))
                 ShowProgressPanel = false;
             OverallProgress = 0;
+            CurrentJob = null;
         }
     }
 
@@ -127,27 +140,41 @@ public partial class JobQueueService : ObservableObject
         var elapsedStopwatch = new System.Diagnostics.Stopwatch();
         var upscaleFrameStopwatch = new System.Diagnostics.Stopwatch();
         var upscaleRuntimeStopwatch = new System.Diagnostics.Stopwatch();
-        string status = string.Empty;
         System.Diagnostics.Process? inputProcess = null;
         try
         {
             if (!System.IO.File.Exists(job.VideoPath) || job.VideoStream is null || job.WorkingFolder is null)
+            {
+                StatusMessage = "Input video or working folder missing.";
                 return;
+            }
             if (!System.IO.Directory.Exists(AppConfiguration.Instance.UpscaylPath))
+            {
+                StatusMessage = "Upscayl path not found.";
                 return;
+            }
 
             string upscaylBin = System.IO.Path.Combine(AppConfiguration.Instance.UpscaylPath, "resources", "bin",
                 OperatingSystem.IsWindows() ? "upscayl-bin.exe" : "upscayl-bin");
             if (!System.IO.File.Exists(upscaylBin))
+            {
+                StatusMessage = "Upscayl binary not found.";
                 return;
+            }
 
             string modelsPath = System.IO.Path.Combine(AppConfiguration.Instance.UpscaylPath, "resources", "models");
             if (!System.IO.Directory.Exists(modelsPath))
+            {
+                StatusMessage = "Upscayl models folder not found.";
                 return;
+            }
 
             var srcVideoFolder = System.IO.Path.GetDirectoryName(job.VideoPath);
             if (srcVideoFolder == null)
+            {
+                StatusMessage = "Source video folder not found.";
                 return;
+            }
 
             elapsedStopwatch.Start();
             Task? progressUpdateTask = null;
@@ -165,15 +192,21 @@ public partial class JobQueueService : ObservableObject
             System.IO.Directory.CreateDirectory(framesFolder);
             System.IO.Directory.CreateDirectory(upscaleOutput);
             if (string.IsNullOrWhiteSpace(job.OutputFilePath))
+            {
+                StatusMessage = "Output file path is empty.";
                 return;
+            }
             string final = job.OutputFilePath;
             var audioFile = System.IO.Path.Combine(job.WorkingFolder, $"Audio{extension}");
             var metadataFile = System.IO.Path.Combine(job.WorkingFolder, $"Metadata.ffmeta");
             // Extract audio
+            StatusMessage = "Extracting audio...";
             await FFMpeg.CopyStreams(job.VideoPath, audioFile, job.VideoDetails.Streams.Where(d => d.CodecType != "video" && d.CodecName != "dvd_subtitle" && d.CodecName != "bin_data"), cancellationToken: cancellationToken);
             // Extract chapter metadata
+            StatusMessage = "Extracting chapter metadata...";
             await FFMpeg.ExtractFFMetadata(job.VideoPath, metadataFile, cancellationToken: cancellationToken);
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder, $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
+            
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate);
             using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, cancellationToken, job.SelectedInterpolatedFps.FrameRate);
             await pngVideo.StartAsync();
@@ -181,6 +214,7 @@ public partial class JobQueueService : ObservableObject
             long outFrameNumber = 0;
             while (!cancellationToken.IsCancellationRequested && pngVideo.IsRunning)
             {
+                StatusMessage = "Extracting frames...";
                 await Task.Run(() => ClearFolders(framesFolder));
                 string upscaleChunkFolder = System.IO.Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
                 System.IO.Directory.CreateDirectory(upscaleChunkFolder);
@@ -200,8 +234,10 @@ public partial class JobQueueService : ObservableObject
                 do
                 {
                     shouldResume = false;
+                    StatusMessage = "Upscaling frames...";
                     if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, job.GpuNumber, cancellationToken) == false)
                     {
+                        StatusMessage = "Upscaling cancelled or failed.";
                         return;
                     }
                 } while (shouldResume && !cancellationToken.IsCancellationRequested);
@@ -211,19 +247,27 @@ public partial class JobQueueService : ObservableObject
             upscaleRuntimeStopwatch.Stop();
             await pngVideo.CompleteAsync();
             if (cancellationToken.IsCancellationRequested)
+            {
+                StatusMessage = "Job cancelled.";
                 return;
+            }
+            StatusMessage = "Merging video and audio...";
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: cancellationToken);
             if (job.DeleteWorkingFolderWhenCompleted)
             {
+                StatusMessage = "Cleaning up...";
                 System.IO.Directory.Delete(job.WorkingFolder, true);
             }
+            StatusMessage = "Job completed.";
         }
         catch (OperationCanceledException)
         {
+            StatusMessage = "Job cancelled.";
             // Silently catch cancellation
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            StatusMessage = $"Error: {ex.Message}";
             // Silently catch all other exceptions
         }
         finally

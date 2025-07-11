@@ -18,9 +18,11 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ToolStripBackground">LightGray</SolidColorBrush>    
+                    <SolidColorBrush x:Key="ProgressPanelBackground">#FFF0F0F0</SolidColorBrush>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ToolStripBackground">Black</SolidColorBrush>
+                    <SolidColorBrush x:Key="ProgressPanelBackground">#CC222222</SolidColorBrush>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -100,11 +102,11 @@
         <Border Grid.Row="2"
                 Margin="8"
                 Padding="10"
-                Background="#CC222222"
+                Background="{DynamicResource ProgressPanelBackground}"
                 CornerRadius="8"
                 IsVisible="{Binding JobQueueService.IsProcessing, Mode=OneWay}">
             <StackPanel Orientation="Vertical" Spacing="6">
-                <TextBlock FontWeight="Bold" FontSize="16" Text="Processing Video..."/>
+                <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobQueueService.StatusMessage}"/>
                 <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel>
                         <TextBlock Text="Input:" FontWeight="Bold"/>
@@ -129,18 +131,25 @@
                         <TextBlock Text="{Binding JobQueueService.CompletedFrames} / {Binding JobQueueService.TotalFrames}"/>
                     </StackPanel>
                     <StackPanel>
+                        <TextBlock Text="Total Frames:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding JobQueueService.TotalFrames}"/>
+                    </StackPanel>
+                    <StackPanel>
                         <TextBlock Text="ETA:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.Eta}"/>
+                        <TextBlock Text="{Binding JobQueueService.Eta.Value, FallbackValue=Calculating..}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Elapsed:" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.ElapsedTime}"/>
                     </StackPanel>
                 </StackPanel>
-                <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"/>
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                <StackPanel>
+                    <TextBlock Text="Upscale Progress:" FontWeight="Bold"/>
+                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"/>
+                </StackPanel>
+                <StackPanel Spacing="8" Margin="0,8,0,0">
                     <TextBlock Text="Overall Progress:" FontWeight="Bold"/>
-                    <ProgressBar Minimum="0" Maximum="100" Height="14" Width="200" Value="{Binding JobQueueService.OverallProgress}"/>
+                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.OverallProgress}"/>
                 </StackPanel>
             </StackPanel>
         </Border>

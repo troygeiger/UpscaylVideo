@@ -13,6 +13,13 @@ using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.Models;
 
+public enum UpscaleJobStatus
+{
+    Queued,
+    Running,
+    Completed
+}
+
 public partial class UpscaleJob : ObservableObject
 {
     /// <summary>
@@ -41,6 +48,9 @@ public partial class UpscaleJob : ObservableObject
 
     [ObservableProperty] private string? _outputPath;
     [ObservableProperty] private string? _outputFileName;
+
+    [ObservableProperty]
+    private UpscaleJobStatus _status = UpscaleJobStatus.Queued;
 
     public UpscaleJob()
     {
