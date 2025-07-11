@@ -1,0 +1,30 @@
+name: NuGet Pack & Push
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 'PackPush'
+    runs-on: ubuntu-latest
+    
+    env:
+      Configuration: Release
+      Solution: TG.Common.sln
+      PkgProject: src/TG.Common/TG.Common.csproj
+      Test_Project_Path: tests/UnitTests/UnitTests.csproj
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish 
+        run: dotnet publish
