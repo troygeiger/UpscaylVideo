@@ -11,6 +11,7 @@ using UpscaylVideo.Views;
 using HandlebarsDotNet;
 using System;
 using System.Globalization;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo;
 
@@ -40,7 +41,7 @@ public partial class App : Application
             {
                 DataContext = new MainWindowViewModel(),
             };
-            PageManager.Instance.SetPage(typeof(MainPageViewModel));
+            UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(MainPageViewModel));
         }
 
         base.OnFrameworkInitializationCompleted();

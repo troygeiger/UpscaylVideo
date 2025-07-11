@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using UpscaylVideo.Models;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -11,7 +12,7 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     public string Greeting { get; } = "Welcome to Avalonia!";
     
-    public PageManager PageManager { get; } = PageManager.Instance;
+    public UpscaylVideo.Services.PageManager PageManager { get; } = UpscaylVideo.Services.PageManager.Instance;
 
     public MainWindowViewModel()
     {

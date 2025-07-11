@@ -15,6 +15,11 @@ namespace UpscaylVideo.Models;
 
 public partial class UpscaleJob : ObservableObject
 {
+    /// <summary>
+    /// The full output file path for the upscaled video (set when enqueued)
+    /// </summary>
+    [ObservableProperty]
+    private string? _outputFilePath;
     private string? _previousVideoPath;
     [ObservableProperty] private string? _videoPath;
     [ObservableProperty] private FFProbeResult _videoDetails = new();

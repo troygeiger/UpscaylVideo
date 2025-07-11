@@ -21,6 +21,7 @@ using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
 using HandlebarsDotNet;
 using Path = System.IO.Path;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -118,10 +119,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
         TotalFrames = (long)Math.Floor(duration.TotalSeconds * Job.VideoStream.CalcAvgFrameRate);
         var reportedNumberFrames = Job.VideoStream.CalcNbFrames;
         Stream? pngStream = null;
-        //Stream? outVideoStream = null;
         Process? inputProcess = null;
-        //Process? outputProcess = null;
-        
 
         Task progressUpdateTask = Task.Run(() => UpdateProgress(_tokenSource.Token));
         try
@@ -130,29 +128,14 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
             var framesFolder = Path.Combine(Job.WorkingFolder, "Frames");
             var upscaleOutput = Path.Combine(Job.WorkingFolder, "Upscale");
-            
 
             var extension = Path.GetExtension(Job.VideoPath);
 
             Directory.CreateDirectory(framesFolder);
             Directory.CreateDirectory(upscaleOutput);
 
-            // Determine output folder and file name from AppConfiguration
-            var config = AppConfiguration.Instance;
-            string outputFolder = !string.IsNullOrWhiteSpace(config.OutputPath) ? config.OutputPath : srcVideoFolder;
-            string originalFile = Path.GetFileNameWithoutExtension(Job.VideoPath);
-            string originalExtension = Path.GetExtension(Job.VideoPath);
-            var templateModel = new {
-                OriginalFile = originalFile,
-                OriginalExtension = originalExtension
-            };
-            string templateString = string.IsNullOrWhiteSpace(config.OutputFileNameTemplate)
-                ? "{{OriginalFile}}-upscaled{{OriginalExtension}}"
-                : config.OutputFileNameTemplate;
-            var template = Handlebars.Compile(templateString);
-            string outputFileName = template(templateModel);
-            string final = Path.Combine(outputFolder, outputFileName);
-           
+            // Output path and file are now set in UpscaleJob before enqueuing
+            string final = Job.OutputFilePath;
 
             var audioFile = Path.Combine(Job.WorkingFolder, $"Audio{extension}");
             var metadataFile = Path.Combine(Job.WorkingFolder, $"Metadata.ffmeta");
@@ -175,7 +158,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcAvgFrameRate);
             using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, _tokenSource.Token, Job.SelectedInterpolatedFps.FrameRate);
-            
+
             await pngVideo.StartAsync();
 
             CanPause = true;
@@ -198,7 +181,6 @@ public partial class JobPageViewModel : PageBase, IDisposable
                     outFrameNumber++;
                     await using var frameFileStream = File.Create(Path.Combine(framesFolder, $"{outFrameNumber:00000000}.png"));
                     await frameStream.CopyToAsync(frameFileStream, _tokenSource.Token);
-                    
                 }
                 if (!hasNewFrames)
                     break;
@@ -219,27 +201,24 @@ public partial class JobPageViewModel : PageBase, IDisposable
                         ClearCompletedUpscaled(framesFolder, upscaleChunkFolder);
                         _pauseTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
                         shouldResume = true;
-                        
                     }
-                    
+
                 } while (shouldResume && _tokenSource.Token.IsCancellationRequested == false);
 
                 _tokenSource.Token.ThrowIfCancellationRequested();
-                
+
                 pngVideo.EnqueueFramePath(upscaleChunkFolder);
-              
             }
             CanPause = false;
             _upscaleRuntimeStopwatch.Stop();
 
             Status = "Finishing video generation...";
             await pngVideo.CompleteAsync();
-            
+
             if (_tokenSource.IsCancellationRequested)
                 return;
 
             Status = "Generating final video file...";
-            
 
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: _tokenSource.Token);
 
@@ -450,7 +429,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     [RelayCommand]
     private void GoToMain()
     {
-        PageManager.Instance.SetPage(typeof(MainPageViewModel));
+        UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(MainPageViewModel));
     }
 
     public void Dispose()

@@ -10,6 +10,7 @@ using DynamicData.Binding;
 using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Models;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -20,18 +21,20 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private UpscaleJob _job = new();
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
     [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
-    
+    private ToolStripButtonDefinition _startButton;
 
     public MainPageViewModel()
     {
+        _startButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", RunCommand)
+        {
+            ShowText = true
+        };
         base.ToolStripButtonDefinitions =
         [
             new(ToolStripButtonLocations.Left, MaterialIconKind.Note, "New Job", NewJobCommand),
-            new(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", RunCommand)
-            {
-                ShowText = true
-            },
-            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand)
+            _startButton,
+            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand),
+            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand)
         ];
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
@@ -66,6 +69,12 @@ public partial class MainPageViewModel : PageBase
                 Job.GpuNumber = results.ToArray();
                 
             });
+
+        UpscaylVideo.Services.JobQueueService.Instance.JobQueue.CollectionChanged += (s, e) =>
+        {
+            var queueCount = UpscaylVideo.Services.JobQueueService.Instance.JobQueue.Count;
+            _startButton.Text = queueCount > 0 ? "Add to Queue" : "Start";
+        };
     }
     
     
@@ -127,7 +136,7 @@ public partial class MainPageViewModel : PageBase
     [RelayCommand]
     private void Settings()
     {
-        PageManager.Instance.SetPage(typeof(ConfigPageViewModel));
+        UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(ConfigPageViewModel));
     }
 
     [RelayCommand]
@@ -140,7 +149,12 @@ public partial class MainPageViewModel : PageBase
             AllowMultiple = false,
             FileTypeFilter = [ new("Videos")
             {
-                Patterns = ["*.mp4", "*.mkv", "*.m4v", "*.avi", "*.wmv", "*.webm"],
+                Patterns = [
+                    "*.mp4", "*.mkv", "*.m4v", "*.avi", "*.wmv", "*.webm", "*.mov",
+                    "*.flv", "*.mpg", "*.mpeg", "*.ts", "*.3gp", "*.3g2", "*.vob",
+                    "*.ogv", "*.mts", "*.m2ts", "*.divx", "*.asf", "*.rm", "*.rmvb",
+                    "*.f4v", "*.dat", "*.mxf"
+                ],
             }, 
                 FilePickerFileTypes.All,
             ]});
@@ -167,7 +181,7 @@ public partial class MainPageViewModel : PageBase
         
     
     [RelayCommand(CanExecute = nameof(ReadyToRun))]
-    private async Task Run()
+    private void Run()
     {
         var config = AppConfiguration.Instance;
         config.LastScale = Job.SelectedScale;
@@ -175,10 +189,30 @@ public partial class MainPageViewModel : PageBase
         config.LastModelUsed = Job.SelectedModel?.Name;
         config.GpuNumbers = Job.GpuNumber;
         config.Save();
-        
-        var jobViewModel = new JobPageViewModel(Job);
-        PageManager.Instance.SetPage(jobViewModel);
-        await jobViewModel.RunAsync();
+
+        // Set output path and file name before enqueuing
+        var srcVideoFolder = Path.GetDirectoryName(Job.VideoPath);
+        if (string.IsNullOrWhiteSpace(srcVideoFolder) || Job.VideoPath is null)
+            return;
+        string outputFolder = !string.IsNullOrWhiteSpace(config.OutputPath) ? config.OutputPath : srcVideoFolder;
+        string originalFile = Path.GetFileNameWithoutExtension(Job.VideoPath);
+        string originalExtension = Path.GetExtension(Job.VideoPath);
+        var templateModel = new {
+            OriginalFile = originalFile,
+            OriginalExtension = originalExtension
+        };
+        string templateString = string.IsNullOrWhiteSpace(config.OutputFileNameTemplate)
+            ? "{{OriginalFile}}-upscaled{{OriginalExtension}}"
+            : config.OutputFileNameTemplate;
+        var template = HandlebarsDotNet.Handlebars.Compile(templateString);
+        string outputFileName = template(templateModel);
+        Job.OutputFilePath = System.IO.Path.Combine(outputFolder ?? string.Empty, outputFileName);
+
+        // Enqueue the job instead of navigating
+        UpscaylVideo.Services.JobQueueService.Instance.EnqueueJob(Job);
+        // Optionally reset the job form for new input
+        Job = new();
+        UpdateSelectedModel();
     }
 
     [RelayCommand]
@@ -216,5 +250,11 @@ public partial class MainPageViewModel : PageBase
         if (Job.SelectedModel is not null)
             return;
         Job.SelectedModel = ModelOptions.FirstOrDefault(m => m.Name == AppConfiguration.Instance.LastModelUsed);
+    }
+
+    [RelayCommand]
+    private void OpenQueue()
+    {
+        UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(QueuePageViewModel));
     }
 }

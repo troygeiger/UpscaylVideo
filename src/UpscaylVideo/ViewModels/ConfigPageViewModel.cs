@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -33,7 +34,7 @@ public partial class ConfigPageViewModel : PageBase
     [RelayCommand]
     private void Back()
     {
-        PageManager.Instance.SetPage(typeof(MainPageViewModel));
+        UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(MainPageViewModel));
     }
 
     [RelayCommand]
