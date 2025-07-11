@@ -22,7 +22,7 @@
     <TabControl Margin="8">
         <TabItem Header="Paths">
             <Grid ColumnDefinitions="Auto, *"
-                  RowDefinitions="Auto, Auto, Auto, Auto">
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto">
 
                 <Label Grid.Row="0"
                        Grid.Column="0"
@@ -62,6 +62,30 @@
                                 Command="{Binding Path=BrowseWorkingFolderCommand, Mode=OneTime}"/>
                     </TextBox.InnerRightContent>
                 </TextBox>
+
+                <Label Grid.Row="3" Grid.Column="0"
+                       Classes="form-label"
+                       Content="Output Path:"/>
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
+                    <TextBox Text="{Binding Path=Configuration.OutputPath, Mode=TwoWay}">
+                        <TextBox.InnerRightContent>
+                            <Button Classes="textbox-button"
+                                    Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                    Command="{Binding Path=BrowseOutputPathCommand, Mode=OneWay}" />
+                        </TextBox.InnerRightContent>
+                    </TextBox>
+                    <TextBlock Text="Leave blank to output to source folder." FontSize="12" Foreground="Gray"/>
+                </StackPanel>
+
+                <Label Grid.Row="4" Grid.Column="0"
+                       Classes="form-label"
+                       Content="Output File Name Template:"/>
+                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
+                    <TextBox Text="{Binding Path=Configuration.OutputFileNameTemplate, Mode=TwoWay}"/>
+                    <TextBlock Text="Default: {{OriginalFile}}-upscaled{{OriginalExtension}}" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="Available: {{OriginalFile}}, {{OriginalExtension}}, {{Now &quot;yyyy-MM-dd&quot;&lt;--optional}}" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="Use {{Now &quot;format&quot;}} for custom date/time, e.g. {{Now 'yyyyMMdd_HHmmss'}}" FontSize="12" Foreground="Gray"/>
+                </StackPanel>
             </Grid>
         </TabItem>
         <!--<TabItem Header="UI">

@@ -8,6 +8,9 @@ using Avalonia.Markup.Xaml;
 using UpscaylVideo.Models;
 using UpscaylVideo.ViewModels;
 using UpscaylVideo.Views;
+using HandlebarsDotNet;
+using System;
+using System.Globalization;
 
 namespace UpscaylVideo;
 
@@ -16,6 +19,12 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        // Register Handlebars helper for Now(format) only once
+        Handlebars.RegisterHelper("Now", (writer, context, parameters) =>
+        {
+            string format = parameters.Length > 0 ? Convert.ToString(parameters[0]) ?? "yyyy-MM-dd" : "yyyy-MM-dd";
+            writer.WriteSafeString(DateTime.Now.ToString(format));
+        });
     }
 
     public static Window? Window { get; private set; }

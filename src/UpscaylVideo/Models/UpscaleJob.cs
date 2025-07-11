@@ -34,6 +34,9 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
     [ObservableProperty] private bool _deleteWorkingFolderWhenCompleted = true;
 
+    [ObservableProperty] private string? _outputPath;
+    [ObservableProperty] private string? _outputFileName;
+
     public UpscaleJob()
     {
         this.WhenPropertyChanged(p => p.VideoPath, false)

@@ -19,6 +19,7 @@ using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
+using HandlebarsDotNet;
 using Path = System.IO.Path;
 
 namespace UpscaylVideo.ViewModels;
@@ -43,7 +44,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     [ObservableProperty] private int _completedFrames;
     [ObservableProperty] private TimeSpan? _avgFrameRate;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspElapsedTime))] private TimeSpan _elapsedTime = TimeSpan.Zero;
-    [ObservableProperty] private string _dialogMessage;
+    [ObservableProperty] private string? _dialogMessage;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(DspEta))]
     private TimeSpan? _eta;
 
@@ -136,6 +137,21 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Directory.CreateDirectory(framesFolder);
             Directory.CreateDirectory(upscaleOutput);
 
+            // Determine output folder and file name from AppConfiguration
+            var config = AppConfiguration.Instance;
+            string outputFolder = !string.IsNullOrWhiteSpace(config.OutputPath) ? config.OutputPath : srcVideoFolder;
+            string originalFile = Path.GetFileNameWithoutExtension(Job.VideoPath);
+            string originalExtension = Path.GetExtension(Job.VideoPath);
+            var templateModel = new {
+                OriginalFile = originalFile,
+                OriginalExtension = originalExtension
+            };
+            string templateString = string.IsNullOrWhiteSpace(config.OutputFileNameTemplate)
+                ? "{{OriginalFile}}-upscaled{{OriginalExtension}}"
+                : config.OutputFileNameTemplate;
+            var template = Handlebars.Compile(templateString);
+            string outputFileName = template(templateModel);
+            string final = Path.Combine(outputFolder, outputFileName);
            
 
             var audioFile = Path.Combine(Job.WorkingFolder, $"Audio{extension}");
@@ -223,7 +239,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 return;
 
             Status = "Generating final video file...";
-            string final = Path.Combine(srcVideoFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)} - upscaled{extension}");
+            
 
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: _tokenSource.Token);
 
@@ -237,10 +253,9 @@ public partial class JobPageViewModel : PageBase, IDisposable
         {
             // Silently catch cancellation
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.Error.WriteLine(e);
-            DialogMessage = "An error occured while processing!";
+            // Silently catch all other exceptions
         }
         finally
         {
@@ -402,11 +417,11 @@ public partial class JobPageViewModel : PageBase, IDisposable
                 .ConfigureAwait(false);
             return result.ExitCode == 0;
         }
-        catch (OperationCanceledException c)
+        catch (OperationCanceledException)
         {
             return IsPaused;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw;
         }

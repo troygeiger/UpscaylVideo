@@ -88,5 +88,25 @@ public partial class ConfigPageViewModel : PageBase
 
         Configuration.TempWorkingFolder = Uri.UnescapeDataString(result);
     }
-    
+
+    [RelayCommand]
+    private async Task BrowseOutputPath()
+    {
+        var provider = App.Window?.StorageProvider;
+        if (provider is null)
+            return;
+        var folder = await provider.OpenFolderPickerAsync(new());
+        if (!folder.Any())
+            return;
+        Configuration.OutputPath = Uri.UnescapeDataString(folder.First().Path.AbsolutePath);
+    }
+
+    [RelayCommand]
+    private void SetOutputFileNameTemplate(string? template)
+    {
+        if (!string.IsNullOrWhiteSpace(template))
+        {
+            Configuration.OutputFileNameTemplate = template;
+        }
+    }
 }

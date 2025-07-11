@@ -60,7 +60,19 @@ public partial class AppConfiguration : ObservableObject
         set => SetProperty(ref _tempWorkingFolder, value);
     }
     
-    
+    private string? _outputPath;
+    public string? OutputPath
+    {
+        get => _outputPath;
+        set => SetProperty(ref _outputPath, value);
+    }
+
+    private string _outputFileNameTemplate = "{{OriginalFile}}-upscaled{{OriginalExtension}}";
+    public string OutputFileNameTemplate
+    {
+        get => _outputFileNameTemplate;
+        set => SetProperty(ref _outputFileNameTemplate, value);
+    }
     
     public void Save()
     {
