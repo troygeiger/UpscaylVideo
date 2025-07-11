@@ -20,9 +20,6 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore src/UpscaylVideo/UpscaylVideo.csproj
-
       # Only run MinVer for workflow_dispatch (preview builds)
       - name: Install MinVer CLI
         if: github.event_name == 'workflow_dispatch'
@@ -32,7 +29,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         id: minver-preview
         run: |
-          echo "version=$(minver -t v --minimum-major-minor 0.1 --tag-prefix v --default-pre-release-phase preview.0)" >> $GITHUB_OUTPUT
+          echo "version=$(minver --minimum-major-minor 0.1 --tag-prefix v --default-pre-release-phase preview.0)" >> $GITHUB_OUTPUT
 
       - name: Set default version for tag builds
         if: github.event_name != 'workflow_dispatch'
@@ -40,7 +37,7 @@ jobs:
         run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Publish (Linux)
-        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o publish/linux-x64 --no-restore
+        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o publish/linux-x64
 
       - name: Zip binaries (Linux)
         run: |
@@ -48,7 +45,7 @@ jobs:
           zip -r ../../UpscaylVideo-linux-x64.zip .
 
       - name: Publish (Windows)
-        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64 --no-restore
+        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64
 
       - name: Zip binaries (Windows)
         run: |
