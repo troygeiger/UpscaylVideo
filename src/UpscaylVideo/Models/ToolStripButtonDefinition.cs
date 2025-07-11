@@ -17,6 +17,7 @@ public partial class ToolStripButtonDefinition : ObservableObject
     public ToolStripButtonLocations Location { get; init; }
     public MaterialIconKind Icon { get; init; }
     [ObservableProperty] private string text;
+    [ObservableProperty] private bool visible = true;
     public ICommand Command { get; init; }
     public bool ShowText { get; init; } = false;
 

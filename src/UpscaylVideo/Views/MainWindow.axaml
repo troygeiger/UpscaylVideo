@@ -45,7 +45,8 @@
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
                                     Padding="8"
-                                    Margin="3 0">
+                                    Margin="3 0"
+                                    IsVisible="{Binding Visible, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"
@@ -75,7 +76,8 @@
                             <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
                                     Command="{Binding Path=Command, Mode=OneWay}"
                                     Padding="8"
-                                    Margin="3,0">
+                                    Margin="3,0"
+                                    IsVisible="{Binding Visible, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
                                                                 Width="24"

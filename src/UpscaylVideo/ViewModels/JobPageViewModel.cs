@@ -90,7 +90,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
     
     public UpscaleJob Job { get; }
 
-    public async Task RunAsync()
+    public async Task RunAsync(CancellationToken? externalToken = null)
     {
         if (!File.Exists(Job.VideoPath) || Job.VideoStream is null || Job.WorkingFolder is null)
             return;
@@ -111,6 +111,12 @@ public partial class JobPageViewModel : PageBase, IDisposable
         if (srcVideoFolder == null)
             return; // TODO: Add some kind of messaging indicating why it exited early.
 
+        // Use a linked token source so we can still use pause/cancel logic
+        using var linkedCts = externalToken.HasValue ?
+            CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token, externalToken.Value) :
+            CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
+        var token = linkedCts.Token;
+
         IsRunning = true;
         Status = "Starting...";
         _elapsedStopwatch.Start();
@@ -121,7 +127,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
         Stream? pngStream = null;
         Process? inputProcess = null;
 
-        Task progressUpdateTask = Task.Run(() => UpdateProgress(_tokenSource.Token));
+        Task progressUpdateTask = Task.Run(() => UpdateProgress(token));
         try
         {
             Directory.CreateDirectory(Job.WorkingFolder);
@@ -143,30 +149,31 @@ public partial class JobPageViewModel : PageBase, IDisposable
             if (await FFMpeg.CopyStreams(Job.VideoPath,
                     audioFile,
                     Job.VideoDetails.Streams.Where(d => d.CodecType != "video" && d.CodecName != "dvd_subtitle" && d.CodecName != "bin_data"),
-                    cancellationToken: _tokenSource.Token) == false)
+                    cancellationToken: token) == false)
             {
                 return;
             }
 
             Status = "Extracting chapter metadata...";
             if (await FFMpeg.ExtractFFMetadata(Job.VideoPath,
-                    metadataFile, cancellationToken: _tokenSource.Token) == false)
+                    metadataFile, cancellationToken: token) == false)
             {
                 return;
             }
 
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcAvgFrameRate);
-            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, _tokenSource.Token, Job.SelectedInterpolatedFps.FrameRate);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, token, Job.SelectedInterpolatedFps.FrameRate);
 
             await pngVideo.StartAsync();
 
             CanPause = true;
             _upscaleRuntimeStopwatch.Restart();
             long outFrameNumber = 0;
-            while (_tokenSource.Token.IsCancellationRequested == false && pngVideo.IsRunning)
+            while (!token.IsCancellationRequested && pngVideo.IsRunning)
             {
                 Status = "Clearing frames...";
+
                 await ClearFoldersAsync(framesFolder);
                 Status = "Extracting next batch of frames...";
                 string upscaleChunkFolder = Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
@@ -180,11 +187,10 @@ public partial class JobPageViewModel : PageBase, IDisposable
                         break;
                     outFrameNumber++;
                     await using var frameFileStream = File.Create(Path.Combine(framesFolder, $"{outFrameNumber:00000000}.png"));
-                    await frameStream.CopyToAsync(frameFileStream, _tokenSource.Token);
+                    await frameStream.CopyToAsync(frameFileStream, token);
                 }
                 if (!hasNewFrames)
                     break;
-
                 do
                 {
                     shouldResume = false;
@@ -194,10 +200,10 @@ public partial class JobPageViewModel : PageBase, IDisposable
                         return;
                     }
 
-                    if (IsPaused && _tokenSource.Token.IsCancellationRequested == false)
+                    if (IsPaused && !token.IsCancellationRequested)
                     {
                         Status = "Paused";
-                        await WaitUntilUnpaused(_tokenSource.Token);
+                        await WaitUntilUnpaused(token);
                         ClearCompletedUpscaled(framesFolder, upscaleChunkFolder);
                         _pauseTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_tokenSource.Token);
                         shouldResume = true;
@@ -205,7 +211,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
                 } while (shouldResume && _tokenSource.Token.IsCancellationRequested == false);
 
-                _tokenSource.Token.ThrowIfCancellationRequested();
+                token.ThrowIfCancellationRequested();
 
                 pngVideo.EnqueueFramePath(upscaleChunkFolder);
             }
@@ -220,7 +226,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
 
             Status = "Generating final video file...";
 
-            await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: _tokenSource.Token);
+            await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: token);
 
             if (Job.DeleteWorkingFolderWhenCompleted)
             {

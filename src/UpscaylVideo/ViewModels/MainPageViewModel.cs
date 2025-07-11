@@ -22,6 +22,7 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
     [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
     private ToolStripButtonDefinition _startButton;
+    private ToolStripButtonDefinition _cancelButton;
 
     public MainPageViewModel()
     {
@@ -29,13 +30,26 @@ public partial class MainPageViewModel : PageBase
         {
             ShowText = true
         };
+        _cancelButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Cancel, "Cancel", CancelJobCommand)
+        {
+            ShowText = true,
+            Visible = UpscaylVideo.Services.JobQueueService.Instance.IsProcessing
+        };
+
         base.ToolStripButtonDefinitions =
         [
             new(ToolStripButtonLocations.Left, MaterialIconKind.Note, "New Job", NewJobCommand),
             _startButton,
+            _cancelButton,
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand),
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand)
         ];
+
+        // Subscribe to JobQueueService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
+        UpscaylVideo.Services.JobQueueService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
+            .Subscribe(x => _cancelButton.Visible = x.Value);
+
+        
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
             .Subscribe(j => CheckReadyToRun());
@@ -76,8 +90,12 @@ public partial class MainPageViewModel : PageBase
             _startButton.Text = queueCount > 0 ? "Add to Queue" : "Start";
         };
     }
-    
-    
+
+    [RelayCommand]
+    private void CancelJob()
+    {
+        UpscaylVideo.Services.JobQueueService.Instance.CancelCurrentJob();
+    }
 
     public override void OnAppearing()
     {
