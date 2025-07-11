@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    outputs:
+      minver-version: ${{ steps.minver-preview.outputs.version || steps.minver-tag.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +23,21 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/UpscaylVideo/UpscaylVideo.csproj
 
+      # Only run MinVer for workflow_dispatch (preview builds)
+      - name: Install MinVer CLI
+        if: github.event_name == 'workflow_dispatch'
+        run: dotnet tool install --global minver-cli --version 6.0.0
+
+      - name: Get version with MinVer (preview)
+        if: github.event_name == 'workflow_dispatch'
+        id: minver-preview
+        run: |
+          echo "version=$(minver -t v --minimum-major-minor 0.1 --tag-prefix v --default-pre-release-phase preview.0)" >> $GITHUB_OUTPUT
+
+      - name: Set default version for tag builds
+        if: github.event_name != 'workflow_dispatch'
+        id: minver-tag
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Publish (Linux)
         run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o publish/linux-x64 --no-restore
@@ -62,6 +79,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.build-and-publish.outputs.minver-version }}
+          name: ${{ needs.build-and-publish.outputs.minver-version }}
           files: |
             artifacts/UpscaylVideo-linux-x64.zip/UpscaylVideo-linux-x64.zip
             artifacts/UpscaylVideo-win-x64.zip/UpscaylVideo-win-x64.zip
