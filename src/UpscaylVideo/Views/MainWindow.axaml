@@ -82,7 +82,7 @@
             </Grid>
         </Border>
         <ScrollViewer Grid.Row="1">
-            <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage}"
+            <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage, Mode=OneWay}"
                                          Margin="8">
 
             </TransitioningContentControl>

@@ -22,11 +22,11 @@
                   Margin="8"
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
-                <DataGridTextColumn Header="Video Path" Binding="{Binding VideoPath}" Width="3*"/>
-                <DataGridTextColumn Header="Model" Binding="{Binding SelectedModel.Name}" Width="*"/>
-                <DataGridTextColumn Header="Scale" Binding="{Binding SelectedScale}" Width="*"/>
-                <DataGridTextColumn Header="Output File" Binding="{Binding OutputFilePath}" Width="3*"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="Video Path" Binding="{Binding VideoPath, Mode=OneWay}" Width="3*"/>
+                <DataGridTextColumn Header="Model" Binding="{Binding SelectedModel.Name, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="Scale" Binding="{Binding SelectedScale, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="Output File" Binding="{Binding OutputFilePath, Mode=OneWay}" Width="3*"/>
                 <DataGridTemplateColumn Header="Actions" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
