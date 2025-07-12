@@ -86,7 +86,7 @@ jobs:
         with:
           tag_name: v${{ needs.build-and-publish.outputs.minver-version }}
           name: ${{ needs.build-and-publish.outputs.minver-version }}
-          update_existing: true
+          make_latest: true
           files: |
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
@@ -100,7 +100,8 @@ jobs:
         with:
           tag_name: ${{ needs.build-and-publish.outputs.minver-version }}
           name: ${{ needs.build-and-publish.outputs.minver-version }}
-          update_existing: true
+          prerelease: true
+          make_latest: true
           files: |
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
