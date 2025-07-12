@@ -110,25 +110,25 @@
                 <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel>
                         <TextBlock Text="Input:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.VideoPath}"/>
+                        <TextBlock Text="{Binding JobQueueService.CurrentJob.VideoPath, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Output:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.OutputFilePath}"/>
+                        <TextBlock Text="{Binding JobQueueService.CurrentJob.OutputFilePath, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Model:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedModel.Name}"/>
+                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedModel.Name, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Scale:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedScale}"/>
+                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedScale, FallbackValue=N/A}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel>
                         <TextBlock Text="Frames:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CompletedFrames} / {Binding JobQueueService.TotalFrames}"/>
+                        <TextBlock Text="{Binding JobQueueService.CompletedFrames}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Total Frames:" FontWeight="Bold"/>
@@ -136,7 +136,7 @@
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="ETA:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.Eta.Value, FallbackValue=Calculating..}"/>
+                        <TextBlock Text="{Binding JobQueueService.Eta, TargetNullValue=Calculating..}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Elapsed:" FontWeight="Bold"/>

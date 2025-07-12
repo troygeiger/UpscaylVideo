@@ -26,6 +26,7 @@
     </PropertyGroup>
     
     <ItemGroup>
+        <None Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
