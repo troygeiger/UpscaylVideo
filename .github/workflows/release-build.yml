@@ -67,18 +67,6 @@ jobs:
         with:
           path: artifacts
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ needs.build-and-publish.outputs.minver-version }}
-          name: v${{ needs.build-and-publish.outputs.minver-version }}
-          update_existing: true
-          files: |
-            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
-            artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-
       # Production release: only if triggered by a v*.*.* tag
       - name: Create Production Release
         if: startsWith(github.ref, 'refs/tags/v')
