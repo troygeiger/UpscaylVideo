@@ -206,7 +206,7 @@ public partial class JobQueueService : ObservableObject
             StatusMessage = "Extracting chapter metadata...";
             await FFMpeg.ExtractFFMetadata(job.VideoPath, metadataFile, cancellationToken: cancellationToken);
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder, $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
-            
+
             (inputProcess, pngStream) = FFMpeg.StartPngPipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate);
             using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, cancellationToken, job.SelectedInterpolatedFps.FrameRate);
             await pngVideo.StartAsync();
@@ -253,11 +253,7 @@ public partial class JobQueueService : ObservableObject
             }
             StatusMessage = "Merging video and audio...";
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: cancellationToken);
-            if (job.DeleteWorkingFolderWhenCompleted)
-            {
-                StatusMessage = "Cleaning up...";
-                System.IO.Directory.Delete(job.WorkingFolder, true);
-            }
+
             StatusMessage = "Job completed.";
         }
         catch (OperationCanceledException)
@@ -284,6 +280,22 @@ public partial class JobQueueService : ObservableObject
                 catch { /* ignore exceptions on kill */ }
                 try { inputProcess.Dispose(); } catch { }
             }
+
+
+            if (job.DeleteWorkingFolderWhenCompleted)
+            {
+                try
+                {
+                    StatusMessage = "Cleaning up...";
+                    System.IO.Directory.Delete(job.WorkingFolder!, true);
+                }
+                catch (Exception cleanupEx)
+                {
+                    StatusMessage = $"Cleanup failed: {cleanupEx.Message}";
+                }
+            }
+
+
         }
     }
 
