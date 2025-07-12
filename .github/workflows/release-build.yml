@@ -36,7 +36,7 @@ jobs:
       - name: Zip binaries (Linux)
         run: |
           cd publish/linux-x64
-          zip -r ../../UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip .
+          tar -czf ../../UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.tar.gz .
 
       - name: Publish (Windows)
         run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64
@@ -49,8 +49,8 @@ jobs:
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip
-          path: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip
+          name: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.tar.gz
+          path: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.tar.gz
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -76,7 +76,7 @@ jobs:
           name: ${{ needs.build-and-publish.outputs.minver-version }}
           make_latest: true
           files: |
-            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
+            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +90,7 @@ jobs:
           name: ${{ needs.build-and-publish.outputs.minver-version }}
           prerelease: true
           files: |
-            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
+            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
