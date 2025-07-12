@@ -10,7 +10,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
-      minver-version: ${{ steps.minver-preview.outputs.version || steps.minver-tag.outputs.version }}
+      minver-version: ${{ steps.minver.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,21 +20,13 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # Only run MinVer for workflow_dispatch (preview builds)
       - name: Install MinVer CLI
-        if: github.event_name == 'workflow_dispatch'
         run: dotnet tool install --global minver-cli --version 6.0.0
 
-      - name: Get version with MinVer (preview)
-        if: github.event_name == 'workflow_dispatch'
-        id: minver-preview
+      - name: Get version with MinVer
+        id: minver
         run: |
           echo "version=$(minver --minimum-major-minor 0.1 --tag-prefix v --default-pre-release-phase preview.0)" >> $GITHUB_OUTPUT
-
-      - name: Set default version for tag builds
-        if: github.event_name != 'workflow_dispatch'
-        id: minver-tag
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Publish (Linux)
         run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o publish/linux-x64
@@ -42,7 +34,7 @@ jobs:
       - name: Zip binaries (Linux)
         run: |
           cd publish/linux-x64
-          zip -r ../../UpscaylVideo-linux-x64.zip .
+          zip -r ../../UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip .
 
       - name: Publish (Windows)
         run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/win-x64
@@ -50,19 +42,19 @@ jobs:
       - name: Zip binaries (Windows)
         run: |
           cd publish/win-x64
-          zip -r ../../UpscaylVideo-win-x64.zip .
+          zip -r ../../UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip .
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: UpscaylVideo-linux-x64.zip
-          path: UpscaylVideo-linux-x64.zip
+          name: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip
+          path: UpscaylVideo-linux-x64-${{ steps.minver.outputs.version }}.zip
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: UpscaylVideo-win-x64.zip
-          path: UpscaylVideo-win-x64.zip
+          name: UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip
+          path: UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip
 
   release:
     needs: build-and-publish
@@ -76,11 +68,12 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build-and-publish.outputs.minver-version }}
-          name: ${{ needs.build-and-publish.outputs.minver-version }}
+          tag_name: v${{ needs.build-and-publish.outputs.minver-version }}
+          name: v${{ needs.build-and-publish.outputs.minver-version }}
+          update_existing: true
           files: |
-            artifacts/UpscaylVideo-linux-x64.zip/UpscaylVideo-linux-x64.zip
-            artifacts/UpscaylVideo-win-x64.zip/UpscaylVideo-win-x64.zip
+            artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
+            artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
