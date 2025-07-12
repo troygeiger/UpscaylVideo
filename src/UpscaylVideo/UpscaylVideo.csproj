@@ -9,7 +9,7 @@
         <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
         <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
         <MinVerTagPrefix>v</MinVerTagPrefix>
-        <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+        <MinVerDefaultPreReleaseIdentifiers>alpha.0</MinVerDefaultPreReleaseIdentifiers>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 

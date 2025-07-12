@@ -28,7 +28,7 @@ jobs:
       - name: Get version with MinVer
         id: minver
         run: |
-          echo "version=$(minver --minimum-major-minor 0.1 --tag-prefix v -d preview)" >> $GITHUB_OUTPUT
+          echo "version=$(minver --minimum-major-minor 0.1 --tag-prefix v -d alpha)" >> $GITHUB_OUTPUT
 
       - name: Publish (Linux)
         run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o publish/linux-x64
