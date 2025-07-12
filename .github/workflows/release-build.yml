@@ -79,7 +79,7 @@ jobs:
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Preview release: only if not a v*.*.* tag (e.g. workflow_dispatch)
       - name: Create Preview Release
@@ -93,7 +93,7 @@ jobs:
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
