@@ -94,8 +94,10 @@
                 
             </StackPanel>
             <controls:Card Grid.Column="1"
+                           Name="VideoDetailsCard"
                            Margin="4"
-                           IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}">
+                           IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}"
+                           Background="{DynamicResource PanelBackground}">
                 <Grid ColumnDefinitions="Auto, *"
                       RowDefinitions="Auto, Auto, Auto, Auto, Auto">
                     <Label Classes="form-label"

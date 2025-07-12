@@ -14,25 +14,14 @@
         <vm:MainWindowViewModel />
     </Window.DataContext>
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="ToolStripBackground">LightGray</SolidColorBrush>    
-                    <SolidColorBrush x:Key="ProgressPanelBackground">#FFF0F0F0</SolidColorBrush>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="ToolStripBackground">Black</SolidColorBrush>
-                    <SolidColorBrush x:Key="ProgressPanelBackground">#CC222222</SolidColorBrush>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
+        <!-- Removed PanelBackground resource, now using global resource from App.axaml -->
     </Window.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto,Auto">
         <!--ToolStrip-->
         <Border Grid.Row="0"
                 Padding="6"
-                Background="{DynamicResource ToolStripBackground}"
+                Background="{DynamicResource PanelBackground}"
                 CornerRadius="6"
         >
             <Grid ColumnDefinitions="*, Auto">
@@ -102,7 +91,7 @@
         <Border Grid.Row="2"
                 Margin="8"
                 Padding="10"
-                Background="{DynamicResource ProgressPanelBackground}"
+                Background="{DynamicResource PanelBackground}"
                 CornerRadius="8"
                 IsVisible="{Binding JobQueueService.IsProcessing, Mode=OneWay}">
             <StackPanel Orientation="Vertical" Spacing="6">
