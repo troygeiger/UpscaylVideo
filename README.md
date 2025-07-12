@@ -2,6 +2,8 @@
 
 UpscaylVideo is a cross-platform batch video upscaling tool that orchestrates [Upscayl](https://github.com/upscayl/upscayl) and ffmpeg to extract frames from video, upscale them using AI, and reassemble the video. It features a modern Avalonia UI, job queue, progress/cancellation controls, and supports both Windows and Linux.
 
+![Screenshot](screenshot.png)
+
 ## Features
 
 - Batch upscaling of videos using Upscayl and ffmpeg
