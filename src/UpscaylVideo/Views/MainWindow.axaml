@@ -28,7 +28,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
         <!--ToolStrip-->
         <Border Grid.Row="0"
                 Padding="6"
@@ -152,6 +152,10 @@
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.OverallProgress}"/>
                 </StackPanel>
             </StackPanel>
+        </Border>
+        <!-- Version Panel -->
+        <Border Grid.Row="3" Background="Transparent" Padding="0,2,8,2">
+            <TextBlock Text="{Binding Version}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="12" Foreground="Gray"/>
         </Border>
     </Grid>
 

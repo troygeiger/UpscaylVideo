@@ -15,8 +15,12 @@ public partial class MainWindowViewModel : ViewModelBase
     public UpscaylVideo.Services.PageManager PageManager { get; } = UpscaylVideo.Services.PageManager.Instance;
     public JobQueueService JobQueueService { get; } = JobQueueService.Instance;
 
+    public string Version { get; }
+
     public MainWindowViewModel()
     {
+        TG.Common.AssemblyInfo.ReferenceAssembly = typeof(MainWindowViewModel).Assembly;
+        Version = TG.Common.AssemblyInfo.InformationVersion;
     }
 
     [RelayCommand]
