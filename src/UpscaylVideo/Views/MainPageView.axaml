@@ -35,6 +35,15 @@
                     </TextBox.InnerRightContent>
                 </TextBox>
 
+                <TextBox p1:TextFieldAssist.Label="Output Path"
+                         Text="{Binding Path=Job.OutputFilePath, Mode=TwoWay}">
+                    <TextBox.InnerRightContent>
+                        <Button Classes="textbox-button"
+                                Content="{materialIcons:MaterialIconExt Kind=DotsHorizontal}"
+                                Command="{Binding Path=BrowseOutputPathCommand, Mode=OneWay}" />
+                    </TextBox.InnerRightContent>
+                </TextBox>
+
                 <StackPanel Spacing="10"
                             Width="300"
                             HorizontalAlignment="Left">

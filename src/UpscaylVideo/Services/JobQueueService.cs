@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace UpscaylVideo.Services;
 
 public partial class JobQueueService : ObservableObject
 {
+    private const string TimespanFormat = @"d\.hh\:mm\:ss";
     public static JobQueueService Instance { get; } = new();
 
     public ObservableCollection<UpscaleJob> JobQueue { get; } = new();
@@ -27,6 +29,8 @@ public partial class JobQueueService : ObservableObject
     [ObservableProperty] private TimeSpan? _avgFrameRate;
     [ObservableProperty] private TimeSpan? _eta;
     [ObservableProperty] private TimeSpan _elapsedTime = TimeSpan.Zero;
+    [ObservableProperty] private string? _dspElapsedTime;
+    [ObservableProperty] private string? _dspEta;
     [ObservableProperty] private string _statusMessage = string.Empty;
     private CancellationTokenSource? _cancellationTokenSource;
     private Task? _processingTask;
@@ -348,6 +352,7 @@ public partial class JobQueueService : ObservableObject
                             AvgFrameRate = TimeSpan.FromTicks(averageProvider.GetAverage(true));
                             var remaining = TotalFrames - CompletedFrames;
                             Eta = AvgFrameRate.HasValue ? (remaining * AvgFrameRate.Value) : null;
+                            DspEta = Eta?.ToString(TimespanFormat);
                         }
                     }
                     var match = RegexHelper.UpscaylPercent.Match(line);
@@ -374,13 +379,26 @@ public partial class JobQueueService : ObservableObject
         }
     }
 
-    private async Task UpdateProgress(CancellationToken token, System.Diagnostics.Stopwatch stopwatch)
+    private async Task UpdateProgress(CancellationToken token, System.Diagnostics.Stopwatch _elapsedStopwatch)
     {
         while (!token.IsCancellationRequested && IsProcessing)
         {
-            ElapsedTime = stopwatch.Elapsed;
-            // Optionally update ETA here if needed
-            await Task.Delay(500, token).ContinueWith(_ => { });
+            ElapsedTime = _elapsedStopwatch.Elapsed;
+            DspElapsedTime = ElapsedTime.ToString(TimespanFormat);
+            
+            var frameCount = CompletedFrames;
+            ElapsedTime = _elapsedStopwatch.Elapsed;
+            var progress = (int)((decimal)frameCount / TotalFrames * 100);
+            OverallProgress = progress > 100 ? 100 : progress;
+
+            if (AvgFrameRate.HasValue)
+            {
+                var remaining = TotalFrames - frameCount;
+                Eta = (remaining * AvgFrameRate.Value);
+                DspEta = Eta.Value.ToString(TimespanFormat);
+            }
+            
+            await TaskHelpers.Wait(1000, token).ConfigureAwait(false);
         }
     }
 }

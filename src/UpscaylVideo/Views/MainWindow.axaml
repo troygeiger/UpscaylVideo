@@ -125,20 +125,24 @@
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="ETA:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.Eta, TargetNullValue=Calculating..}"/>
+                        <TextBlock Text="{Binding JobQueueService.DspEta, TargetNullValue=Calculating..}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Elapsed:" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.ElapsedTime}"/>
+                        <TextBlock Text="{Binding JobQueueService.DspElapsedTime}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel>
                     <TextBlock Text="Upscale Progress:" FontWeight="Bold"/>
-                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"/>
+                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"
+                                 ShowProgressText="True"
+                                 CornerRadius="6"/>
                 </StackPanel>
                 <StackPanel Spacing="8" Margin="0,8,0,0">
                     <TextBlock Text="Overall Progress:" FontWeight="Bold"/>
-                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.OverallProgress}"/>
+                    <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.OverallProgress}"
+                                 ShowProgressText="True"
+                                 CornerRadius="6"/>
                 </StackPanel>
             </StackPanel>
         </Border>

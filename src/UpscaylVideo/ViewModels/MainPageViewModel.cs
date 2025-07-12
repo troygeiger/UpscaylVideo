@@ -196,6 +196,28 @@ public partial class MainPageViewModel : PageBase
         Job.WorkingFolder = selected.Path.LocalPath;
         CheckReadyToRun();
     }
+    
+    [RelayCommand]
+    private async Task BrowseOutputPath()
+    {
+        if (!File.Exists(Job.VideoPath))
+            return;
+        var videoExtension = Path.GetExtension(Job.VideoPath);
+        
+        var provider = App.Window!.StorageProvider;
+        var result = await provider.SaveFilePickerAsync(new()
+        {
+            Title = "Select output file",
+            SuggestedFileName = Job.OutputFilePath ?? UpscaleJob.GenerateDefaultOutputPath(Job.VideoPath),
+            FileTypeChoices = [new(videoExtension)
+            {
+                Patterns = [$"*{videoExtension}"]
+            }],
+        });
+        if (result is null)
+            return;
+        Job.OutputFilePath = result.Path.LocalPath;
+    }
         
     
     [RelayCommand(CanExecute = nameof(ReadyToRun))]
@@ -208,23 +230,10 @@ public partial class MainPageViewModel : PageBase
         config.GpuNumbers = Job.GpuNumber;
         config.Save();
 
-        // Set output path and file name before enqueuing
-        var srcVideoFolder = Path.GetDirectoryName(Job.VideoPath);
-        if (string.IsNullOrWhiteSpace(srcVideoFolder) || Job.VideoPath is null)
-            return;
-        string outputFolder = !string.IsNullOrWhiteSpace(config.OutputPath) ? config.OutputPath : srcVideoFolder;
-        string originalFile = Path.GetFileNameWithoutExtension(Job.VideoPath);
-        string originalExtension = Path.GetExtension(Job.VideoPath);
-        var templateModel = new {
-            OriginalFile = originalFile,
-            OriginalExtension = originalExtension
-        };
-        string templateString = string.IsNullOrWhiteSpace(config.OutputFileNameTemplate)
-            ? "{{OriginalFile}}-upscaled{{OriginalExtension}}"
-            : config.OutputFileNameTemplate;
-        var template = HandlebarsDotNet.Handlebars.Compile(templateString);
-        string outputFileName = template(templateModel);
-        Job.OutputFilePath = System.IO.Path.Combine(outputFolder ?? string.Empty, outputFileName);
+        if (string.IsNullOrWhiteSpace(Job.OutputFilePath))
+        {
+            Job.OutputFilePath = UpscaleJob.GenerateDefaultOutputPath(Job.VideoPath);
+        }
 
         // Enqueue the job instead of navigating
         UpscaylVideo.Services.JobQueueService.Instance.EnqueueJob(Job);

@@ -46,8 +46,8 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
     [ObservableProperty] private bool _deleteWorkingFolderWhenCompleted = true;
 
-    [ObservableProperty] private string? _outputPath;
-    [ObservableProperty] private string? _outputFileName;
+    //[ObservableProperty] private string? _outputPath;
+    //[ObservableProperty] private string? _outputFileName;
 
     [ObservableProperty]
     private UpscaleJobStatus _status = UpscaleJobStatus.Queued;
@@ -65,6 +65,8 @@ public partial class UpscaleJob : ObservableObject
                         ? AppConfiguration.Instance.TempWorkingFolder
                         : Path.GetDirectoryName(p.Value);
                     WorkingFolder = folder is null ? WorkingFolder : Path.Combine(folder, $"{fileName}_Working", string.Empty);
+                    
+                    OutputFilePath = GenerateDefaultOutputPath(p.Value);
                 }
 
                 _previousVideoPath = p.Value;
@@ -130,5 +132,28 @@ public partial class UpscaleJob : ObservableObject
         {
             Console.Error.WriteLine(e);
         }
+    }
+
+    public static string? GenerateDefaultOutputPath(string? videoPath)
+    {
+        if (string.IsNullOrWhiteSpace(videoPath))
+            return null;
+        var config = AppConfiguration.Instance;
+        string outputFolder = !string.IsNullOrWhiteSpace(config.OutputPath) 
+            ? config.OutputPath : Path.GetDirectoryName(videoPath) ?? Environment.CurrentDirectory;
+        
+        string originalFile = Path.GetFileNameWithoutExtension(videoPath);
+        string originalExtension = Path.GetExtension(videoPath);
+        var templateModel = new {
+            OriginalFile = originalFile,
+            OriginalExtension = originalExtension
+        };
+        string templateString = string.IsNullOrWhiteSpace(config.OutputFileNameTemplate)
+            ? "{{OriginalFile}}-upscaled{{OriginalExtension}}"
+            : config.OutputFileNameTemplate;
+        var template = HandlebarsDotNet.Handlebars.Compile(templateString);
+        string outputFileName = template(templateModel);
+        
+        return Path.Combine(outputFolder, outputFileName);
     }
 }
