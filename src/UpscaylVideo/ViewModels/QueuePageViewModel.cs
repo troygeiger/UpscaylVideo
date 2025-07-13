@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
@@ -74,9 +75,9 @@ public partial class QueuePageViewModel : PageBase
     }
 
     [RelayCommand]
-    private void CancelJob()
+    private async Task CancelJob()
     {
-        JobQueueService.Instance.CancelCurrentJob();
+        await JobQueueService.Instance.CancelCurrentJobAsync();
     }
 
 

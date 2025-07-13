@@ -84,7 +84,9 @@
         <ScrollViewer Grid.Row="1">
             <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage, Mode=OneWay}"
                                          Margin="8">
-
+                <TransitioningContentControl.PageTransition>
+                    <PageSlide Orientation="Vertical" Duration="0:00:00.200" />
+                </TransitioningContentControl.PageTransition>
             </TransitioningContentControl>
         </ScrollViewer>
         <!-- Progress Panel -->

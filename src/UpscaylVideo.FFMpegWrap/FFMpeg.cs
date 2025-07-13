@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Security.Cryptography;
 using CliWrap;
 using CliWrap.Buffered;
-using UpscaylVideo.FFMpegWrap.Models;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.FFMpegWrap;

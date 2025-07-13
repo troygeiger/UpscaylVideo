@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData.Binding;
-using ReactiveUI;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
 

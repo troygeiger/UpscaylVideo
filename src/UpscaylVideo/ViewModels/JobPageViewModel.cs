@@ -6,25 +6,19 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls.Documents;
-using Avalonia.Controls.Shapes;
-using Avalonia.Interactivity;
 using CliWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DialogHostAvalonia;
 using DynamicData.Binding;
 using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
-using UpscaylVideo.FFMpegWrap.Models.Probe;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
-using HandlebarsDotNet;
 using Path = System.IO.Path;
-using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
+[Obsolete("Moved most functionality to JobQueueService, this class is now only for reference and will be removed in a future version.")]
 public partial class JobPageViewModel : PageBase, IDisposable
 {
     private const string TimespanFormat = @"d\.hh\:mm\:ss";

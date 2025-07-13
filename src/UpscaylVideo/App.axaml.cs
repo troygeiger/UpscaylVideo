@@ -1,17 +1,13 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using UpscaylVideo.Models;
 using UpscaylVideo.ViewModels;
 using UpscaylVideo.Views;
 using HandlebarsDotNet;
 using System;
-using System.Globalization;
-using UpscaylVideo.Services;
 
 namespace UpscaylVideo;
 

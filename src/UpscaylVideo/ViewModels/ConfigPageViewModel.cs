@@ -1,14 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
-using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 

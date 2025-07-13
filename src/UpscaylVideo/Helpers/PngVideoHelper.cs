@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UpscaylVideo.FFMpegWrap;
-using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.Helpers;
 

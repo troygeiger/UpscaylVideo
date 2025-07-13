@@ -10,7 +10,6 @@ using DynamicData.Binding;
 using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Models;
-using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -92,9 +91,9 @@ public partial class MainPageViewModel : PageBase
     }
 
     [RelayCommand]
-    private void CancelJob()
+    private async Task CancelJob()
     {
-        UpscaylVideo.Services.JobQueueService.Instance.CancelCurrentJob();
+        await Services.JobQueueService.Instance.CancelCurrentJobAsync();
     }
 
     public override void OnAppearing()

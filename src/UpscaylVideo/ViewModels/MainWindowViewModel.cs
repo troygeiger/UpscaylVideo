@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
-using UpscaylVideo.Models;
 using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
