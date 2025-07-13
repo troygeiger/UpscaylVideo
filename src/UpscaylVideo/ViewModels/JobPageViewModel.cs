@@ -135,7 +135,7 @@ public partial class JobPageViewModel : PageBase, IDisposable
             Directory.CreateDirectory(upscaleOutput);
 
             // Output path and file are now set in UpscaleJob before enqueuing
-            string final = Job.OutputFilePath;
+            string final = Job.OutputFilePath!;
 
             var audioFile = Path.Combine(Job.WorkingFolder, $"Audio{extension}");
             var metadataFile = Path.Combine(Job.WorkingFolder, $"Metadata.ffmeta");

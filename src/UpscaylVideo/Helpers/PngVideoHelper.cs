@@ -11,26 +11,24 @@ namespace UpscaylVideo.Helpers;
 
 public class PngVideoHelper : IDisposable
 {
-    private Process? _ffmpegProcess;
-    private Thread? _ffmpegProcessTask;
+    // private Process? _ffmpegProcess;
+    // private Thread? _ffmpegProcessTask;
     private Queue<string> _frameQueue = new();
     private bool _isRuning = false;
     private bool _shouldStop = false;
     private readonly string _outputPath;
     private readonly double _framerate;
-    private readonly CancellationToken _parentCancellationToken;
     private readonly double? _frameInterpolationFps;
-    private CancellationTokenSource _cancellationTokenSource;
-    private CancellationToken _cancellationToken;
+    private readonly CancellationTokenSource _cancellationTokenSource;
+    private readonly CancellationToken _cancellationToken;
 
 
     public PngVideoHelper(string outputPath, double framerate, CancellationToken parentCancellationToken, double? frameInterpolationFps = null)
     {
         _outputPath = outputPath;
         _framerate = framerate;
-        _parentCancellationToken = parentCancellationToken;
         _frameInterpolationFps = frameInterpolationFps;
-        _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_parentCancellationToken);
+        _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(parentCancellationToken);
         _cancellationToken = _cancellationTokenSource.Token;
     }
 
