@@ -99,42 +99,43 @@
                 IsVisible="{Binding JobQueueService.IsProcessing, Mode=OneWay}">
             <StackPanel Orientation="Vertical" Spacing="6">
                 <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobQueueService.StatusMessage}"/>
-                <StackPanel Orientation="Horizontal" Spacing="16">
-                    <StackPanel>
+                <Grid Margin="0,0,0,8" ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,12,Auto">
+                    <!-- First row -->
+                    <StackPanel Grid.Column="0" Grid.Row="0">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Input}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.VideoPath, FallbackValue=N/A}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.VideoPath, FallbackValue=N/A}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="0">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Output}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.OutputFilePath, FallbackValue=N/A}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.OutputFilePath, FallbackValue=N/A}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="0">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Model}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedModel.Name, FallbackValue=N/A}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.SelectedModel.Name, FallbackValue=N/A}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="3" Grid.Row="0">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Scale}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedScale, FallbackValue=N/A}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.SelectedScale, FallbackValue=N/A}"/>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="16">
-                    <StackPanel>
+                    <!-- Spacer row (12px) -->
+                    <!-- Second row -->
+                    <StackPanel Grid.Column="0" Grid.Row="2">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Frames}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.CompletedFrames}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CompletedFrames}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="2">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_TotalFrames}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.TotalFrames}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.TotalFrames}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="2">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_ETA}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.DspEta, TargetNullValue=Calculating..}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.DspEta, TargetNullValue=Calculating..}"/>
                     </StackPanel>
-                    <StackPanel>
+                    <StackPanel Grid.Column="3" Grid.Row="2">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Elapsed}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding JobQueueService.DspElapsedTime}"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.DspElapsedTime}"/>
                     </StackPanel>
-                </StackPanel>
+                </Grid>
                 <StackPanel>
                     <TextBlock Text="{x:Static local:Localization.MainWindow_UpscaleProgress}" FontWeight="Bold"/>
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"
