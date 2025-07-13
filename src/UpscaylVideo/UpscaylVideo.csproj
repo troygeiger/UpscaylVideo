@@ -57,4 +57,22 @@
     <ItemGroup>
       <ProjectReference Include="..\UpscaylVideo.FFMpegWrap\UpscaylVideo.FFMpegWrap.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Localization.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Localization.de-de.resx">
+        <DependentUpon>Localization.resx</DependentUpon>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Localization.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Localization.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

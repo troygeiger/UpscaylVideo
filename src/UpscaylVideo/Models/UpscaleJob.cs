@@ -12,13 +12,6 @@ using UpscaylVideo.FFMpegWrap.Models.Probe;
 
 namespace UpscaylVideo.Models;
 
-public enum UpscaleJobStatus
-{
-    Queued,
-    Running,
-    Completed
-}
-
 public partial class UpscaleJob : ObservableObject
 {
     /// <summary>
@@ -44,12 +37,7 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private AIModelOption? _selectedModel;
     [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
     [ObservableProperty] private bool _deleteWorkingFolderWhenCompleted = true;
-
-    //[ObservableProperty] private string? _outputPath;
-    //[ObservableProperty] private string? _outputFileName;
-
-    [ObservableProperty]
-    private UpscaleJobStatus _status = UpscaleJobStatus.Queued;
+    [ObservableProperty] private string _status = Localization.Status_Queued;
 
     public UpscaleJob()
     {

@@ -1,0 +1,152 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MainWindow_Input" xml:space="preserve">
+        <value>Eingabe:</value>
+    </data>
+    <data name="MainWindow_Output" xml:space="preserve">
+        <value>Ausgabe:</value>
+    </data>
+    <data name="MainWindow_Model" xml:space="preserve">
+        <value>Modell:</value>
+    </data>
+    <data name="MainWindow_Scale" xml:space="preserve">
+        <value>Skalierung:</value>
+    </data>
+    <data name="MainWindow_Frames" xml:space="preserve">
+        <value>Bilder:</value>
+    </data>
+    <data name="MainWindow_TotalFrames" xml:space="preserve">
+        <value>Gesamtbilder:</value>
+    </data>
+    <data name="MainWindow_ETA" xml:space="preserve">
+        <value>Voraussichtliche Zeit:</value>
+    </data>
+    <data name="MainWindow_Elapsed" xml:space="preserve">
+        <value>Vergangene Zeit:</value>
+    </data>
+    <data name="MainWindow_UpscaleProgress" xml:space="preserve">
+        <value>Hochskalierungsfortschritt:</value>
+    </data>
+    <data name="MainWindow_OverallProgress" xml:space="preserve">
+        <value>Gesamtfortschritt:</value>
+    </data>
+    <data name="MainPageView_VideoFile" xml:space="preserve">
+        <value>Videodatei</value>
+    </data>
+    <data name="MainPageView_WorkingFolder" xml:space="preserve">
+        <value>Arbeitsordner</value>
+    </data>
+    <data name="MainPageView_OutputPath" xml:space="preserve">
+        <value>Ausgabepfad</value>
+    </data>
+    <data name="MainPageView_ImageScale" xml:space="preserve">
+        <value>Bildskalierung ({0}x)</value>
+    </data>
+    <data name="MainPageView_Model" xml:space="preserve">
+        <value>Modell</value>
+    </data>
+    <data name="MainPageView_UpscaleChunkSize" xml:space="preserve">
+        <value>Upscale-Chunks</value>
+    </data>
+    <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve">
+        <value>Dies ist die Anzahl der Bilder, die gleichzeitig verarbeitet werden. Da es derzeit ein Speicherleck im Upscayl-Cli-Prozess gibt, kann eine hohe Zahl den Systemspeicher aufbrauchen.</value>
+    </data>
+    <data name="MainPageView_GpuNumberList" xml:space="preserve">
+        <value>GPU-Nummer (leer für automatisch oder durch Kommas getrennt für mehrere)</value>
+    </data>
+    <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve">
+        <value>Arbeitsordner nach Abschluss löschen?</value>
+    </data>
+    <data name="MainPageView_FrameCount" xml:space="preserve">
+        <value>Bilderanzahl:</value>
+    </data>
+    <data name="MainPageView_OriginalDimension" xml:space="preserve">
+        <value>Originalgröße:</value>
+    </data>
+    <data name="MainPageView_ScaledDimension" xml:space="preserve">
+        <value>Skalierte Größe:</value>
+    </data>
+    <data name="MainPageView_Duration" xml:space="preserve">
+        <value>Dauer:</value>
+    </data>
+    <data name="MainPageView_NotLoaded" xml:space="preserve">
+        <value>Nicht geladen</value>
+    </data>
+    <data name="MainPageView_Framerate" xml:space="preserve">
+        <value>Bildrate:</value>
+    </data>
+    <data name="ConfigPageView_UpscaylPath" xml:space="preserve">
+        <value>Upscayl-Pfad:</value>
+    </data>
+    <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve">
+        <value>FFMpeg-Binärdateipfad:</value>
+    </data>
+    <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve">
+        <value>Temporärer Arbeitsordner:</value>
+    </data>
+    <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve">
+        <value>Standard-Ausgabepfad:</value>
+    </data>
+    <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve">
+        <value>Standard-Ausgabedatei-Vorlage:</value>
+    </data>
+    <data name="ConfigPageView_LeaveBlank" xml:space="preserve">
+        <value>Leer lassen, um in den Quellordner auszugeben.</value>
+    </data>
+    <data name="ConfigPageView_DefaultTemplate" xml:space="preserve">
+        <value>Standard: {{OriginalFile}}-upscaled{{OriginalExtension}}</value>
+    </data>
+    <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve">
+        <value>Verfügbar: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--optional}}</value>
+    </data>
+    <data name="ConfigPageView_CustomDateTime" xml:space="preserve">
+        <value>Verwenden Sie {{Now "format"}} für benutzerdefiniertes Datum/Uhrzeit, z. B. {{Now 'yyyyMMdd_HHmmss'}}</value>
+    </data>
+    <data name="QueuePageView_Back" xml:space="preserve">
+        <value>Zurück</value>
+    </data>
+    <data name="QueuePageView_ClearQueue" xml:space="preserve">
+        <value>Warteschlange leeren</value>
+    </data>
+    <data name="QueuePageView_Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="QueuePageView_VideoPath" xml:space="preserve">
+        <value>Videopfad</value>
+    </data>
+    <data name="QueuePageView_Model" xml:space="preserve">
+        <value>Modell</value>
+    </data>
+    <data name="QueuePageView_Scale" xml:space="preserve">
+        <value>Skalierung</value>
+    </data>
+    <data name="QueuePageView_OutputFile" xml:space="preserve">
+        <value>Ausgabedatei</value>
+    </data>
+    <data name="QueuePageView_Actions" xml:space="preserve">
+        <value>Aktionen</value>
+    </data>
+    <data name="QueuePageView_Remove" xml:space="preserve">
+        <value>Entfernen</value>
+    </data>
+    <data name="Status_Queued" xml:space="preserve">
+        <value>In Warteschlange</value>
+    </data>
+    <data name="Status_Running" xml:space="preserve">
+        <value>Läuft</value>
+    </data>
+    <data name="Status_Completed" xml:space="preserve">
+        <value>Abgeschlossen</value>
+    </data>
+</root>

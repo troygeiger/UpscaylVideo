@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:resx="clr-namespace:UpscaylVideo"
              x:DataType="vm:ConfigPageViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UpscaylVideo.Views.ConfigPageView">
@@ -27,7 +28,7 @@
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Classes="form-label"
-                       Content="Upscayl Path:" />
+                       Content="{x:Static resx:Localization.ConfigPageView_UpscaylPath}" />
                 <TextBox Grid.Row="0"
                          Grid.Column="1"
                          Classes=""
@@ -41,7 +42,7 @@
 
                 <Label Grid.Row="1" Grid.Column="0" 
                        Classes="form-label"
-                       Content="FFMpeg Binaries Path:"/>
+                       Content="{x:Static resx:Localization.ConfigPageView_FFmpegBinariesPath}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" 
                          Text="{Binding Path=Configuration.FFmpegBinariesPath}">
                     <TextBox.InnerRightContent>
@@ -53,7 +54,7 @@
                 
                 <Label Grid.Row="2" Grid.Column="0" 
                        Classes="form-label"
-                       Content="Temporary Working Folder:"/>
+                       Content="{x:Static resx:Localization.ConfigPageView_TemporaryWorkingFolder}"/>
                 <TextBox Grid.Row="2" Grid.Column="1" 
                          Text="{Binding Path=Configuration.TempWorkingFolder}">
                     <TextBox.InnerRightContent>
@@ -65,7 +66,7 @@
 
                 <Label Grid.Row="3" Grid.Column="0"
                        Classes="form-label"
-                       Content="Output Path:"/>
+                       Content="{x:Static resx:Localization.ConfigPageView_DefaultOutputPath}"/>
                 <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
                     <TextBox Text="{Binding Path=Configuration.OutputPath, Mode=TwoWay}">
                         <TextBox.InnerRightContent>
@@ -74,17 +75,17 @@
                                     Command="{Binding Path=BrowseOutputPathCommand, Mode=OneWay}" />
                         </TextBox.InnerRightContent>
                     </TextBox>
-                    <TextBlock Text="Leave blank to output to source folder." FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_LeaveBlank}" FontSize="12" Foreground="Gray"/>
                 </StackPanel>
 
                 <Label Grid.Row="4" Grid.Column="0"
                        Classes="form-label"
-                       Content="Output File Name Template:"/>
+                       Content="{x:Static resx:Localization.ConfigPageView_OutputFileNameTemplate}"/>
                 <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
                     <TextBox Text="{Binding Path=Configuration.OutputFileNameTemplate, Mode=TwoWay}"/>
-                    <TextBlock Text="Default: {{OriginalFile}}-upscaled{{OriginalExtension}}" FontSize="12" Foreground="Gray"/>
-                    <TextBlock Text="Available: {{OriginalFile}}, {{OriginalExtension}}, {{Now &quot;yyyy-MM-dd&quot;&lt;--optional}}" FontSize="12" Foreground="Gray"/>
-                    <TextBlock Text="Use {{Now &quot;format&quot;}} for custom date/time, e.g. {{Now 'yyyyMMdd_HHmmss'}}" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_DefaultTemplate}" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_AvailableTemplateVars}" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_CustomDateTime}" FontSize="12" Foreground="Gray"/>
                 </StackPanel>
             </Grid>
         </TabItem>

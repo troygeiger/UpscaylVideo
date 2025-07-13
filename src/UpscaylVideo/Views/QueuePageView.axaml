@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:resx="clr-namespace:UpscaylVideo"
              x:DataType="vm:QueuePageViewModel"
              x:Name="QueuePage"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -13,8 +14,8 @@
     </Design.DataContext>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
-            <Button Content="Back" Command="{Binding BackCommand}" Margin="0,0,8,0"/>
-            <Button Content="Clear Queue" Command="{Binding ClearQueueCommand}"/>
+            <Button Content="{x:Static resx:Localization.QueuePageView_Back}" Command="{Binding BackCommand}" Margin="0,0,8,0"/>
+            <Button Content="{x:Static resx:Localization.QueuePageView_ClearQueue}" Command="{Binding ClearQueueCommand}"/>
         </StackPanel>
         <DataGrid ItemsSource="{Binding JobQueue}" 
                   SelectedItem="{Binding SelectedJob, Mode=TwoWay}" 
@@ -22,15 +23,15 @@
                   Margin="8"
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Video Path" Binding="{Binding VideoPath, Mode=OneWay}" Width="3*"/>
-                <DataGridTextColumn Header="Model" Binding="{Binding SelectedModel.Name, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Scale" Binding="{Binding SelectedScale, Mode=OneWay}" Width="*"/>
-                <DataGridTextColumn Header="Output File" Binding="{Binding OutputFilePath, Mode=OneWay}" Width="3*"/>
-                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_Status}" Binding="{Binding Status, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_VideoPath}" Binding="{Binding VideoPath, Mode=OneWay}" Width="3*"/>
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_Model}" Binding="{Binding SelectedModel.Name, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_Scale}" Binding="{Binding SelectedScale, Mode=OneWay}" Width="*"/>
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_OutputFile}" Binding="{Binding OutputFilePath, Mode=OneWay}" Width="3*"/>
+                <DataGridTemplateColumn Header="{x:Static resx:Localization.QueuePageView_Actions}" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Remove"
+                            <Button Content="{x:Static resx:Localization.QueuePageView_Remove}"
                                     Command="{Binding #QueuePage.((vm:QueuePageViewModel)DataContext).RemoveJobCommand}"
                                     CommandParameter="{Binding}" />
                         </DataTemplate>

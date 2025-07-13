@@ -28,6 +28,15 @@ The application orchestrates CLI applications Upscayl and ffmpeg for extracting 
 - Output file paths are set at enqueue time and shown in the queue.
 - The UI is being refactored for a new UX that relies on the service for all job/progress state.
 
+## Localization
+
+- All displayed strings must be added to the main `Localization.resx` file in `src/UpscaylVideo/`.
+- For additional languages, add translations to the corresponding `.resx` files (e.g., `Localization.de-de.resx`).
+- When creating new displayed strings, add them to the main resource file and provide translations as needed.
+- Keys that are specific to a view should be prefixed with the window or page name (e.g., `MainWindow_TheStringName`).
+- Bind localizations in the views using Avalonia's binding mechanisms.
+- When binding to localized strings, ensure an xmlns is pointing to `clr-namespace:UpscaylVideo`.
+
 ## Development Notes
 
 - All orchestration logic (frame extraction, upscaling, merging, progress, cancellation) should be implemented in the service layer, not in ViewModels.

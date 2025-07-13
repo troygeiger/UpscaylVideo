@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:UpscaylVideo"
         xmlns:vm="using:UpscaylVideo.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -100,48 +101,48 @@
                 <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobQueueService.StatusMessage}"/>
                 <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel>
-                        <TextBlock Text="Input:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Input}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.CurrentJob.VideoPath, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Output:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Output}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.CurrentJob.OutputFilePath, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Model:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Model}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedModel.Name, FallbackValue=N/A}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Scale:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Scale}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.CurrentJob.SelectedScale, FallbackValue=N/A}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="16">
                     <StackPanel>
-                        <TextBlock Text="Frames:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Frames}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.CompletedFrames}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Total Frames:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_TotalFrames}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.TotalFrames}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="ETA:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_ETA}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.DspEta, TargetNullValue=Calculating..}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Elapsed:" FontWeight="Bold"/>
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Elapsed}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding JobQueueService.DspElapsedTime}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel>
-                    <TextBlock Text="Upscale Progress:" FontWeight="Bold"/>
+                    <TextBlock Text="{x:Static local:Localization.MainWindow_UpscaleProgress}" FontWeight="Bold"/>
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"
                                  ShowProgressText="True"
                                  CornerRadius="6"/>
                 </StackPanel>
                 <StackPanel Spacing="8" Margin="0,8,0,0">
-                    <TextBlock Text="Overall Progress:" FontWeight="Bold"/>
+                    <TextBlock Text="{x:Static local:Localization.MainWindow_OverallProgress}" FontWeight="Bold"/>
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.OverallProgress}"
                                  ShowProgressText="True"
                                  CornerRadius="6"/>

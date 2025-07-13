@@ -7,6 +7,7 @@ using UpscaylVideo.Helpers;
 using UpscaylVideo.FFMpegWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UpscaylVideo.Models;
+using UpscaylVideo;
 
 namespace UpscaylVideo.Services;
 
@@ -107,23 +108,23 @@ public partial class JobQueueService : ObservableObject
             while (index < JobQueue.Count)
             {
                 var job = JobQueue[index];
-                if (job.Status != UpscaleJobStatus.Queued)
+                if (job.Status != Localization.Status_Queued)
                 {
                     index++;
                     continue;
                 }
                 CurrentJob = job;
-                job.Status = UpscaleJobStatus.Running;
+                job.Status = Localization.Status_Running;
                 await RunJobAsync(job, _cancellationTokenSource.Token);
                 if (_cancellationTokenSource.IsCancellationRequested)
                 {
-                    job.Status = UpscaleJobStatus.Queued;
+                    job.Status = Localization.Status_Queued;
                     // Do not remove current job, just stop processing
                     break;
                 }
                 else
                 {
-                    job.Status = UpscaleJobStatus.Completed;
+                    job.Status = Localization.Status_Completed;
                 }
                 // Only remove if not cancelled
                 index++;

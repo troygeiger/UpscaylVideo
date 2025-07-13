@@ -6,6 +6,7 @@
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:resx="clr-namespace:UpscaylVideo"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:MainPageViewModel"
              x:Class="UpscaylVideo.Views.MainPageView">
@@ -17,7 +18,7 @@
               RowDefinitions="Auto">
             <StackPanel Grid.Column="0"
                         Spacing="16">
-                <TextBox p1:TextFieldAssist.Label="Video File"
+                <TextBox p1:TextFieldAssist.Label="{x:Static resx:Localization.MainPageView_VideoFile}"
                          Text="{Binding Path=Job.VideoPath}">
                     <TextBox.InnerRightContent>
                         <Button Classes="textbox-button"
@@ -26,7 +27,7 @@
                     </TextBox.InnerRightContent>
                 </TextBox>
                 
-                <TextBox p1:TextFieldAssist.Label="Working Folder"
+                <TextBox p1:TextFieldAssist.Label="{x:Static resx:Localization.MainPageView_WorkingFolder}"
                          Text="{Binding Path=Job.WorkingFolder}">
                     <TextBox.InnerRightContent>
                         <Button Classes="textbox-button"
@@ -35,7 +36,7 @@
                     </TextBox.InnerRightContent>
                 </TextBox>
 
-                <TextBox p1:TextFieldAssist.Label="Output Path"
+                <TextBox p1:TextFieldAssist.Label="{x:Static resx:Localization.MainPageView_OutputPath}"
                          Text="{Binding Path=Job.OutputFilePath, Mode=TwoWay}">
                     <TextBox.InnerRightContent>
                         <Button Classes="textbox-button"
@@ -47,7 +48,7 @@
                 <StackPanel Spacing="10"
                             Width="300"
                             HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding Path=Job.SelectedScale, StringFormat='Image Scale ({0}x)', Mode=OneWay}"
+                    <TextBlock Text="{Binding Path=Job.SelectedScale, StringFormat={x:Static resx:Localization.MainPageView_ImageScale}, Mode=OneWay}"
                                FontWeight="Bold" />
                     <Slider IsSnapToTickEnabled="True"
                             Maximum="16"
@@ -60,18 +61,18 @@
                 <ComboBox Width="300"
                           HorizontalAlignment="Left"
                           Theme="{StaticResource MaterialOutlineComboBox}"
-                          p1:ComboBoxAssist.Label="Model"
+                          p1:ComboBoxAssist.Label="{x:Static resx:Localization.MainPageView_Model}"
                           SelectedValue="{Binding Path=Job.SelectedModel}"
                           ItemsSource="{Binding Path=ModelOptions, Mode=OneWay}"
                           DisplayMemberBinding="{Binding Path=DisplayName, Mode=OneWay}"/>
                 
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="Upscale Chunk Size"/>
+                        <Label Content="{x:Static resx:Localization.MainPageView_UpscaleChunkSize}"/>
                         <Label Background="CornflowerBlue"
                                Content=" ? "
                                CornerRadius="16"
-                               ToolTip.Tip="This is the number of frame to process at a time. Since there is currently a memory leak in Upscayl's Cli process, a high number may use up system memory."
+                               ToolTip.Tip="{x:Static resx:Localization.MainPageView_UpscaleChunkSizeTooltip}"
                                />
                     </StackPanel>
                     <NumericUpDown Width="300"
@@ -93,13 +94,15 @@
                     
                 </ComboBox>-->
                 
-                <TextBox p1:TextFieldAssist.Label="Gpu #(Blank for auto or comma separated for multiple)"
+                <TextBox p1:TextFieldAssist.Label="{x:Static resx:Localization.MainPageView_GpuNumberList}"
                          UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                          Text="{Binding Path=GpuNumberList}"
                          HorizontalAlignment="Left"
                          />
                 
-                <CheckBox IsChecked="{Binding Job.DeleteWorkingFolderWhenCompleted}">Delete working folder when completed?</CheckBox>
+                <CheckBox IsChecked="{Binding Job.DeleteWorkingFolderWhenCompleted}">
+                    <TextBlock Text="{x:Static resx:Localization.MainPageView_DeleteWorkingFolderWhenCompleted}"/>
+                </CheckBox>
                 
             </StackPanel>
             <controls:Card Grid.Column="1"
@@ -110,7 +113,7 @@
                 <Grid ColumnDefinitions="Auto, *"
                       RowDefinitions="Auto, Auto, Auto, Auto, Auto">
                     <Label Classes="form-label"
-                        Content="Frame Count:" />
+                        Content="{x:Static resx:Localization.MainPageView_FrameCount}" />
                     <TextBlock Grid.Column="1" 
                                Grid.Row="0" 
                         Text="{Binding Path=Job.VideoStream.NbFrames, FallbackValue='', Mode=OneWay}"
@@ -119,7 +122,7 @@
                     <Label Grid.Column="0"
                            Grid.Row="1"
                            Classes="form-label"
-                           Content="Original Dimension:"/>
+                           Content="{x:Static resx:Localization.MainPageView_OriginalDimension}"/>
                     <TextBlock Grid.Column="1"
                                Grid.Row="1"
                                Text="{Binding Path=Job.OriginalDimension, Mode=OneWay}"
@@ -128,7 +131,7 @@
                     <Label Grid.Column="0"
                            Grid.Row="2"
                            Classes="form-label"
-                           Content="Scaled Dimension:" />
+                           Content="{x:Static resx:Localization.MainPageView_ScaledDimension}" />
                     <TextBlock Grid.Column="1"
                                Grid.Row="2"
                                Text="{Binding Path=Job.ScaledDimensions, Mode=OneWay}"
@@ -137,20 +140,20 @@
                     <Label Grid.Row="3"
                            Grid.Column="0"
                            Classes="form-label"
-                           Content="Duration:"/>
+                           Content="{x:Static resx:Localization.MainPageView_Duration}"/>
                     <TextBlock Grid.Row="3"
                                Grid.Column="1"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoDetails.Format.Duration, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                               Text="{Binding Path=Job.VideoDetails.Format.Duration, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
                     
                     <Label Grid.Row="4"
                            Grid.Column="0"
                            Classes="form-label"
-                           Content="Framerate:"/>
+                           Content="{x:Static resx:Localization.MainPageView_Framerate}"/>
                     <TextBlock Grid.Row="4"
                                Grid.Column="1"
                                VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue='Not Loaded'}"/>
+                               Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
                     
                     
                 </Grid>
