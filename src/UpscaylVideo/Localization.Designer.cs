@@ -309,6 +309,12 @@ namespace UpscaylVideo {
             }
         }
         
+        public static string QueuePageView_ElapsedTime {
+            get {
+                return ResourceManager.GetString("QueuePageView_ElapsedTime", resourceCulture);
+            }
+        }
+        
         public static string Status_Queued {
             get {
                 return ResourceManager.GetString("Status_Queued", resourceCulture);

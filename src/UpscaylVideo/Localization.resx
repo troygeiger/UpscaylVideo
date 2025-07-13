@@ -150,6 +150,9 @@
     <data name="QueuePageView_Remove" xml:space="preserve">
         <value>Remove</value>
     </data>
+    <data name="QueuePageView_ElapsedTime" xml:space="preserve">
+        <value>Elapsed Time</value>
+    </data>
     <data name="Status_Queued" xml:space="preserve">
         <value>Queued</value>
     </data>

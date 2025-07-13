@@ -28,6 +28,7 @@
                 <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_Model}" Binding="{Binding SelectedModel.Name, Mode=OneWay}" Width="*"/>
                 <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_Scale}" Binding="{Binding SelectedScale, Mode=OneWay}" Width="*"/>
                 <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_OutputFile}" Binding="{Binding OutputFilePath, Mode=OneWay}" Width="3*"/>
+                <DataGridTextColumn Header="{x:Static resx:Localization.QueuePageView_ElapsedTime}" Binding="{Binding DspElapsedTime, Mode=OneWay}"/>
                 <DataGridTemplateColumn Header="{x:Static resx:Localization.QueuePageView_Actions}" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

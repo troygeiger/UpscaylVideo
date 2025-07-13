@@ -38,6 +38,8 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private int[] _gpuNumber = AppConfiguration.Instance.GpuNumbers;
     [ObservableProperty] private bool _deleteWorkingFolderWhenCompleted = true;
     [ObservableProperty] private string _status = Localization.Status_Queued;
+    [ObservableProperty] private TimeSpan _elapsedTime = TimeSpan.Zero;
+    [ObservableProperty] private string? _dspElapsedTime;
 
     public UpscaleJob()
     {

@@ -32,6 +32,7 @@ public partial class JobQueueService : ObservableObject
     [ObservableProperty] private string _statusMessage = string.Empty;
     private CancellationTokenSource? _cancellationTokenSource;
     private Task? _processingTask;
+    AverageProvider<long> averageProvider = new();
 
     public void EnqueueJob(UpscaleJob job)
     {
@@ -307,8 +308,10 @@ public partial class JobQueueService : ObservableObject
                     StatusMessage = $"Cleanup failed: {cleanupEx.Message}";
                 }
             }
-
-
+            ElapsedTime = elapsedStopwatch.Elapsed;
+            DspElapsedTime = ElapsedTime.ToString(TimespanFormat);
+            job.ElapsedTime = ElapsedTime;
+            job.DspElapsedTime = DspElapsedTime;
         }
     }
 
@@ -343,7 +346,6 @@ public partial class JobQueueService : ObservableObject
             {
                 args.AddRange(["-g", string.Join(',', gpuNumbers)]);
             }
-            var averageProvider = new AverageProvider<long>();
             // Use the observable property directly for completed frames
             var cmd = CliWrap.Cli.Wrap(upscaylBinPath)
                 .WithArguments(args)
@@ -370,6 +372,8 @@ public partial class JobQueueService : ObservableObject
                         Progress = (int)Math.Round(value);
                     }
                 }));
+            
+            averageProvider.Reset();
             var result = await cmd.ExecuteAsync(cancellationToken)
                 .ConfigureAwait(false);
             return result.ExitCode == 0;
@@ -399,11 +403,17 @@ public partial class JobQueueService : ObservableObject
             ElapsedTime = elapsedStopwatch.Elapsed;
             var progress = (int)((decimal)frameCount / TotalFrames * 100);
             OverallProgress = progress > 100 ? 100 : progress;
+            
+            if (CurrentJob is not null)
+            {
+                CurrentJob.ElapsedTime = ElapsedTime;
+                CurrentJob.DspElapsedTime = DspElapsedTime;
+            }
 
             if (AvgFrameRate.HasValue)
             {
                 var remaining = TotalFrames - frameCount;
-                Eta = (remaining * AvgFrameRate.Value);
+                Eta = (remaining * AvgFrameRate.Value) - averageProvider.TimeSinceLastAverageUpdate;
                 DspEta = Eta.Value.ToString(TimespanFormat);
             }
             

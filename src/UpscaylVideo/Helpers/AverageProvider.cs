@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace UpscaylVideo.Helpers;
@@ -9,14 +10,17 @@ public class AverageProvider<T> where T : notnull, INumberBase<T>, IDivisionOper
     private readonly T _length;
     private T _lastAverage = default!;
     private int _next = 0;
+    private Stopwatch _lastAverageUpdate;
 
     public AverageProvider() : this(10)
-    { }
+    {
+    }
     
     public AverageProvider(int averageSize)
     {
         _values = new T[averageSize];
         _length = (T)Convert.ChangeType(_values.Length, typeof(T));
+        _lastAverageUpdate = Stopwatch.StartNew();
     }
 
     public void Push(T value)
@@ -26,7 +30,6 @@ public class AverageProvider<T> where T : notnull, INumberBase<T>, IDivisionOper
         if (_next == 0)
         {
             UpdateAverage();
-            AverageReady = true;
         }
     }
     
@@ -41,6 +44,8 @@ public class AverageProvider<T> where T : notnull, INumberBase<T>, IDivisionOper
         return _lastAverage;
     }
     
+    public T GetAverage() => GetAverage(false);
+    
     private T UpdateAverage()
     {
         T total = default(T)!;
@@ -50,6 +55,8 @@ public class AverageProvider<T> where T : notnull, INumberBase<T>, IDivisionOper
             total = total + _values[i];
         }
         _lastAverage = total / _length;
+        AverageReady = true;
+        _lastAverageUpdate.Restart();
         return _lastAverage;
     }
 
@@ -59,5 +66,8 @@ public class AverageProvider<T> where T : notnull, INumberBase<T>, IDivisionOper
         for (int i = 0; i < _values.Length; i++)
             _values[i] = default!;
         AverageReady = false;
+        _lastAverageUpdate.Reset();
     }
+    
+    public TimeSpan TimeSinceLastAverageUpdate => _lastAverageUpdate.Elapsed;
 }
