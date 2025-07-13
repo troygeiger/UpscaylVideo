@@ -89,8 +89,8 @@ jobs:
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build-and-publish.outputs.minver-version }}
-          name: ${{ needs.build-and-publish.outputs.minver-version }}
+          tag_name: p${{ needs.build-and-publish.outputs.minver-version }}
+          name: 'Pre-release ${{ needs.build-and-publish.outputs.minver-version }}'
           prerelease: true
           files: |
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
