@@ -249,6 +249,12 @@ namespace UpscaylVideo {
             }
         }
         
+        public static string ConfigPageView_ResetToDefaultTemplate {
+            get {
+                return ResourceManager.GetString("ConfigPageView_ResetToDefaultTemplate", resourceCulture);
+            }
+        }
+        
         public static string QueuePageView_Back {
             get {
                 return ResourceManager.GetString("QueuePageView_Back", resourceCulture);

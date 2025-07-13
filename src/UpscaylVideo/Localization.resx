@@ -120,6 +120,9 @@
     <data name="ConfigPageView_CustomDateTime" xml:space="preserve">
         <value>Use {{Now "format"}} for custom date/time, e.g. {{Now 'yyyyMMdd_HHmmss'}}</value>
     </data>
+    <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve">
+        <value>Reset to default template</value>
+    </data>
     <data name="QueuePageView_Back" xml:space="preserve">
         <value>Back</value>
     </data>

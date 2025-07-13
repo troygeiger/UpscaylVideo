@@ -107,4 +107,28 @@ public partial class ConfigPageViewModel : PageBase
             Configuration.OutputFileNameTemplate = template;
         }
     }
+
+    public bool IsOutputFileNameTemplateCustom =>
+        !string.IsNullOrWhiteSpace(Configuration.OutputFileNameTemplate) &&
+        Configuration.OutputFileNameTemplate.Trim() != AppConfiguration.DefaultOutputFileNameTemplate;
+
+    partial void OnConfigurationChanged(AppConfiguration? value)
+    {
+        OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
+        if (value != null)
+        {
+            value.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AppConfiguration.OutputFileNameTemplate))
+                    OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
+            };
+        }
+    }
+
+    [RelayCommand]
+    private void ResetOutputFileNameTemplate()
+    {
+        Configuration.OutputFileNameTemplate = AppConfiguration.DefaultOutputFileNameTemplate;
+        OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
+    }
 }

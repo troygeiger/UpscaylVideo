@@ -7,6 +7,7 @@ namespace UpscaylVideo.Models;
 
 public partial class AppConfiguration : ObservableObject
 {
+    public const string DefaultOutputFileNameTemplate = "{{OriginalFile}}-upscaled{{OriginalExtension}}";
     private static AppConfiguration? _instance;
 
     public static AppConfiguration Instance
@@ -67,7 +68,7 @@ public partial class AppConfiguration : ObservableObject
         set => SetProperty(ref _outputPath, value);
     }
 
-    private string _outputFileNameTemplate = "{{OriginalFile}}-upscaled{{OriginalExtension}}";
+    private string _outputFileNameTemplate = DefaultOutputFileNameTemplate;
     public string OutputFileNameTemplate
     {
         get => _outputFileNameTemplate;

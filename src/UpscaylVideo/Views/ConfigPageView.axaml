@@ -82,7 +82,16 @@
                        Classes="form-label"
                        Content="{x:Static resx:Localization.ConfigPageView_OutputFileNameTemplate}"/>
                 <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
-                    <TextBox Text="{Binding Path=Configuration.OutputFileNameTemplate, Mode=TwoWay}"/>
+                    <TextBox Text="{Binding Path=Configuration.OutputFileNameTemplate, Mode=TwoWay}">
+                        <TextBox.InnerRightContent>
+                            <Button Classes="textbox-button"
+                                    IsVisible="{Binding Path=IsOutputFileNameTemplateCustom}"
+                                    Foreground="Orange"
+                                    ToolTip.Tip="{x:Static resx:Localization.ConfigPageView_ResetToDefaultTemplate}"
+                                    Command="{Binding Path=ResetOutputFileNameTemplateCommand}"
+                                    Content="{materialIcons:MaterialIconExt Kind=Restore}" />
+                        </TextBox.InnerRightContent>
+                    </TextBox>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_DefaultTemplate}" FontSize="12" Foreground="Gray"/>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_AvailableTemplateVars}" FontSize="12" Foreground="Gray"/>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_CustomDateTime}" FontSize="12" Foreground="Gray"/>
