@@ -1,6 +1,6 @@
 # UpscaylVideo
 
-UpscaylVideo is a cross-platform batch video upscaling tool that orchestrates [Upscayl](https://github.com/upscayl/upscayl) and ffmpeg to extract frames from video, upscale them using AI, and reassemble the video. It features a modern Avalonia UI, job queue, progress/cancellation controls, and supports both Windows and Linux.
+UpscaylVideo is a cross-platform batch video upscaling tool that orchestrates [Upscayl](https://github.com/upscayl/upscayl) and ffmpeg to extract frames from video, upscale them using AI, and reassemble the video. It features a modern Avalonia UI, job queue, progress/cancellation controls, and supports Windows, Linux, and macOS.
 
 ![Screenshot](screenshot.png)
 
@@ -10,7 +10,7 @@ UpscaylVideo is a cross-platform batch video upscaling tool that orchestrates [U
 - Job queue with progress, ETA, and cancellation
 - Modern UI with real-time feedback
 - Supports most common video formats
-- Cross-platform: Windows & Linux
+- Cross-platform: Windows, Linux & macOS
 
 ## Requirements
 
@@ -32,6 +32,12 @@ winget install Gyan.FFmpeg Upscayl.Upscayl
 - Install ffmpeg using your package manager (e.g. `sudo apt install ffmpeg`)
 - Download and extract the Upscayl AppImage or binary from [Upscayl releases](https://github.com/upscayl/upscayl/releases)
 - Make sure both `ffmpeg` and the Upscayl binary are in your PATH or specify their locations in the app settings
+
+### macOS
+
+- Install ffmpeg using Homebrew: `brew install ffmpeg`
+- Download the Upscayl binary from [Upscayl releases](https://github.com/upscayl/upscayl/releases)
+- Ensure both `ffmpeg` and the Upscayl binary are in your PATH or specify their locations in the app settings
 
 ## Usage
 
