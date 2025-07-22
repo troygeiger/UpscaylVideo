@@ -49,6 +49,22 @@ jobs:
           cd publish/win-x64
           zip -r ../../UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip .
 
+      - name: Publish (macOS x64)
+        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true -o publish/osx-x64
+
+      - name: Zip binaries (macOS x64)
+        run: |
+          cd publish/osx-x64
+          tar -czf ../../UpscaylVideo-osx-x64-${{ steps.minver.outputs.version }}.tar.gz .
+
+      - name: Publish (macOS arm64)
+        run: dotnet publish src/UpscaylVideo/UpscaylVideo.csproj -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -o publish/osx-arm64
+
+      - name: Zip binaries (macOS arm64)
+        run: |
+          cd publish/osx-arm64
+          tar -czf ../../UpscaylVideo-osx-arm64-${{ steps.minver.outputs.version }}.tar.gz .
+
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
@@ -60,6 +76,18 @@ jobs:
         with:
           name: UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip
           path: UpscaylVideo-win-x64-${{ steps.minver.outputs.version }}.zip
+
+      - name: Upload macOS x64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UpscaylVideo-osx-x64-${{ steps.minver.outputs.version }}.tar.gz
+          path: UpscaylVideo-osx-x64-${{ steps.minver.outputs.version }}.tar.gz
+
+      - name: Upload macOS arm64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UpscaylVideo-osx-arm64-${{ steps.minver.outputs.version }}.tar.gz
+          path: UpscaylVideo-osx-arm64-${{ steps.minver.outputs.version }}.tar.gz
 
   release:
     needs: build-and-publish
@@ -81,6 +109,8 @@ jobs:
           files: |
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
+            artifacts/UpscaylVideo-osx-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-osx-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
+            artifacts/UpscaylVideo-osx-arm64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-osx-arm64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -95,9 +125,7 @@ jobs:
           files: |
             artifacts/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-linux-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
             artifacts/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip/UpscaylVideo-win-x64-${{ needs.build-and-publish.outputs.minver-version }}.zip
+            artifacts/UpscaylVideo-osx-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-osx-x64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
+            artifacts/UpscaylVideo-osx-arm64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz/UpscaylVideo-osx-arm64-${{ needs.build-and-publish.outputs.minver-version }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-
