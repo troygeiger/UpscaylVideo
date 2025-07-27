@@ -41,20 +41,21 @@ public partial class ConfigPageViewModel : PageBase
         Back();
     }
 
-    private async Task<string?> BrowseFolder()
+    private async Task<Uri?> BrowseFolder(Uri? startingFolder = null)
     {
         var provider = App.Window?.StorageProvider;
         if (provider is null)
             return null;
+        var startingLocation = await startingFolder.TryGetStorageFolderAsync(provider);
         var folder = await provider.OpenFolderPickerAsync(new()
         {
-            
+            SuggestedStartLocation = startingLocation,
         });
         
         if (!folder.Any())
             return null;
         
-        return Uri.UnescapeDataString(folder.First().Path.AbsolutePath);
+        return folder.First().Path;
     }
     
     [RelayCommand]
@@ -63,8 +64,8 @@ public partial class ConfigPageViewModel : PageBase
         var result = await BrowseFolder();
         if (result is null)
             return;
-        
-        Configuration.UpscaylPath = Uri.UnescapeDataString(result);
+
+        Configuration.UpscaylPath = result.ToUnescapedAbsolutePath();
     }
 
     [RelayCommand]
@@ -73,30 +74,29 @@ public partial class ConfigPageViewModel : PageBase
         var result = await BrowseFolder();
         if (result is null)
             return;
-        
-        Configuration.FFmpegBinariesPath = Uri.UnescapeDataString(result);
+
+        Configuration.FFmpegBinariesPath = result.ToUnescapedAbsolutePath();
     }
 
     [RelayCommand]
     private async Task BrowseWorkingFolder()
     {
-        var result = await BrowseFolder();
+        var result = await BrowseFolder(Configuration.LastBrowsedWorkingFolder);
         if (result is null)
             return;
 
-        Configuration.TempWorkingFolder = Uri.UnescapeDataString(result);
+        Configuration.TempWorkingFolder = result.ToUnescapedAbsolutePath();
+        Configuration.LastBrowsedWorkingFolder = result;
     }
 
     [RelayCommand]
     private async Task BrowseOutputPath()
     {
-        var provider = App.Window?.StorageProvider;
-        if (provider is null)
+        var result = await BrowseFolder(Configuration.LastBrowsedOutputPath);
+        if (result is null)
             return;
-        var folder = await provider.OpenFolderPickerAsync(new());
-        if (!folder.Any())
-            return;
-        Configuration.OutputPath = Uri.UnescapeDataString(folder.First().Path.AbsolutePath);
+        Configuration.OutputPath = result.ToUnescapedAbsolutePath();
+        Configuration.LastBrowsedOutputPath = result;
     }
 
     [RelayCommand]

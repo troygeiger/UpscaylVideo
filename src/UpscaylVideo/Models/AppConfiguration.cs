@@ -1,4 +1,6 @@
+using System;
 using System.Text.Json.Serialization;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Helpers;
@@ -74,7 +76,13 @@ public partial class AppConfiguration : ObservableObject
         get => _outputFileNameTemplate;
         set => SetProperty(ref _outputFileNameTemplate, value);
     }
+
+    public Uri? LastBrowsedVideoPath { get; set; }
     
+    public Uri? LastBrowsedWorkingFolder { get; set; }
+    
+    public Uri? LastBrowsedOutputPath { get; set; }
+
     public void Save()
     {
         ConfigurationHelper.SaveConfig(this, AppConfigurationJsonContext.Default.AppConfiguration);

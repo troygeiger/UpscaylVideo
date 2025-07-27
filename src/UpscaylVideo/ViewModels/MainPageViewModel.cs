@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
+using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
 
 namespace UpscaylVideo.ViewModels;
@@ -160,10 +161,12 @@ public partial class MainPageViewModel : PageBase
     private async Task BrowseVideos()
     {
         var provider = App.Window!.StorageProvider;
+        var lastStorage = await AppConfiguration.Instance.LastBrowsedVideoPath.TryGetStorageFolderAsync(provider);
         var result = await provider.OpenFilePickerAsync(new()
         {
             Title = "Select video file",
             AllowMultiple = false,
+            SuggestedStartLocation = lastStorage, 
             FileTypeFilter = [ new("Videos")
             {
                 Patterns = [
@@ -179,20 +182,26 @@ public partial class MainPageViewModel : PageBase
         if (selected is null)
             return;
         Job.VideoPath = selected.Path.LocalPath;
+        AppConfiguration.Instance.LastBrowsedVideoPath = await selected.GetParentAsync().GetUriAsync();
+        AppConfiguration.Instance.Save();
     }
 
     [RelayCommand]
     private async Task BrowseWorkingPath()
     {
         var provider = App.Window!.StorageProvider;
+        var lastStorage = await AppConfiguration.Instance.LastBrowsedWorkingFolder.TryGetStorageFolderAsync(provider);
         var result = await provider.OpenFolderPickerAsync(new()
         {
             Title = "Select output path",
+            SuggestedStartLocation = lastStorage,
         });
         var selected = result.FirstOrDefault();
         if (selected is null)
             return;
         Job.WorkingFolder = selected.Path.LocalPath;
+        AppConfiguration.Instance.LastBrowsedWorkingFolder = await selected.GetParentAsync().GetUriAsync();
+        AppConfiguration.Instance.Save();
         CheckReadyToRun();
     }
     
@@ -204,6 +213,7 @@ public partial class MainPageViewModel : PageBase
         var videoExtension = Path.GetExtension(Job.VideoPath);
         
         var provider = App.Window!.StorageProvider;
+        var lastStorage = await AppConfiguration.Instance.LastBrowsedOutputPath.TryGetStorageFolderAsync(provider);
         var result = await provider.SaveFilePickerAsync(new()
         {
             Title = "Select output file",
@@ -212,6 +222,7 @@ public partial class MainPageViewModel : PageBase
             {
                 Patterns = [$"*{videoExtension}"]
             }],
+            SuggestedStartLocation = lastStorage,
         });
         if (result is null)
             return;
