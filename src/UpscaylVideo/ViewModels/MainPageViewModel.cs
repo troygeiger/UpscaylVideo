@@ -11,11 +11,19 @@ using Material.Icons;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
+using UpscaylVideo.Services;
 
 namespace UpscaylVideo.ViewModels;
 
 public partial class MainPageViewModel : PageBase
 {
+    private static readonly string[] _supportedVideoExtensions =
+    [
+        "*.mp4", "*.mkv", "*.m4v", "*.avi", "*.wmv", "*.webm", "*.mov",
+        "*.flv", "*.mpg", "*.mpeg", "*.ts", "*.3gp", "*.3g2", "*.vob",
+        "*.ogv", "*.mts", "*.m2ts", "*.divx", "*.asf", "*.rm", "*.rmvb",
+        "*.f4v", "*.dat", "*.mxf"
+    ];
     private bool isFirstLoad = true;
     [ObservableProperty] private IEnumerable<AIModelOption> _modelOptions = [];
     [ObservableProperty] private UpscaleJob _job = new();
@@ -39,6 +47,7 @@ public partial class MainPageViewModel : PageBase
         base.ToolStripButtonDefinitions =
         [
             new(ToolStripButtonLocations.Left, MaterialIconKind.Note, "New Job", NewJobCommand),
+            new(ToolStripButtonLocations.Left, MaterialIconKind.FileMultiple, "Queue Multiple", "Queues multiple files using the current scaling and defaults.", AddBatchCommand),
             _startButton,
             _cancelButton,
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand),
@@ -169,12 +178,7 @@ public partial class MainPageViewModel : PageBase
             SuggestedStartLocation = lastStorage, 
             FileTypeFilter = [ new("Videos")
             {
-                Patterns = [
-                    "*.mp4", "*.mkv", "*.m4v", "*.avi", "*.wmv", "*.webm", "*.mov",
-                    "*.flv", "*.mpg", "*.mpeg", "*.ts", "*.3gp", "*.3g2", "*.vob",
-                    "*.ogv", "*.mts", "*.m2ts", "*.divx", "*.asf", "*.rm", "*.rmvb",
-                    "*.f4v", "*.dat", "*.mxf"
-                ],
+                Patterns = _supportedVideoExtensions,
             }, 
                 FilePickerFileTypes.All,
             ]});
@@ -183,6 +187,44 @@ public partial class MainPageViewModel : PageBase
             return;
         Job.VideoPath = selected.Path.LocalPath;
         AppConfiguration.Instance.LastBrowsedVideoPath = await selected.GetParentAsync().GetUriAsync();
+        AppConfiguration.Instance.Save();
+    }
+
+    [RelayCommand]
+    private async Task AddBatch()
+    {
+        var provider = App.Window!.StorageProvider;
+        var lastStorage = await AppConfiguration.Instance.LastBrowsedVideoPath.TryGetStorageFolderAsync(provider);
+        var result = await provider.OpenFilePickerAsync(new()
+        {
+            Title = "Select video files",
+            AllowMultiple = true,
+            SuggestedStartLocation = lastStorage, 
+            FileTypeFilter = [ new("Videos")
+                {
+                    Patterns = _supportedVideoExtensions,
+                }, 
+                FilePickerFileTypes.All,
+            ]});
+
+        foreach (var selected in result)
+        {
+            var batchJob = new UpscaleJob();
+            batchJob.UpscaleFrameChunkSize = Job.UpscaleFrameChunkSize;
+            batchJob.SelectedScale = Job.SelectedScale;
+            batchJob.SelectedInterpolatedFps = Job.SelectedInterpolatedFps;
+            batchJob.SelectedModel = Job.SelectedModel;
+            batchJob.GpuNumber = Job.GpuNumber;
+            batchJob.VideoPath = selected.Path.LocalPath;
+            await batchJob.WaitForLoadAsync();
+            JobQueueService.Instance.EnqueueJob(batchJob);
+        }
+        
+        var first = result.FirstOrDefault();
+        if (first is null)
+            return;
+        
+        AppConfiguration.Instance.LastBrowsedVideoPath = await first.GetParentAsync().GetUriAsync();
         AppConfiguration.Instance.Save();
     }
 
@@ -248,8 +290,7 @@ public partial class MainPageViewModel : PageBase
         // Enqueue the job instead of navigating
         UpscaylVideo.Services.JobQueueService.Instance.EnqueueJob(Job);
         // Optionally reset the job form for new input
-        Job = new();
-        UpdateSelectedModel();
+        NewJob();
     }
 
     [RelayCommand]

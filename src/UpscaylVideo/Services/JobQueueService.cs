@@ -34,13 +34,13 @@ public partial class JobQueueService : ObservableObject
     private Task? _processingTask;
     AverageProvider<long> averageProvider = new();
 
-    public void EnqueueJob(UpscaleJob job)
+    public void EnqueueJob(UpscaleJob job, bool startProcessing = true)
     {
         JobQueue.Add(job);
-        ShowProgressPanel = true;
+        
         // Start processing if not already running
-        if (!IsProcessing)
-            _processingTask = Task.Run(ProcessQueueIfNeeded);
+        if (startProcessing)
+            StartQueueIfStopped();
     }
 
     /// <summary>
@@ -50,7 +50,8 @@ public partial class JobQueueService : ObservableObject
     {
         if (!IsProcessing && JobQueue.Count > 0)
         {
-            _ = ProcessQueueIfNeeded();
+            ShowProgressPanel = true;
+            _processingTask = Task.Run(ProcessQueueIfNeeded);
         }
     }
 
@@ -136,10 +137,10 @@ public partial class JobQueueService : ObservableObject
             IsProcessing = false;
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
-            if (JobQueue.Count == 0 || (JobQueue.Count == 1 && JobQueue[0] == CurrentJob))
-                ShowProgressPanel = false;
+            //if (JobQueue.Count == 0 || (JobQueue.Count == 1 && JobQueue[0] == CurrentJob))
+            ShowProgressPanel = false;
             OverallProgress = 0;
-            CurrentJob = null;
+            CurrentJob = null; ;
         }
     }
 

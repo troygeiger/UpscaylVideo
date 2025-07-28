@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData.Binding;
@@ -40,12 +42,14 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private string _status = Localization.Status_Queued;
     [ObservableProperty] private TimeSpan _elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private string? _dspElapsedTime;
+    //[ObservableProperty] private bool _
 
     public UpscaleJob()
     {
         this.WhenPropertyChanged(p => p.VideoPath, false)
             .Subscribe(async void (p) =>
             {
+                IsLoaded = false;
                 await LoadVideoDetails();
                 if (_previousVideoPath != p.Value && File.Exists(p.Value) && VideoStream is not null)
                 {
@@ -56,13 +60,17 @@ public partial class UpscaleJob : ObservableObject
                     WorkingFolder = folder is null ? WorkingFolder : Path.Combine(folder, $"{fileName}_Working", string.Empty);
                     
                     OutputFilePath = GenerateDefaultOutputPath(p.Value);
+                    IsLoaded = true;
                 }
 
                 _previousVideoPath = p.Value;
             });
 
-        this.WhenPropertyChanged(p => p.VideoStream)
-            .Subscribe(stream => { IsLoaded = _videoStream is not null; });
+        /*this.WhenPropertyChanged(p => p.VideoStream)
+            .Subscribe(stream =>
+            {
+                IsLoaded = _videoStream is not null && !string.IsNullOrWhiteSpace(WorkingFolder) && !string.IsNullOrWhiteSpace(OutputFilePath);
+            });*/
         
         InterpolatedFpsOptions =
         [
@@ -120,6 +128,18 @@ public partial class UpscaleJob : ObservableObject
         catch (Exception e)
         {
             Console.Error.WriteLine(e);
+        }
+    }
+    
+    public async Task WaitForLoadAsync(TimeSpan? timeout = null)
+    {
+        if (IsLoaded)
+            return;
+        timeout ??= TimeSpan.FromSeconds(30);
+        Stopwatch timeoutWatch = Stopwatch.StartNew();
+        while (!IsLoaded && timeoutWatch.Elapsed < timeout.Value)
+        {
+            await Task.Delay(50);
         }
     }
 
