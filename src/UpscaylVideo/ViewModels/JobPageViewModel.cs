@@ -18,7 +18,7 @@ using Path = System.IO.Path;
 
 namespace UpscaylVideo.ViewModels;
 
-[Obsolete("Moved most functionality to JobQueueService, this class is now only for reference and will be removed in a future version.")]
+[Obsolete("Moved most functionality to JobProcessingService, this class is now only for reference and will be removed in a future version.")]
 public partial class JobPageViewModel : PageBase, IDisposable
 {
     private const string TimespanFormat = @"d\.hh\:mm\:ss";

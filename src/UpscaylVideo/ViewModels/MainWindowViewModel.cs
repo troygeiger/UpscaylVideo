@@ -9,7 +9,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public string Greeting { get; } = "Welcome to Avalonia!";
     
     public UpscaylVideo.Services.PageManager PageManager { get; } = UpscaylVideo.Services.PageManager.Instance;
-    public JobQueueService JobQueueService { get; } = JobQueueService.Instance;
+    public JobProcessingService JobQueueService { get; } = JobProcessingService.Instance;
 
     public string Version { get; }
 

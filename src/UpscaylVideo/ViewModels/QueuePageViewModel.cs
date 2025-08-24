@@ -11,18 +11,18 @@ namespace UpscaylVideo.ViewModels;
 
 public partial class QueuePageViewModel : PageBase
 {
-    public ObservableCollection<UpscaleJob> JobQueue => JobQueueService.Instance.JobQueue;
+    public ObservableCollection<UpscaleJob> JobQueue => JobProcessingService.Instance.JobQueue;
 
     [RelayCommand]
     private void RemoveJob(UpscaleJob job)
     {
-        JobQueueService.Instance.RemoveJob(job);
+        JobProcessingService.Instance.RemoveJob(job);
     }
 
     [RelayCommand]
     private void ClearQueue()
     {
-        JobQueueService.Instance.ClearQueue();
+        JobProcessingService.Instance.ClearQueue();
     }
 
     private ToolStripButtonDefinition _startButton;
@@ -38,7 +38,7 @@ public partial class QueuePageViewModel : PageBase
         _cancelButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Cancel, "Cancel", CancelJobCommand!)
         {
             ShowText = true,
-            Visible = JobQueueService.Instance.IsProcessing
+            Visible = JobProcessingService.Instance.IsProcessing
         };
         base.ToolStripButtonDefinitions =
         [
@@ -49,25 +49,25 @@ public partial class QueuePageViewModel : PageBase
         ];
 
         // Update Start and Cancel button visibility when queue or processing state changes
-        JobQueueService.Instance.PropertyChanged += (s, e) =>
+        JobProcessingService.Instance.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(JobQueueService.IsProcessing))
+            if (e.PropertyName == nameof(JobProcessingService.IsProcessing))
             {
                 UpdateStartButtonVisibility();
                 UpdateCancelButtonVisibility();
             }
         };
-        JobQueueService.Instance.JobQueue.CollectionChanged += (s, e) => UpdateStartButtonVisibility();
+        JobProcessingService.Instance.JobQueue.CollectionChanged += (s, e) => UpdateStartButtonVisibility();
     }
 
     [RelayCommand]
     private void Start()
     {
         // If not already processing, trigger the queue processor directly
-        JobQueueService.Instance.StartQueueIfStopped();
+        JobProcessingService.Instance.StartQueueIfStopped();
     }
 
-    private bool CanStart() => !JobQueueService.Instance.IsProcessing && JobQueueService.Instance.JobQueue.Any();
+    private bool CanStart() => !JobProcessingService.Instance.IsProcessing && JobProcessingService.Instance.JobQueue.Any();
 
     private void UpdateStartButtonVisibility()
     {
@@ -77,13 +77,13 @@ public partial class QueuePageViewModel : PageBase
     [RelayCommand]
     private async Task CancelJob()
     {
-        await JobQueueService.Instance.CancelCurrentJobAsync();
+        await JobProcessingService.Instance.CancelCurrentJobAsync();
     }
 
 
     private void UpdateCancelButtonVisibility()
     {
-        _cancelButton.Visible = JobQueueService.Instance.IsProcessing;
+        _cancelButton.Visible = JobProcessingService.Instance.IsProcessing;
     }
 
     [RelayCommand]

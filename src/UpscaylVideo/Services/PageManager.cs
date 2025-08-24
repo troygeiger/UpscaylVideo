@@ -14,7 +14,7 @@ public partial class PageManager : ObservableObject
     private readonly Dictionary<Type, ViewModelBase> _loadedPages = new();
 
     // Reference the job queue service for queue/progress
-    public JobQueueService JobQueueService => JobQueueService.Instance;
+    public JobProcessingService JobQueueService => JobProcessingService.Instance;
 
     public IEnumerable<Type> AvailablePages { get; } =
     [

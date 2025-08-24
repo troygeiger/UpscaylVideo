@@ -11,10 +11,10 @@ using UpscaylVideo;
 
 namespace UpscaylVideo.Services;
 
-public partial class JobQueueService : ObservableObject
+public partial class JobProcessingService : ObservableObject
 {
     private const string TimespanFormat = @"d\.hh\:mm\:ss";
-    public static JobQueueService Instance { get; } = new();
+    public static JobProcessingService Instance { get; } = new();
 
     public ObservableCollection<UpscaleJob> JobQueue { get; } = new();
     [ObservableProperty] private bool _showProgressPanel;
@@ -37,6 +37,11 @@ public partial class JobQueueService : ObservableObject
     public void EnqueueJob(UpscaleJob job, bool startProcessing = true)
     {
         JobQueue.Add(job);
+        // Ensure overall progress reflects a fresh start if we're idle
+        if (!IsProcessing)
+        {
+            OverallProgress = 0;
+        }
         
         // Start processing if not already running
         if (startProcessing)
@@ -146,7 +151,14 @@ public partial class JobQueueService : ObservableObject
 
     private async Task RunJobAsync(UpscaleJob job, CancellationToken cancellationToken)
     {
+        // Reset per-job progress state
+        CompletedFrames = 0;
+        Progress = 0;
         OverallProgress = 0;
+        ElapsedTime = TimeSpan.Zero;
+        DspElapsedTime = ElapsedTime.ToString(TimespanFormat);
+        DspEta = null;
+        
         var elapsedStopwatch = new System.Diagnostics.Stopwatch();
         var upscaleRuntimeStopwatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Process? inputProcess = null;
@@ -193,6 +205,9 @@ public partial class JobQueueService : ObservableObject
             progressUpdateTask = Task.Run(() => UpdateProgress(elapsedStopwatch, jobCancellation.Token));
             var duration = job.VideoDetails.GetDuration();
             TotalFrames = (long)Math.Floor(duration.TotalSeconds * job.VideoStream.CalcAvgFrameRate);
+            // Set initial ETA using previous AvgFrameRate if available
+            Eta = AvgFrameRate.HasValue ? (TotalFrames * AvgFrameRate.Value) : null;
+            DspEta = Eta?.ToString(TimespanFormat);
 
             await Task.Run(() => System.IO.Directory.CreateDirectory(job.WorkingFolder), jobCancellation.Token);
             var framesFolder = System.IO.Path.Combine(job.WorkingFolder, "Frames");
@@ -263,6 +278,12 @@ public partial class JobQueueService : ObservableObject
             }
             StatusMessage = "Merging video and audio...";
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: jobCancellation.Token);
+
+            // Mark progress complete for the job
+            Progress = 100;
+            OverallProgress = 100;
+            Eta = TimeSpan.Zero;
+            DspEta = Eta?.ToString(TimespanFormat);
 
             StatusMessage = "Job completed.";
         }
@@ -402,7 +423,9 @@ public partial class JobQueueService : ObservableObject
             
             var frameCount = CompletedFrames;
             ElapsedTime = elapsedStopwatch.Elapsed;
-            var progress = (int)((decimal)frameCount / TotalFrames * 100);
+            int progress = 0;
+            if (TotalFrames > 0)
+                progress = (int)((decimal)frameCount / TotalFrames * 100);
             OverallProgress = progress > 100 ? 100 : progress;
             
             if (CurrentJob is not null)
@@ -416,6 +439,10 @@ public partial class JobQueueService : ObservableObject
                 var remaining = TotalFrames - frameCount;
                 Eta = (remaining * AvgFrameRate.Value) - averageProvider.TimeSinceLastAverageUpdate;
                 DspEta = Eta.Value.ToString(TimespanFormat);
+            }
+            else
+            {
+                DspEta = null;
             }
             
             await TaskHelpers.Wait(1000, token).ConfigureAwait(false);

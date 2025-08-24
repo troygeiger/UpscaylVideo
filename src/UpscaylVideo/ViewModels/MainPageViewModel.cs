@@ -41,7 +41,7 @@ public partial class MainPageViewModel : PageBase
         _cancelButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Cancel, "Cancel", CancelJobCommand)
         {
             ShowText = true,
-            Visible = UpscaylVideo.Services.JobQueueService.Instance.IsProcessing
+            Visible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing
         };
 
         base.ToolStripButtonDefinitions =
@@ -54,8 +54,8 @@ public partial class MainPageViewModel : PageBase
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand)
         ];
 
-        // Subscribe to JobQueueService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
-        UpscaylVideo.Services.JobQueueService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
+        // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
+        UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
             .Subscribe(x => _cancelButton.Visible = x.Value);
 
         
@@ -93,9 +93,9 @@ public partial class MainPageViewModel : PageBase
                 
             });
 
-        UpscaylVideo.Services.JobQueueService.Instance.JobQueue.CollectionChanged += (s, e) =>
+        UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.CollectionChanged += (s, e) =>
         {
-            var queueCount = UpscaylVideo.Services.JobQueueService.Instance.JobQueue.Count;
+            var queueCount = UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.Count;
             _startButton.Text = queueCount > 0 ? "Add to Queue" : "Start";
         };
     }
@@ -103,7 +103,7 @@ public partial class MainPageViewModel : PageBase
     [RelayCommand]
     private async Task CancelJob()
     {
-        await Services.JobQueueService.Instance.CancelCurrentJobAsync();
+        await Services.JobProcessingService.Instance.CancelCurrentJobAsync();
     }
 
     public override void OnAppearing()
@@ -217,7 +217,7 @@ public partial class MainPageViewModel : PageBase
             batchJob.GpuNumber = Job.GpuNumber;
             batchJob.VideoPath = selected.Path.LocalPath;
             await batchJob.WaitForLoadAsync();
-            JobQueueService.Instance.EnqueueJob(batchJob);
+            JobProcessingService.Instance.EnqueueJob(batchJob);
         }
         
         var first = result.FirstOrDefault();
@@ -288,7 +288,7 @@ public partial class MainPageViewModel : PageBase
         }
 
         // Enqueue the job instead of navigating
-        UpscaylVideo.Services.JobQueueService.Instance.EnqueueJob(Job);
+        UpscaylVideo.Services.JobProcessingService.Instance.EnqueueJob(Job);
         // Optionally reset the job form for new input
         NewJob();
     }
