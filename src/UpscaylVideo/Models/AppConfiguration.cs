@@ -52,6 +52,10 @@ public partial class AppConfiguration : ObservableObject
 
     public int LastUpscaleFrameChunkSize { get; set; } = 1000;
     
+    // New: last-used image format (-f) and tile size (-t)
+    public string LastImageFormat { get; set; } = "png";
+    public int LastTileSize { get; set; } = 31;
+    
     
     
     public string? LastModelUsed { get; set; }

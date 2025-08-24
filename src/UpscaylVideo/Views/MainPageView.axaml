@@ -7,17 +7,16 @@
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:resx="clr-namespace:UpscaylVideo"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
              x:DataType="vm:MainPageViewModel"
              x:Class="UpscaylVideo.Views.MainPageView">
     <Design.DataContext>
         <vm:MainPageViewModel />
     </Design.DataContext>
-    <StackPanel Margin="16">
-        <Grid ColumnDefinitions="*, *"
-              RowDefinitions="Auto">
-            <StackPanel Grid.Column="0"
-                        Spacing="16">
+    <StackPanel Margin="16" Spacing="12">
+        <!-- Top two-column area: left = path fields, right = video details -->
+        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto">
+            <StackPanel Grid.Column="0" Spacing="12">
                 <TextBox p1:TextFieldAssist.Label="{x:Static resx:Localization.MainPageView_VideoFile}"
                          Text="{Binding Path=Job.VideoPath}">
                     <TextBox.InnerRightContent>
@@ -44,10 +43,52 @@
                                 Command="{Binding Path=BrowseOutputPathCommand, Mode=OneWay}" />
                     </TextBox.InnerRightContent>
                 </TextBox>
+            </StackPanel>
 
-                <StackPanel Spacing="10"
-                            Width="300"
-                            HorizontalAlignment="Left">
+            <controls:Card Grid.Column="1"
+                           Margin="12 0 0 0"
+                           Name="VideoDetailsCardTop"
+                           IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}"
+                           Background="{DynamicResource PanelBackground}">
+                <Grid ColumnDefinitions="Auto, *"
+                      RowDefinitions="Auto, Auto, Auto, Auto, Auto"
+                      MinWidth="360">
+                    <Label Classes="form-label"
+                           Content="{x:Static resx:Localization.MainPageView_FrameCount}" />
+                    <TextBlock Grid.Column="1" Grid.Row="0" 
+                               Text="{Binding Path=Job.VideoStream.NbFrames, FallbackValue='', Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Column="0" Grid.Row="1" Classes="form-label"
+                           Content="{x:Static resx:Localization.MainPageView_OriginalDimension}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                               Text="{Binding Path=Job.OriginalDimension, Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Column="0" Grid.Row="2" Classes="form-label"
+                           Content="{x:Static resx:Localization.MainPageView_ScaledDimension}" />
+                    <TextBlock Grid.Column="1" Grid.Row="2"
+                               Text="{Binding Path=Job.ScaledDimensions, Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Row="3" Grid.Column="0" Classes="form-label"
+                           Content="{x:Static resx:Localization.MainPageView_Duration}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center"
+                               Text="{Binding Path=Job.VideoDetails.Format.Duration, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
+                    
+                    <Label Grid.Row="4" Grid.Column="0" Classes="form-label"
+                           Content="{x:Static resx:Localization.MainPageView_Framerate}"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center"
+                               Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
+                </Grid>
+            </controls:Card>
+        </Grid>
+
+        <!-- Bottom two-column area for the rest of the controls -->
+        <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto">
+            <!-- Left column: scale/model/chunk/gpu/delete -->
+            <StackPanel Grid.Column="0" Spacing="16">
+                <StackPanel Spacing="10" Width="300" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding Path=Job.SelectedScale, StringFormat={x:Static resx:Localization.MainPageView_ImageScale}, Mode=OneWay}"
                                FontWeight="Bold" />
                     <Slider IsSnapToTickEnabled="True"
@@ -103,63 +144,28 @@
                 <CheckBox IsChecked="{Binding Job.DeleteWorkingFolderWhenCompleted}">
                     <TextBlock Text="{x:Static resx:Localization.MainPageView_DeleteWorkingFolderWhenCompleted}"/>
                 </CheckBox>
-                
             </StackPanel>
-            <controls:Card Grid.Column="1"
-                           Name="VideoDetailsCard"
-                           Margin="4"
-                           IsVisible="{Binding Path=Job.IsLoaded, Mode=OneWay}"
-                           Background="{DynamicResource PanelBackground}">
-                <Grid ColumnDefinitions="Auto, *"
-                      RowDefinitions="Auto, Auto, Auto, Auto, Auto">
-                    <Label Classes="form-label"
-                        Content="{x:Static resx:Localization.MainPageView_FrameCount}" />
-                    <TextBlock Grid.Column="1" 
-                               Grid.Row="0" 
-                        Text="{Binding Path=Job.VideoStream.NbFrames, FallbackValue='', Mode=OneWay}"
-                               VerticalAlignment="Center"/>
-                    
-                    <Label Grid.Column="0"
-                           Grid.Row="1"
-                           Classes="form-label"
-                           Content="{x:Static resx:Localization.MainPageView_OriginalDimension}"/>
-                    <TextBlock Grid.Column="1"
-                               Grid.Row="1"
-                               Text="{Binding Path=Job.OriginalDimension, Mode=OneWay}"
-                               VerticalAlignment="Center"/>
-                    
-                    <Label Grid.Column="0"
-                           Grid.Row="2"
-                           Classes="form-label"
-                           Content="{x:Static resx:Localization.MainPageView_ScaledDimension}" />
-                    <TextBlock Grid.Column="1"
-                               Grid.Row="2"
-                               Text="{Binding Path=Job.ScaledDimensions, Mode=OneWay}"
-                               VerticalAlignment="Center"/>
-                    
-                    <Label Grid.Row="3"
-                           Grid.Column="0"
-                           Classes="form-label"
-                           Content="{x:Static resx:Localization.MainPageView_Duration}"/>
-                    <TextBlock Grid.Row="3"
-                               Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoDetails.Format.Duration, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
-                    
-                    <Label Grid.Row="4"
-                           Grid.Column="0"
-                           Classes="form-label"
-                           Content="{x:Static resx:Localization.MainPageView_Framerate}"/>
-                    <TextBlock Grid.Row="4"
-                               Grid.Column="1"
-                               VerticalAlignment="Center"
-                               Text="{Binding Path=Job.VideoStream.CalcAvgFrameRate, Mode=OneWay, FallbackValue={x:Static resx:Localization.MainPageView_NotLoaded}}"/>
-                    
-                    
-                </Grid>
-            </controls:Card>
 
+            <!-- Right column: image format and tile size -->
+            <StackPanel Grid.Column="1" Spacing="12">
+                <ComboBox Width="300"
+                          HorizontalAlignment="Left"
+                          Theme="{StaticResource MaterialOutlineComboBox}"
+                          p1:ComboBoxAssist.Label="{x:Static resx:Localization.MainPageView_ImageFormat}"
+                          ItemsSource="{Binding Path=ImageFormats, Mode=OneWay}"
+                          SelectedValue="{Binding Path=Job.OutputImageFormat, Mode=TwoWay}"/>
 
+                <StackPanel Spacing="6" Width="400" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Path=Job.TileSizeDisplay, StringFormat={x:Static resx:Localization.MainPageView_TileSizeFormat}}" FontWeight="Bold"/>
+                    <Slider IsSnapToTickEnabled="True"
+                            Minimum="31"
+                            Maximum="512"
+                            TickFrequency="1"
+                            TickPlacement="TopLeft"
+                            Value="{Binding Path=Job.TileSize, Mode=TwoWay}"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
+
     </StackPanel>
 </UserControl>

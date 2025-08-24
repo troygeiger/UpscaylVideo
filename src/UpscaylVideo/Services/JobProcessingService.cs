@@ -231,9 +231,10 @@ public partial class JobProcessingService : ObservableObject
             await FFMpeg.ExtractFFMetadata(job.VideoPath, metadataFile, cancellationToken: jobCancellation.Token);
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder, $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
 
-            (inputProcess, pngStream) = FFMpeg.StartPngPipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate);
-            using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, jobCancellation.Token, job.SelectedInterpolatedFps.FrameRate);
+            (inputProcess, pngStream) = FFMpeg.StartImagePipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate, job.OutputImageFormat);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, jobCancellation.Token, job.OutputImageFormat ?? "png", job.SelectedInterpolatedFps.FrameRate);
             await pngVideo.StartAsync();
+            var imageFormat = (job.OutputImageFormat ?? "png").ToLowerInvariant();
             upscaleRuntimeStopwatch.Restart();
             long outFrameNumber = 0;
             while (!cancellationToken.IsCancellationRequested && pngVideo.IsRunning)
@@ -246,12 +247,12 @@ public partial class JobProcessingService : ObservableObject
                 var hasNewFrames = false;
                 for (int i = 0; i < job.UpscaleFrameChunkSize; i++)
                 {
-                    using var frameStream = await pngStream.ReadNextPngAsync();
+                    using var frameStream = await pngStream.ReadNextImageAsync(imageFormat);
                     hasNewFrames |= frameStream.Length > 0;
                     if (frameStream.Length == 0)
                         break;
                     outFrameNumber++;
-                    await using var frameFileStream = System.IO.File.Create(System.IO.Path.Combine(framesFolder, $"{outFrameNumber:00000000}.png"));
+                    await using var frameFileStream = System.IO.File.Create(System.IO.Path.Combine(framesFolder, $"{outFrameNumber:00000000}.{imageFormat}"));
                     await frameStream.CopyToAsync(frameFileStream, jobCancellation.Token);
                 }
                 if (!hasNewFrames)
@@ -368,6 +369,14 @@ public partial class JobProcessingService : ObservableObject
             {
                 args.AddRange(["-g", string.Join(',', gpuNumbers)]);
             }
+            // New: output format (-f)
+            if (!string.IsNullOrWhiteSpace(job.OutputImageFormat))
+            {
+                args.AddRange(["-f", job.OutputImageFormat!]);
+            }
+            // New: tile size (-t) with 31 -> 0 mapping for auto
+            var tileArg = job.TileSize <= 31 ? 0 : job.TileSize;
+            args.AddRange(["-t", tileArg.ToString()]);
             // Use the observable property directly for completed frames
             var cmd = CliWrap.Cli.Wrap(upscaylBinPath)
                 .WithArguments(args)

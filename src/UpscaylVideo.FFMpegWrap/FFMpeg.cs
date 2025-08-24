@@ -77,7 +77,7 @@ public static class FFMpeg
         var tmpList = Path.Combine(options.TempFolder, $"{Guid.NewGuid()}.txt");
         await File.WriteAllLinesAsync(tmpList, framePaths.Select(p => $"file '{p}'"), cancellationToken).ConfigureAwait(false);
 
-        var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
+        var cmd = FFMpegHelper.GetFFMpeg(options)
             .WithArguments([
                 "-y",
                 "-r",
@@ -116,7 +116,7 @@ public static class FFMpeg
         var tmpList = Path.Combine(options.TempFolder, $"{Guid.NewGuid()}.txt");
         await File.WriteAllLinesAsync(tmpList, filePaths.Select(p => $"file '{p}'"), cancellationToken).ConfigureAwait(false);
 
-        var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
+        var cmd = FFMpegHelper.GetFFMpeg(options)
             .WithArguments([
                 "-y",
                 "-f",
@@ -265,6 +265,38 @@ public static class FFMpeg
         return (process, new BufferedStream(process.StandardOutput.BaseStream));
     }
 
+    public static (Process ffProcess, Stream stdOutStream) StartImagePipe(string inputFilePath, double framerate, string? imageFormat, FFMpegOptions? options = null)
+    {
+        var fmt = (imageFormat ?? "png").ToLowerInvariant();
+        var decoder = fmt switch
+        {
+            "png" => "png",
+            "jpg" => "mjpeg",
+            "jpeg" => "mjpeg",
+            "webp" => "webp",
+            _ => "png"
+        };
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
+            "-i",
+            inputFilePath,
+            "-r", framerate.ToString(CultureInfo.InvariantCulture),
+            "-vf",
+            "scale='max(iw,iw*sar)':'max(ih,ih/sar)'",
+            "-c:v",
+            decoder, "-f", "image2pipe",
+            "-",
+        ])
+        {
+            RedirectStandardOutput = true,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            CreateNoWindow = false,
+        };
+        var process = Process.Start(ffStart);
+        if (process == null)
+            throw new Exception("Unable to start FFMpeg");
+        return (process, new BufferedStream(process.StandardOutput.BaseStream));
+    }
+
     public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(
         string outputFilePath,
         double framerate,
@@ -279,6 +311,65 @@ public static class FFMpeg
             strFramerate,
             "-f", "image2pipe",
             "-c:v", "png",
+            "-i", "-",
+        };
+        List<string> formats = new() { "yuv420p" };
+
+        if (frameInterpolationFps.HasValue)
+        {
+            formats.Add($"minterpolate='fps={frameInterpolationFps.Value.ToString(CultureInfo.InvariantCulture)}'");
+        }
+        else
+        {
+            args.AddRange([
+                "-r",
+                strFramerate,
+            ]);
+        }
+
+        args.AddRange([
+            "-vf", $"format={string.Join(',', formats)}",
+            outputFilePath
+        ]);
+
+
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), args)
+        {
+            RedirectStandardInput = true,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            CreateNoWindow = false,
+        };
+        var process = Process.Start(ffStart);
+        if (process == null)
+            throw new Exception("Unable to start FFMpeg");
+        return (process, process.StandardInput.BaseStream);
+    }
+
+    public static (Process ffProcess, Stream stdInStream) StartFramesToVideoPipe(
+        string outputFilePath,
+        double framerate,
+        string imageFormat,
+        FFMpegOptions? options = null,
+        double? frameInterpolationFps = null)
+    {
+        var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
+        var fmt = (imageFormat ?? "png").ToLowerInvariant();
+        // Map image format to appropriate decoder name
+        var decoder = fmt switch
+        {
+            "png" => "png",
+            "jpg" => "mjpeg",
+            "jpeg" => "mjpeg",
+            "webp" => "webp",
+            _ => "png"
+        };
+        List<string> args = new List<string>()
+        {
+            "-y",
+            "-framerate",
+            strFramerate,
+            "-f", "image2pipe",
+            "-c:v", decoder,
             "-i", "-",
         };
         List<string> formats = new() { "yuv420p" };

@@ -195,6 +195,24 @@ namespace UpscaylVideo {
             }
         }
         
+        public static string MainPageView_ImageFormat {
+            get {
+                return ResourceManager.GetString("MainPageView_ImageFormat", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_TileSize {
+            get {
+                return ResourceManager.GetString("MainPageView_TileSize", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_TileSizeFormat {
+            get {
+                return ResourceManager.GetString("MainPageView_TileSizeFormat", resourceCulture);
+            }
+        }
+        
         public static string ConfigPageView_UpscaylPath {
             get {
                 return ResourceManager.GetString("ConfigPageView_UpscaylPath", resourceCulture);

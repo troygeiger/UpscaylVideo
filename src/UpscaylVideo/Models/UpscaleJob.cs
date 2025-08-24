@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData.Binding;
@@ -43,6 +42,19 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private TimeSpan _elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private string? _dspElapsedTime;
     //[ObservableProperty] private bool _
+
+    // New: Upscayl-bin options
+    // -f format (png/jpg/webp). Null/empty means use default behavior.
+    [ObservableProperty] private string? _outputImageFormat;
+    // -t tile-size (>=32; 0 = auto). UI slider maps 31 -> 0 (auto), default slider start at 31.
+    [ObservableProperty] private int _tileSize = 31;
+    // New: display text for tile size ("Auto" when 31, else number)
+    [ObservableProperty] private string _tileSizeDisplay = "Auto";
+
+    partial void OnTileSizeChanged(int value)
+    {
+        TileSizeDisplay = value <= 31 ? "Auto" : value.ToString();
+    }
 
     public UpscaleJob()
     {

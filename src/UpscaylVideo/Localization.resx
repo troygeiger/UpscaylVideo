@@ -93,6 +93,15 @@
     <data name="MainPageView_Framerate" xml:space="preserve">
         <value>Framerate:</value>
     </data>
+    <data name="MainPageView_ImageFormat" xml:space="preserve">
+        <value>Image Format</value>
+    </data>
+    <data name="MainPageView_TileSize" xml:space="preserve">
+        <value>Tile Size (31 = Auto)</value>
+    </data>
+    <data name="MainPageView_TileSizeFormat" xml:space="preserve">
+        <value>Tile Size ({0})</value>
+    </data>
     <data name="ConfigPageView_UpscaylPath" xml:space="preserve">
         <value>Upscayl Path:</value>
     </data>

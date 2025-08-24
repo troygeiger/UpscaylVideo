@@ -32,6 +32,9 @@ public partial class MainPageViewModel : PageBase
     private ToolStripButtonDefinition _startButton;
     private ToolStripButtonDefinition _cancelButton;
 
+    // New: options for output image formats used by Upscayl-bin (-f)
+    public IEnumerable<string> ImageFormats { get; } = new[] { "png", "jpg", "webp" };
+
     public MainPageViewModel()
     {
         _startButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", RunCommand)
@@ -43,6 +46,10 @@ public partial class MainPageViewModel : PageBase
             ShowText = true,
             Visible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing
         };
+
+        // Initialize job defaults from configuration
+        Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
+        Job.TileSize = AppConfiguration.Instance.LastTileSize;
 
         base.ToolStripButtonDefinitions =
         [
@@ -215,6 +222,9 @@ public partial class MainPageViewModel : PageBase
             batchJob.SelectedInterpolatedFps = Job.SelectedInterpolatedFps;
             batchJob.SelectedModel = Job.SelectedModel;
             batchJob.GpuNumber = Job.GpuNumber;
+            // New: copy format and tile size options
+            batchJob.OutputImageFormat = Job.OutputImageFormat;
+            batchJob.TileSize = Job.TileSize;
             batchJob.VideoPath = selected.Path.LocalPath;
             await batchJob.WaitForLoadAsync();
             JobProcessingService.Instance.EnqueueJob(batchJob);
@@ -280,6 +290,9 @@ public partial class MainPageViewModel : PageBase
         config.LastUpscaleFrameChunkSize = Job.UpscaleFrameChunkSize;
         config.LastModelUsed = Job.SelectedModel?.Name;
         config.GpuNumbers = Job.GpuNumber;
+        // Persist new options
+        config.LastImageFormat = string.IsNullOrWhiteSpace(Job.OutputImageFormat) ? "png" : Job.OutputImageFormat!;
+        config.LastTileSize = Job.TileSize;
         config.Save();
 
         if (string.IsNullOrWhiteSpace(Job.OutputFilePath))
@@ -297,6 +310,9 @@ public partial class MainPageViewModel : PageBase
     private void NewJob()
     {
         Job = new();
+        // Initialize defaults on new job
+        Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
+        Job.TileSize = AppConfiguration.Instance.LastTileSize;
         UpdateSelectedModel();
     }
     
@@ -336,3 +352,4 @@ public partial class MainPageViewModel : PageBase
         UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(QueuePageViewModel));
     }
 }
+

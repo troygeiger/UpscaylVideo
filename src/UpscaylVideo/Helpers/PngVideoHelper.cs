@@ -21,13 +21,15 @@ public class PngVideoHelper : IDisposable
     private readonly double? _frameInterpolationFps;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly CancellationToken _cancellationToken;
+    private readonly string _imageFormat;
 
 
-    public PngVideoHelper(string outputPath, double framerate, CancellationToken parentCancellationToken, double? frameInterpolationFps = null)
+    public PngVideoHelper(string outputPath, double framerate, CancellationToken parentCancellationToken, string imageFormat = "png", double? frameInterpolationFps = null)
     {
         _outputPath = outputPath;
         _framerate = framerate;
         _frameInterpolationFps = frameInterpolationFps;
+        _imageFormat = string.IsNullOrWhiteSpace(imageFormat) ? "png" : imageFormat.ToLowerInvariant();
         _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(parentCancellationToken);
         _cancellationToken = _cancellationTokenSource.Token;
     }
@@ -59,7 +61,7 @@ public class PngVideoHelper : IDisposable
     private void QueueRunner(object? state)
     {
         _isRuning = true;
-        (var ffProcess, var ffmpegStream) = FFMpeg.StartPngFramesToVideoPipe(_outputPath, Framerate, null, _frameInterpolationFps);
+        (var ffProcess, var ffmpegStream) = FFMpeg.StartFramesToVideoPipe(_outputPath, Framerate, _imageFormat, null, _frameInterpolationFps);
 
         try
         {
@@ -89,7 +91,8 @@ public class PngVideoHelper : IDisposable
 
     private void AddFrames(string framePath, Stream outVideoStream)
     {
-        var frameFiles = Directory.GetFiles(framePath, "*.png");
+        var pattern = $"*.{_imageFormat}";
+        var frameFiles = Directory.GetFiles(framePath, pattern);
         Array.Sort(frameFiles);
 
         foreach (var frameFile in frameFiles)

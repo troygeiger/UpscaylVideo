@@ -152,4 +152,13 @@
     <data name="Status_Completed" xml:space="preserve">
         <value>Abgeschlossen</value>
     </data>
+    <data name="MainPageView_ImageFormat" xml:space="preserve">
+        <value>Bildformat</value>
+    </data>
+    <data name="MainPageView_TileSize" xml:space="preserve">
+        <value>Kachelgröße (31 = Auto)</value>
+    </data>
+    <data name="MainPageView_TileSizeFormat" xml:space="preserve">
+        <value>Kachelgröße ({0})</value>
+    </data>
 </root>

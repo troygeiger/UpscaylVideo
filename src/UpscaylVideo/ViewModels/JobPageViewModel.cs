@@ -156,8 +156,8 @@ public partial class JobPageViewModel : PageBase, IDisposable
             }
 
             string upscaledVideoPath = Path.Combine(Job.WorkingFolder, $"{Path.GetFileNameWithoutExtension(Job.VideoPath)}-video{extension}");
-            (inputProcess, pngStream) = FFMpeg.StartPngPipe(Job.VideoPath, Job.VideoStream.CalcAvgFrameRate);
-            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, token, Job.SelectedInterpolatedFps.FrameRate);
+            (inputProcess, pngStream) = FFMpeg.StartImagePipe(Job.VideoPath, Job.VideoStream.CalcAvgFrameRate, Job.OutputImageFormat);
+            using var pngVideo = new PngVideoHelper(upscaledVideoPath, Job.VideoStream.CalcAvgFrameRate, token, Job.OutputImageFormat ?? "png", Job.SelectedInterpolatedFps.FrameRate);
 
             await pngVideo.StartAsync();
 
