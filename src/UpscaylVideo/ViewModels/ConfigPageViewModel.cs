@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
@@ -16,11 +17,12 @@ public partial class ConfigPageViewModel : PageBase
     public ConfigPageViewModel() : base("Configuration")
     {
         _configuration = new AppConfiguration();
-        base.ToolStripButtonDefinitions =
-        [
-            new(ToolStripButtonLocations.Left, MaterialIconKind.ArrowBack, "Back", BackCommand),
-            new(ToolStripButtonLocations.Right, MaterialIconKind.Check, "Apply", ApplyCommand)
-        ];
+        // Build toolstrip controls
+        var backBtn = CreateToolButton(MaterialIconKind.ArrowBack, "Back", BackCommand, toolTip: "Back", showText: false);
+        var applyBtn = CreateToolButton(MaterialIconKind.Check, "Apply", ApplyCommand, toolTip: "Apply", showText: false);
+
+        LeftToolStripControls = new Control[] { backBtn };
+        RightToolStripControls = new Control[] { applyBtn };
     }
 
     public override void OnAppearing()

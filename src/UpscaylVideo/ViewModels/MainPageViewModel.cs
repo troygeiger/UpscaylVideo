@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
 using Material.Icons;
+using Material.Icons.Avalonia;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
@@ -29,46 +33,67 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private UpscaleJob _job = new();
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
     [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
-    private ToolStripButtonDefinition _startButton;
-    private ToolStripButtonDefinition _cancelButton;
+
+    // Hold references for dynamic updates
+    private Button? _cancelButton;
+    private TextBlock? _startText;
 
     // New: options for output image formats used by Upscayl-bin (-f)
     public IEnumerable<string> ImageFormats { get; } = new[] { "png", "jpg", "webp" };
 
     public MainPageViewModel()
     {
-        _startButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", RunCommand)
-        {
-            ShowText = true
-        };
-        _cancelButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Cancel, "Cancel", CancelJobCommand)
-        {
-            ShowText = true,
-            Visible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing
-        };
-
         // Initialize job defaults from configuration
         Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
         Job.TileSize = AppConfiguration.Instance.LastTileSize;
 
         var checkUpdateText = UpscaylVideo.Localization.ResourceManager.GetString("MainPageView_CheckUpdates") ?? "Check for Updates";
 
-        base.ToolStripButtonDefinitions =
+        // Build toolstrip controls
+        // SplitButton: primary New Job, dropdown has Queue Multiple
+        var newJobSplit = CreateSplitButton(
+            MaterialIconKind.Note,
+            "New Job",
+            NewJobCommand,
+            [
+                CreateMenuItem("Queue Multiple", MaterialIconKind.FileMultiple, AddBatchCommand),
+            ], showText:false); 
+        
+
+        var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, "Start", RunCommand, out _startText, toolTip: "Start", showText: true);
+        _cancelButton = CreateToolButton(MaterialIconKind.Cancel, "Cancel", CancelJobCommand, toolTip: "Cancel", showText: true);
+        //var settingsBtn = CreateToolButton(MaterialIconKind.Gear, "Settings", SettingsCommand, toolTip: "Settings", showText: false);
+        var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, "Queue", OpenQueueCommand, toolTip: "Queue", showText: false);
+        //var updateBtn = CreateToolButton(MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand, toolTip: checkUpdateText, showText: false);
+        var settingsBtn = CreateSplitButton(
+            MaterialIconKind.Gear,
+            "Settings",
+            SettingsCommand,
+            [
+                CreateMenuItem(checkUpdateText, MaterialIconKind.Update, CheckUpdatesCommand),
+            ], showText:false
+        );
+        _cancelButton.IsVisible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing;
+
+        LeftToolStripControls =
         [
-            new(ToolStripButtonLocations.Left, MaterialIconKind.Note, "New Job", NewJobCommand),
-            new(ToolStripButtonLocations.Left, MaterialIconKind.FileMultiple, "Queue Multiple", "Queues multiple files using the current scaling and defaults.", AddBatchCommand),
-            _startButton,
+            newJobSplit
+        ];
+        RightToolStripControls =
+        [
+            startBtn,
             _cancelButton,
-            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand),
-            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand),
-            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand)
+            queueBtn,
+            settingsBtn,
         ];
 
         // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
         UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
-            .Subscribe(x => _cancelButton.Visible = x.Value);
-
-        
+            .Subscribe(x =>
+            {
+                if (_cancelButton != null)
+                    _cancelButton.IsVisible = x.Value;
+            });
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
             .Subscribe(j => CheckReadyToRun());
@@ -106,7 +131,8 @@ public partial class MainPageViewModel : PageBase
         UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.CollectionChanged += (s, e) =>
         {
             var queueCount = UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.Count;
-            _startButton.Text = queueCount > 0 ? "Add to Queue" : "Start";
+            if (_startText != null)
+                _startText.Text = queueCount > 0 ? "Add to Queue" : "Start";
         };
     }
 

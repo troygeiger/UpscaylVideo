@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
@@ -25,28 +26,21 @@ public partial class QueuePageViewModel : PageBase
         JobProcessingService.Instance.ClearQueue();
     }
 
-    private ToolStripButtonDefinition _startButton;
-    private ToolStripButtonDefinition _cancelButton;
+    private Button? _startButton;
+    private Button? _cancelButton;
 
     public QueuePageViewModel() : base("Job Queue")
     {
-        _startButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.PlayArrow, "Start", StartCommand)
-        {
-            ShowText = true,
-            Visible = CanStart()
-        };
-        _cancelButton = new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Cancel, "Cancel", CancelJobCommand!)
-        {
-            ShowText = true,
-            Visible = JobProcessingService.Instance.IsProcessing
-        };
-        base.ToolStripButtonDefinitions =
-        [
-            new(ToolStripButtonLocations.Left, MaterialIconKind.ArrowBack, "Back", BackCommand),
-            _startButton,
-            _cancelButton,
-            new(ToolStripButtonLocations.Right, MaterialIconKind.Delete, "Clear Queue", ClearQueueCommand)
-        ];
+        _startButton = CreateToolButton(MaterialIconKind.PlayArrow, "Start", StartCommand, toolTip: "Start", showText: true);
+        _cancelButton = CreateToolButton(MaterialIconKind.Cancel, "Cancel", CancelJobCommand!, toolTip: "Cancel", showText: true);
+        var backBtn = CreateToolButton(MaterialIconKind.ArrowBack, "Back", BackCommand, toolTip: "Back", showText: false);
+        var clearBtn = CreateToolButton(MaterialIconKind.Delete, "Clear Queue", ClearQueueCommand, toolTip: "Clear Queue", showText: false);
+
+        _startButton.IsVisible = CanStart();
+        _cancelButton.IsVisible = JobProcessingService.Instance.IsProcessing;
+
+        LeftToolStripControls = new Control[] { backBtn };
+        RightToolStripControls = new Control[] { _startButton, _cancelButton, clearBtn };
 
         // Update Start and Cancel button visibility when queue or processing state changes
         JobProcessingService.Instance.PropertyChanged += (s, e) =>
@@ -71,7 +65,8 @@ public partial class QueuePageViewModel : PageBase
 
     private void UpdateStartButtonVisibility()
     {
-        _startButton.Visible = CanStart();
+        if (_startButton != null)
+            _startButton.IsVisible = CanStart();
     }
 
     [RelayCommand]
@@ -83,7 +78,8 @@ public partial class QueuePageViewModel : PageBase
 
     private void UpdateCancelButtonVisibility()
     {
-        _cancelButton.Visible = JobProcessingService.Instance.IsProcessing;
+        if (_cancelButton != null)
+            _cancelButton.IsVisible = JobProcessingService.Instance.IsProcessing;
     }
 
     [RelayCommand]

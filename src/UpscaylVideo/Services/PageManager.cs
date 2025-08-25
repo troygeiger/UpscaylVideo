@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UpscaylVideo.Models;
+using Avalonia.Controls;
 using UpscaylVideo.ViewModels;
 
 namespace UpscaylVideo.Services;
@@ -23,8 +23,8 @@ public partial class PageManager : ObservableObject
 
     [ObservableProperty] private string _title = GlobalConst.AppTitle;
     [ObservableProperty] private ViewModelBase? _currentPage;
-    [ObservableProperty] private IEnumerable<ToolStripButtonDefinition> _leftToolbarButtons = [];
-    [ObservableProperty] private IEnumerable<ToolStripButtonDefinition> _rightToolbarButtons = [];
+    [ObservableProperty] private IEnumerable<Control> _leftToolStripControls = [];
+    [ObservableProperty] private IEnumerable<Control> _rightToolStripControls = [];
 
     public void SetPage(Type pageType)
     {
@@ -55,8 +55,8 @@ public partial class PageManager : ObservableObject
         
         if (viewModel is PageBase page)
         {
-            LeftToolbarButtons = page.ToolStripButtonDefinitions.Where(d => d.Location == ToolStripButtonLocations.Left).ToArray();
-            RightToolbarButtons = page.ToolStripButtonDefinitions.Where(d => d.Location == ToolStripButtonLocations.Right).ToArray();
+            LeftToolStripControls = page.LeftToolStripControls?.ToArray() ?? [];
+            RightToolStripControls = page.RightToolStripControls?.ToArray() ?? [];
             pageTitle = page.PageTitle;
             page.OnAppearing();
         }

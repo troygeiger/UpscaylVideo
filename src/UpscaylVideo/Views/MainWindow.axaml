@@ -27,64 +27,22 @@
         >
             <Grid ColumnDefinitions="*, Auto">
                 <ItemsControl Grid.Column="0"
-                              ItemsSource="{Binding Path=PageManager.LeftToolbarButtons, Mode=OneWay}"
+                              ItemsSource="{Binding Path=PageManager.LeftToolStripControls, Mode=OneWay}"
                               HorizontalAlignment="Left">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"
-                            />
+                            <StackPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button ToolTip.Tip="{Binding Path=ToolTip, Mode=OneWay}"
-                                    Command="{Binding Path=Command, Mode=OneWay}"
-                                    Padding="8"
-                                    Margin="3 0"
-                                    IsVisible="{Binding Visible, Mode=OneWay}">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
-                                                                Width="24"
-                                                                Height="24"/>
-                                    <TextBlock IsVisible="{Binding ShowText, Mode=OneWay}"
-                                               Text="{Binding Text, Mode=OneWay}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Right"
-                                               />
-                                </StackPanel>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <ItemsControl Grid.Column="1"
-                              ItemsSource="{Binding Path=PageManager.RightToolbarButtons, Mode=OneWay}"
-                              HorizontalAlignment="Right"
-                              >
+                              ItemsSource="{Binding Path=PageManager.RightToolStripControls, Mode=OneWay}"
+                              HorizontalAlignment="Right">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"
-                                        />
+                            <StackPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button ToolTip.Tip="{Binding Path=Text, Mode=OneWay}"
-                                    Command="{Binding Path=Command, Mode=OneWay}"
-                                    Padding="8"
-                                    Margin="3,0"
-                                    IsVisible="{Binding Visible, Mode=OneWay}">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialIcons:MaterialIcon Kind="{Binding Path=Icon}"
-                                                                Width="24"
-                                                                Height="24"/>
-                                    <TextBlock IsVisible="{Binding ShowText, Mode=OneWay}"
-                                               Text="{Binding Text, Mode=OneWay}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Grid>
         </Border>
