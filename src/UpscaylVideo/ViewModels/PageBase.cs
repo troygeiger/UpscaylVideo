@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Material.Icons;
 using Material.Icons.Avalonia;
-using UpscaylVideo.Models;
 
 namespace UpscaylVideo.ViewModels;
 
@@ -19,8 +18,6 @@ public abstract class PageBase : ViewModelBase
     {
         PageTitle = title;
     }
-    
-    public IEnumerable<ToolStripButtonDefinition> ToolStripButtonDefinitions { get; protected set; } = [];
     
     public IEnumerable<Control> LeftToolStripControls { get; protected set; } = [];
     
@@ -122,7 +119,7 @@ public abstract class PageBase : ViewModelBase
         }
         return button;
     }
-    
+
     protected MenuItem CreateMenuItem(string header, MaterialIconKind? iconKind, System.Windows.Input.ICommand command)
     {
         return new MenuItem
@@ -132,7 +129,7 @@ public abstract class PageBase : ViewModelBase
             Command = command
         };
     }
-    
+
     public class PageDisappearingArgs
     {
         public bool Cancel { get; set; }
