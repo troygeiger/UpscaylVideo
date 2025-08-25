@@ -105,7 +105,7 @@
                 IsVisible="{Binding JobQueueService.IsProcessing, Mode=OneWay}">
             <StackPanel Orientation="Vertical" Spacing="6">
                 <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobQueueService.StatusMessage}"/>
-                <Grid Margin="0,0,0,8" ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,12,Auto">
+                <Grid Margin="0,0,0,8" ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,12,Auto,12,Auto">
                     <!-- First row -->
                     <StackPanel Grid.Column="0" Grid.Row="0">
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Input}" FontWeight="Bold"/>
@@ -141,7 +141,30 @@
                         <TextBlock Text="{x:Static local:Localization.MainWindow_Elapsed}" FontWeight="Bold"/>
                         <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.DspElapsedTime}"/>
                     </StackPanel>
+                    <!-- Spacer row (12px) -->
+                    <!-- Third row: Additional Upscayl properties -->
+                    <StackPanel Grid.Column="0" Grid.Row="4">
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_ChunkSize}" FontWeight="Bold"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.UpscaleFrameChunkSize}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="4">
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_Gpu}" FontWeight="Bold"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.GpuNumberDisplay}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="4">
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_ImageFormat}" FontWeight="Bold"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.OutputImageFormat, FallbackValue=png}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3" Grid.Row="4">
+                        <TextBlock Text="{x:Static local:Localization.MainWindow_TileSize}" FontWeight="Bold"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding JobQueueService.CurrentJob.TileSizeDisplay}"/>
+                    </StackPanel>
                 </Grid>
+                <!-- Delete working folder flag under the grid for clarity -->
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="{x:Static local:Localization.MainWindow_DeleteWorkingFolder}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding JobQueueService.CurrentJob.DeleteWorkingFolderDisplay}"/>
+                </StackPanel>
                 <StackPanel>
                     <TextBlock Text="{x:Static local:Localization.MainWindow_UpscaleProgress}" FontWeight="Bold"/>
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobQueueService.Progress}"

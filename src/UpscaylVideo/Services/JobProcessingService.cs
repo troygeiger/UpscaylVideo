@@ -377,6 +377,12 @@ public partial class JobProcessingService : ObservableObject
             // New: tile size (-t) with 31 -> 0 mapping for auto
             var tileArg = job.TileSize <= 31 ? 0 : job.TileSize;
             args.AddRange(["-t", tileArg.ToString()]);
+            // New: global threads config (-j)
+            var threads = AppConfiguration.Instance.UpscaylThreadConfig;
+            if (!string.IsNullOrWhiteSpace(threads))
+            {
+                args.AddRange(["-j", threads]);
+            }
             // Use the observable property directly for completed frames
             var cmd = CliWrap.Cli.Wrap(upscaylBinPath)
                 .WithArguments(args)
@@ -403,7 +409,7 @@ public partial class JobProcessingService : ObservableObject
                         Progress = (int)Math.Round(value);
                     }
                 }));
-            
+
             averageProvider.Reset();
             var result = await cmd.ExecuteAsync(cancellationToken)
                 .ConfigureAwait(false);
@@ -412,10 +418,6 @@ public partial class JobProcessingService : ObservableObject
         catch (OperationCanceledException)
         {
             return false;
-        }
-        catch (Exception)
-        {
-            throw;
         }
         finally
         {

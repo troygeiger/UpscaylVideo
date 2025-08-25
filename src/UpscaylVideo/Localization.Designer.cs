@@ -105,6 +105,36 @@ namespace UpscaylVideo {
             }
         }
         
+        public static string MainWindow_ChunkSize {
+            get {
+                return ResourceManager.GetString("MainWindow_ChunkSize", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_Gpu {
+            get {
+                return ResourceManager.GetString("MainWindow_Gpu", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_ImageFormat {
+            get {
+                return ResourceManager.GetString("MainWindow_ImageFormat", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_TileSize {
+            get {
+                return ResourceManager.GetString("MainWindow_TileSize", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_DeleteWorkingFolder {
+            get {
+                return ResourceManager.GetString("MainWindow_DeleteWorkingFolder", resourceCulture);
+            }
+        }
+        
         public static string MainPageView_VideoFile {
             get {
                 return ResourceManager.GetString("MainPageView_VideoFile", resourceCulture);
@@ -348,6 +378,24 @@ namespace UpscaylVideo {
         public static string Status_Completed {
             get {
                 return ResourceManager.GetString("Status_Completed", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_UpscaylThreads {
+            get {
+                return ResourceManager.GetString("ConfigPageView_UpscaylThreads", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_UpscaylThreadsHelp {
+            get {
+                return ResourceManager.GetString("ConfigPageView_UpscaylThreadsHelp", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_UpscaylThreadsInvalid {
+            get {
+                return ResourceManager.GetString("ConfigPageView_UpscaylThreadsInvalid", resourceCulture);
             }
         }
     }

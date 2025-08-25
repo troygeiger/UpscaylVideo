@@ -1,5 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UpscaylVideo.FFMpegWrap;
@@ -7,7 +10,7 @@ using UpscaylVideo.Helpers;
 
 namespace UpscaylVideo.Models;
 
-public partial class AppConfiguration : ObservableObject
+public partial class AppConfiguration : ObservableValidator
 {
     public const string DefaultOutputFileNameTemplate = "{{OriginalFile}}-upscaled{{OriginalExtension}}";
     private static AppConfiguration? _instance;
@@ -87,9 +90,30 @@ public partial class AppConfiguration : ObservableObject
     
     public Uri? LastBrowsedOutputPath { get; set; }
 
+    // Global upscayl threads config (-j load:proc:save). Examples: 1:2:2 or 1:2,2,2:2
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    [RegularExpression("^\\d+:\\d+(?:,\\d+)*:\\d+$", ErrorMessage = "Invalid thread format")] // UI also shows localized message
+    private string _upscaylThreadConfig = "1:2:2";
+
+    partial void OnUpscaylThreadConfigChanged(string value)
+    {
+        IsUpscaylThreadConfigInvalid = HasErrors && GetErrors(nameof(UpscaylThreadConfig)).Any();
+    }
+
+    [JsonIgnore, ObservableProperty]
+    private bool _isUpscaylThreadConfigInvalid = false;
+
     public void Save()
     {
         ConfigurationHelper.SaveConfig(this, AppConfigurationJsonContext.Default.AppConfiguration);
+    }
+
+    public void ValidateAll()
+    {
+        ValidateAllProperties();
+        OnPropertyChanged(nameof(IsUpscaylThreadConfigInvalid));
     }
 }
 

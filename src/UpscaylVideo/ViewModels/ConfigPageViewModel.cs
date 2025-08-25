@@ -26,6 +26,9 @@ public partial class ConfigPageViewModel : PageBase
     public override void OnAppearing()
     {
         this.Configuration = AppConfiguration.Instance;
+        // Force initial validation so Apply CanExecute reflects current state
+        Configuration.ValidateAll();
+        ApplyCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -34,7 +37,12 @@ public partial class ConfigPageViewModel : PageBase
         UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(MainPageViewModel));
     }
 
-    [RelayCommand]
+    private bool CanApply()
+    {
+        return !Configuration.HasErrors;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanApply))]
     private void Apply()
     {
         ConfigurationHelper.SaveConfig(Configuration, AppConfigurationJsonContext.Default.AppConfiguration);
@@ -112,17 +120,18 @@ public partial class ConfigPageViewModel : PageBase
         !string.IsNullOrWhiteSpace(Configuration.OutputFileNameTemplate) &&
         Configuration.OutputFileNameTemplate.Trim() != AppConfiguration.DefaultOutputFileNameTemplate;
 
-    partial void OnConfigurationChanged(AppConfiguration? value)
+    partial void OnConfigurationChanged(AppConfiguration value)
     {
         OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
-        if (value != null)
+        value.PropertyChanged += (s, e) =>
         {
-            value.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(AppConfiguration.OutputFileNameTemplate))
-                    OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
-            };
-        }
+            if (e.PropertyName == nameof(AppConfiguration.OutputFileNameTemplate))
+                OnPropertyChanged(nameof(IsOutputFileNameTemplateCustom));
+        };
+        value.ErrorsChanged += (s, e) =>
+        {
+            ApplyCommand.NotifyCanExecuteChanged();
+        };
     }
 
     [RelayCommand]

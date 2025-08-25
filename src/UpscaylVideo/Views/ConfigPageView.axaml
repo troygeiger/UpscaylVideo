@@ -14,16 +14,19 @@
         <vm:ConfigPageViewModel />
     </Design.DataContext>
     <UserControl.Styles>
-        
-        <Style Selector="TextBox.fw-300">
-            <Setter Property="MaxWidth" Value="300"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Style Selector="Label.form-label">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0 16 4 0"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            
         </Style>
     </UserControl.Styles>
     <TabControl Margin="8">
         <TabItem Header="Paths">
             <Grid ColumnDefinitions="Auto, *"
-                  RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
 
                 <Label Grid.Row="0"
                        Grid.Column="0"
@@ -95,6 +98,13 @@
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_DefaultTemplate}" FontSize="12" Foreground="Gray"/>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_AvailableTemplateVars}" FontSize="12" Foreground="Gray"/>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_CustomDateTime}" FontSize="12" Foreground="Gray"/>
+                </StackPanel>
+
+                <Label Grid.Row="5" Grid.Column="0" Classes="form-label"
+                       Content="{x:Static resx:Localization.ConfigPageView_UpscaylThreads}"/>
+                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Vertical">
+                    <TextBox Text="{Binding Path=Configuration.UpscaylThreadConfig, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_UpscaylThreadsHelp}" FontSize="12" Foreground="Gray"/>
                 </StackPanel>
             </Grid>
         </TabItem>

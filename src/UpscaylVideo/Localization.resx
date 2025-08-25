@@ -48,6 +48,21 @@
     <data name="MainWindow_OverallProgress" xml:space="preserve">
         <value>Overall Progress:</value>
     </data>
+    <data name="MainWindow_ChunkSize" xml:space="preserve">
+        <value>Chunk Size</value>
+    </data>
+    <data name="MainWindow_Gpu" xml:space="preserve">
+        <value>GPU</value>
+    </data>
+    <data name="MainWindow_ImageFormat" xml:space="preserve">
+        <value>Image Format</value>
+    </data>
+    <data name="MainWindow_TileSize" xml:space="preserve">
+        <value>Tile Size</value>
+    </data>
+    <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve">
+        <value>Delete Working Folder?</value>
+    </data>
     <data name="MainPageView_VideoFile" xml:space="preserve">
         <value>Video File</value>
     </data>
@@ -170,5 +185,14 @@
     </data>
     <data name="Status_Completed" xml:space="preserve">
         <value>Completed</value>
+    </data>
+    <data name="ConfigPageView_UpscaylThreads" xml:space="preserve">
+        <value>Upscayl Threads (-j):</value>
+    </data>
+    <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve">
+        <value>thread count for load/proc/save (default=1:2:2). Examples: 1:2:2 or 1:2,2,2:2 for multi-GPU</value>
+    </data>
+    <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve">
+        <value>Invalid format. Use load:proc:save, e.g. 1:2:2 or multi-GPU like 1:2,2,2:2</value>
     </data>
 </root>

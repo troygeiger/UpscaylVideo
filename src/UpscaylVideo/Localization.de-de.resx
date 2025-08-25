@@ -161,4 +161,25 @@
     <data name="MainPageView_TileSizeFormat" xml:space="preserve">
         <value>Kachelgröße ({0})</value>
     </data>
+    <data name="MainWindow_ChunkSize" xml:space="preserve">
+        <value>Chunkgröße</value>
+    </data>
+    <data name="MainWindow_Gpu" xml:space="preserve">
+        <value>GPU</value>
+    </data>
+    <data name="MainWindow_ImageFormat" xml:space="preserve">
+        <value>Bildformat</value>
+    </data>
+    <data name="MainWindow_TileSize" xml:space="preserve">
+        <value>Kachelgröße</value>
+    </data>
+    <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve">
+        <value>Arbeitsordner löschen?</value>
+    </data>
+    <data name="ConfigPageView_UpscaylThreads" xml:space="preserve">
+        <value>Upscayl-Threads (-j):</value>
+    </data>
+    <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve">
+        <value>Threadanzahl für Laden/Verarbeiten/Speichern (Standard=1:2:2). Beispiele: 1:2:2 oder 1:2,2,2:2 für Multi-GPU</value>
+    </data>
 </root>

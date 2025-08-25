@@ -177,4 +177,21 @@ public partial class UpscaleJob : ObservableObject
         
         return Path.Combine(outputFolder, outputFileName);
     }
+
+    // Display helpers for UI bindings in progress panel
+    public string GpuNumberDisplay => (GpuNumber != null && GpuNumber.Length > 0)
+        ? string.Join(',', GpuNumber)
+        : "auto";
+
+    public string DeleteWorkingFolderDisplay => DeleteWorkingFolderWhenCompleted ? "Yes" : "No";
+
+    partial void OnGpuNumberChanged(int[] value)
+    {
+        OnPropertyChanged(nameof(GpuNumberDisplay));
+    }
+
+    partial void OnDeleteWorkingFolderWhenCompletedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(DeleteWorkingFolderDisplay));
+    }
 }
