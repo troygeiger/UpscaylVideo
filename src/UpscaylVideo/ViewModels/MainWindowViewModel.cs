@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using UpscaylVideo.Services;
+using System.Diagnostics;
 
 namespace UpscaylVideo.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
-    
     public UpscaylVideo.Services.PageManager PageManager { get; } = UpscaylVideo.Services.PageManager.Instance;
     public JobProcessingService JobQueueService { get; } = JobProcessingService.Instance;
+    public UpdateService UpdateService { get; } = UpdateService.Instance;
 
     public string Version { get; }
 
@@ -20,9 +20,22 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task Test()
+    private void OpenLatestRelease()
     {
-        var videoPath = "/home/troy/Videos/Always/Always (1989).mp4";
-        await UpscaylVideo.FFMpegWrap.FFProbe.AnalyseAsync(videoPath);
+        var url = UpdateService.LatestReleaseUrl;
+        if (string.IsNullOrWhiteSpace(url))
+            return;
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch
+        {
+            // ignore
+        }
     }
 }

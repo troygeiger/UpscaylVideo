@@ -51,6 +51,8 @@ public partial class MainPageViewModel : PageBase
         Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
         Job.TileSize = AppConfiguration.Instance.LastTileSize;
 
+        var checkUpdateText = UpscaylVideo.Localization.ResourceManager.GetString("MainPageView_CheckUpdates") ?? "Check for Updates";
+
         base.ToolStripButtonDefinitions =
         [
             new(ToolStripButtonLocations.Left, MaterialIconKind.Note, "New Job", NewJobCommand),
@@ -58,7 +60,8 @@ public partial class MainPageViewModel : PageBase
             _startButton,
             _cancelButton,
             new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Gear, "Settings", SettingsCommand),
-            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand)
+            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.ListStatus, "Queue", OpenQueueCommand),
+            new ToolStripButtonDefinition(ToolStripButtonLocations.Right, MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand)
         ];
 
         // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
@@ -139,6 +142,9 @@ public partial class MainPageViewModel : PageBase
         {
             Settings();
         }
+
+        // Fire-and-forget update check in background
+        _ = UpscaylVideo.Services.UpdateService.Instance.CheckForUpdatesAsync(true);
     }
 
     private void CheckReadyToRun()
@@ -351,5 +357,10 @@ public partial class MainPageViewModel : PageBase
     {
         UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(QueuePageViewModel));
     }
-}
 
+    [RelayCommand]
+    private async Task CheckUpdates()
+    {
+        await UpscaylVideo.Services.UpdateService.Instance.CheckForUpdatesAsync(true);
+    }
+}

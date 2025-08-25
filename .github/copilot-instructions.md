@@ -83,3 +83,17 @@ The application orchestrates CLI applications Upscayl and ffmpeg for extracting 
 - The code-behind file is required for event handlers, control logic, and proper Avalonia designer support.
 - When adding a new view, always create both the `.axaml` and `.axaml.cs` files, and ensure the class in the code-behind matches the XAML root element's `x:Class` attribute.
 - Bindings and UI logic should be handled via ViewModels, but any code-behind needed for Avalonia-specific features or interop should be placed in the `.axaml.cs` file.
+
+## ChangeLog Strategy
+
+- The `bin/CHANGELOG.md` file is not committed and is used to track changes between commits/releases.
+- Upon request, Copilot can generate based on a git diff.
+- Git diffs should be executed by a terminal tool call with `--no-pager` to prevent interactive output.
+- If worktree is dirty, changelog generation should be based on that; otherwise, diff against the previous commit.
+- User manually clears the file once a release is made.
+- The file should be formatted in markdown with sections for added, changed, fixed, and removed items.
+- Each entry should be concise and descriptive, following the format:
+  - `- Added: Description of the new feature or addition.`
+  - `- Changed: Description of the change made.`
+  - `- Fixed: Description of the bug fix.`
+  - `- Removed: Description of the removed feature or item.`

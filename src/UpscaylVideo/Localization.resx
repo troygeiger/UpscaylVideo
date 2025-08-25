@@ -195,4 +195,28 @@
     <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve">
         <value>Invalid format. Use load:proc:save, e.g. 1:2:2 or multi-GPU like 1:2,2,2:2</value>
     </data>
+    <data name="MainPageView_CheckUpdates" xml:space="preserve">
+        <value>Check for Updates</value>
+    </data>
+    <data name="MainWindow_GetUpdate" xml:space="preserve">
+        <value>Get Update</value>
+    </data>
+    <data name="Update_Checking" xml:space="preserve">
+        <value>Checking for updates…</value>
+    </data>
+    <data name="Update_NotConfigured" xml:space="preserve">
+        <value>Update checks are not configured.</value>
+    </data>
+    <data name="Update_NoReleases" xml:space="preserve">
+        <value>No releases found.</value>
+    </data>
+    <data name="Update_Available" xml:space="preserve">
+        <value>Update available: {0}</value>
+    </data>
+    <data name="Update_UpToDate" xml:space="preserve">
+        <value>You're up to date.</value>
+    </data>
+    <data name="Update_Failed" xml:space="preserve">
+        <value>Update check failed: {0}</value>
+    </data>
 </root>

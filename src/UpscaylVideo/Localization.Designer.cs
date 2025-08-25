@@ -398,5 +398,53 @@ namespace UpscaylVideo {
                 return ResourceManager.GetString("ConfigPageView_UpscaylThreadsInvalid", resourceCulture);
             }
         }
+        
+        public static string MainPageView_CheckUpdates {
+            get {
+                return ResourceManager.GetString("MainPageView_CheckUpdates", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_GetUpdate {
+            get {
+                return ResourceManager.GetString("MainWindow_GetUpdate", resourceCulture);
+            }
+        }
+        
+        public static string Update_Checking {
+            get {
+                return ResourceManager.GetString("Update_Checking", resourceCulture);
+            }
+        }
+        
+        public static string Update_NotConfigured {
+            get {
+                return ResourceManager.GetString("Update_NotConfigured", resourceCulture);
+            }
+        }
+        
+        public static string Update_NoReleases {
+            get {
+                return ResourceManager.GetString("Update_NoReleases", resourceCulture);
+            }
+        }
+        
+        public static string Update_Available {
+            get {
+                return ResourceManager.GetString("Update_Available", resourceCulture);
+            }
+        }
+        
+        public static string Update_UpToDate {
+            get {
+                return ResourceManager.GetString("Update_UpToDate", resourceCulture);
+            }
+        }
+        
+        public static string Update_Failed {
+            get {
+                return ResourceManager.GetString("Update_Failed", resourceCulture);
+            }
+        }
     }
 }

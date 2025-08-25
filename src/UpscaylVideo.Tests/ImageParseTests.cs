@@ -4,7 +4,7 @@ using System;
 
 namespace UpscaylVideo.Tests;
 
-public class UnitTest1
+public class ImageParseTests
 {
     [Fact]
     public void ReadNextPng_ParsesUntilIend_IgnoresPrefixNoise()

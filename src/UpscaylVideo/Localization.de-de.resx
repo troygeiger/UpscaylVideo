@@ -182,4 +182,28 @@
     <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve">
         <value>Threadanzahl für Laden/Verarbeiten/Speichern (Standard=1:2:2). Beispiele: 1:2:2 oder 1:2,2,2:2 für Multi-GPU</value>
     </data>
+    <data name="MainPageView_CheckUpdates" xml:space="preserve">
+        <value>Nach Updates suchen</value>
+    </data>
+    <data name="MainWindow_GetUpdate" xml:space="preserve">
+        <value>Update holen</value>
+    </data>
+    <data name="Update_Checking" xml:space="preserve">
+        <value>Suche nach Updates…</value>
+    </data>
+    <data name="Update_NotConfigured" xml:space="preserve">
+        <value>Update-Prüfung ist nicht konfiguriert.</value>
+    </data>
+    <data name="Update_NoReleases" xml:space="preserve">
+        <value>Keine Releases gefunden.</value>
+    </data>
+    <data name="Update_Available" xml:space="preserve">
+        <value>Update verfügbar: {0}</value>
+    </data>
+    <data name="Update_UpToDate" xml:space="preserve">
+        <value>Sie sind auf dem neuesten Stand.</value>
+    </data>
+    <data name="Update_Failed" xml:space="preserve">
+        <value>Update-Prüfung fehlgeschlagen: {0}</value>
+    </data>
 </root>

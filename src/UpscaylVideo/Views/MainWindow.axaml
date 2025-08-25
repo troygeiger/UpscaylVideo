@@ -179,9 +179,21 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <!-- Version Panel -->
-        <Border Grid.Row="3" Background="Transparent" Padding="0,2,8,2">
-            <TextBlock Text="{Binding Version}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="12" Foreground="Gray"/>
+        <!-- Version + Update Panel -->
+        <Border Grid.Row="3" Background="Transparent" Padding="8">
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Spacing="12">
+                    <TextBlock Text="{Binding Version}" VerticalAlignment="Center" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="-" VerticalAlignment="Center" FontSize="12" Foreground="Gray"/>
+                    <TextBlock Text="{Binding UpdateService.StatusMessage}" VerticalAlignment="Center" FontSize="12" Foreground="Gray"/>
+                </StackPanel>
+                <Button Content="{x:Static local:Localization.MainWindow_GetUpdate}"
+                        Command="{Binding OpenLatestReleaseCommand}"
+                        IsVisible="{Binding UpdateService.IsUpdateAvailable}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        />
+            </DockPanel>
         </Border>
     </Grid>
 
