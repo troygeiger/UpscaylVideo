@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Avalonia.Threading;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.FFMpegWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -107,7 +108,7 @@ public partial class JobProcessingService : ObservableObject
     {
         if (IsProcessing || JobQueue.Count == 0)
             return;
-        IsProcessing = true;
+        Dispatcher.UIThread.Post(() => IsProcessing = true);
         _cancellationTokenSource = new CancellationTokenSource();
         try
         {
@@ -139,13 +140,17 @@ public partial class JobProcessingService : ObservableObject
         }
         finally
         {
-            IsProcessing = false;
+            Dispatcher.UIThread.Post(() =>
+            {
+                IsProcessing = false;
+                ShowProgressPanel = false;
+                OverallProgress = 0;
+                CurrentJob = null;
+            });
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
             //if (JobQueue.Count == 0 || (JobQueue.Count == 1 && JobQueue[0] == CurrentJob))
-            ShowProgressPanel = false;
-            OverallProgress = 0;
-            CurrentJob = null; ;
+            
         }
     }
 
