@@ -39,8 +39,8 @@ public partial class QueuePageViewModel : PageBase
         _startButton.IsVisible = CanStart();
         _cancelButton.IsVisible = JobProcessingService.Instance.IsProcessing;
 
-        LeftToolStripControls = new Control[] { backBtn };
-        RightToolStripControls = new Control[] { _startButton, _cancelButton, clearBtn };
+        LeftToolStripControls = [backBtn];
+        RightToolStripControls = [_startButton, _cancelButton, clearBtn];
 
         // Update Start and Cancel button visibility when queue or processing state changes
         JobProcessingService.Instance.PropertyChanged += (s, e) =>
