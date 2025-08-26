@@ -3,12 +3,10 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
-using Avalonia.Threading;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.FFMpegWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UpscaylVideo.Models;
-using UpscaylVideo;
 
 namespace UpscaylVideo.Services;
 
@@ -248,11 +246,19 @@ public partial class JobProcessingService : ObservableObject
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder,
                 $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
 
-            (inputProcess, pngStream) = FFMpeg.StartImagePipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate, job.OutputImageFormat);
+            // Sanitize image format (only png/jpg are supported for image2pipe)
+            var imageFormat = job.OutputImageFormat ?? "png" switch
+            {
+                var s when s.Equals("png", StringComparison.OrdinalIgnoreCase) => "png",
+                var s when s.Equals("jpg", StringComparison.OrdinalIgnoreCase) => "jpg",
+                var s when s.Equals("jpeg", StringComparison.OrdinalIgnoreCase) => "jpg",
+                _ => "png"
+            };
+            
+            (inputProcess, pngStream) = FFMpeg.StartImagePipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate, imageFormat);
             using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, jobCancellation.Token,
-                job.OutputImageFormat ?? "png", job.SelectedInterpolatedFps.FrameRate);
+                imageFormat, job.SelectedInterpolatedFps.FrameRate);
             await pngVideo.StartAsync();
-            var imageFormat = (job.OutputImageFormat ?? "png").ToLowerInvariant();
             upscaleRuntimeStopwatch.Restart();
             long outFrameNumber = 0;
             while (!cancellationToken.IsCancellationRequested && pngVideo.IsRunning)
@@ -281,7 +287,7 @@ public partial class JobProcessingService : ObservableObject
                 {
                     shouldResume = false;
                     StatusMessage = "Upscaling frames...";
-                    if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, job.GpuNumber, jobCancellation.Token) ==
+                    if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, job.GpuNumber, jobCancellation.Token, imageFormat) ==
                         false)
                     {
                         StatusMessage = "Upscaling cancelled or failed.";
@@ -386,7 +392,8 @@ public partial class JobProcessingService : ObservableObject
 
     private async Task<bool> RunUpscayl(UpscaleJob job, string upscaylBinPath, string modelsPath, string framesFolder, string upscaledFolder,
         int[]? gpuNumbers,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? sanitizedImageFormat = null)
     {
         var upscaleFrameStopwatch = new System.Diagnostics.Stopwatch();
         upscaleFrameStopwatch.Restart();
@@ -410,9 +417,11 @@ public partial class JobProcessingService : ObservableObject
             }
 
             // New: output format (-f)
-            if (!string.IsNullOrWhiteSpace(job.OutputImageFormat))
+            var fmt = (sanitizedImageFormat ?? job.OutputImageFormat ?? "png").ToLowerInvariant();
+            if (fmt == "jpeg") fmt = "jpg";
+            if (fmt == "png" || fmt == "jpg")
             {
-                args.AddRange(["-f", job.OutputImageFormat!]);
+                args.AddRange(["-f", fmt]);
             }
 
             // New: tile size (-t) with 31 -> 0 mapping for auto

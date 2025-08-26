@@ -32,7 +32,7 @@ The application orchestrates CLI applications Upscayl and ffmpeg for extracting 
 
 - Frames are extracted from the source video via an ffmpeg image pipe.
 - Frames are upscaled in chunks by invoking Upscayl with args built from the job and configuration:
-  - `-f` output image format (e.g., png/jpg/webp) from job/config.
+  - `-f` output image format (e.g., png/jpg) from job/config.
   - `-t` tile size where UI value `<=31` maps to `0` (Upscayl auto), otherwise the numeric value.
   - `-j` global threads config from `AppConfiguration.UpscaylThreadConfig`.
 - Reassembly uses `PngVideoHelper`, which streams upscaled frames into ffmpeg; optional frame interpolation to a target FPS can be selected per job.

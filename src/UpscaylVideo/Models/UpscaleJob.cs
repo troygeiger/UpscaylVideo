@@ -44,7 +44,7 @@ public partial class UpscaleJob : ObservableObject
     //[ObservableProperty] private bool _
 
     // New: Upscayl-bin options
-    // -f format (png/jpg/webp). Null/empty means use default behavior.
+    // -f format (png/jpg). Null/empty means use default behavior.
     [ObservableProperty] private string? _outputImageFormat;
     // -t tile-size (>=32; 0 = auto). UI slider maps 31 -> 0 (auto), default slider start at 31.
     [ObservableProperty] private int _tileSize = 31;

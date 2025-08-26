@@ -273,7 +273,6 @@ public static class FFMpeg
             "png" => "png",
             "jpg" => "mjpeg",
             "jpeg" => "mjpeg",
-            "webp" => "webp",
             _ => "png"
         };
         ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
@@ -282,6 +281,7 @@ public static class FFMpeg
             "-r", framerate.ToString(CultureInfo.InvariantCulture),
             "-vf",
             "scale='max(iw,iw*sar)':'max(ih,ih/sar)'",
+            "-q:v", "2",
             "-c:v",
             decoder, "-f", "image2pipe",
             "-",
@@ -353,14 +353,13 @@ public static class FFMpeg
         double? frameInterpolationFps = null)
     {
         var strFramerate = framerate.ToString(CultureInfo.InvariantCulture);
-        var fmt = (imageFormat ?? "png").ToLowerInvariant();
+        var fmt = (imageFormat).ToLowerInvariant();
         // Map image format to appropriate decoder name
         var decoder = fmt switch
         {
             "png" => "png",
             "jpg" => "mjpeg",
             "jpeg" => "mjpeg",
-            "webp" => "webp",
             _ => "png"
         };
         List<string> args = new List<string>()

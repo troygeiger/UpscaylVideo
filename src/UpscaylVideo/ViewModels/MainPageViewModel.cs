@@ -40,12 +40,14 @@ public partial class MainPageViewModel : PageBase
     private TextBlock? _startText;
 
     // New: options for output image formats used by Upscayl-bin (-f)
-    public IEnumerable<string> ImageFormats { get; } = new[] { "png", "jpg", "webp" };
+    public IEnumerable<string> ImageFormats { get; } = new[] { "png", "jpg" };
 
     public MainPageViewModel()
     {
         // Initialize job defaults from configuration
-        Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
+        var lastFmt = AppConfiguration.Instance.LastImageFormat?.ToLowerInvariant();
+        if (lastFmt == "webp") lastFmt = "png"; // sanitize removed format
+        Job.OutputImageFormat = string.IsNullOrWhiteSpace(lastFmt) ? "png" : lastFmt;
         Job.TileSize = AppConfiguration.Instance.LastTileSize;
 
         var checkUpdateText = UpscaylVideo.Localization.ResourceManager.GetString("MainPageView_CheckUpdates") ?? "Check for Updates";
@@ -345,7 +347,9 @@ public partial class MainPageViewModel : PageBase
     {
         Job = new();
         // Initialize defaults on new job
-        Job.OutputImageFormat = AppConfiguration.Instance.LastImageFormat;
+        var lastFmt = AppConfiguration.Instance.LastImageFormat?.ToLowerInvariant();
+        if (lastFmt == "webp") lastFmt = "png";
+        Job.OutputImageFormat = string.IsNullOrWhiteSpace(lastFmt) ? "png" : lastFmt;
         Job.TileSize = AppConfiguration.Instance.LastTileSize;
         UpdateSelectedModel();
     }

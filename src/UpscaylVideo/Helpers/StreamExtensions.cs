@@ -272,7 +272,6 @@ public static class StreamExtensions
             "png" => stream.ReadNextPng(),
             "jpg" => stream.ReadNextJpeg(),
             "jpeg" => stream.ReadNextJpeg(),
-            "webp" => stream.ReadNextWebp(),
             _ => stream.ReadNextPng()
         };
     }
@@ -280,60 +279,6 @@ public static class StreamExtensions
     public static Task<MemoryStream> ReadNextImageAsync(this Stream stream, string imageFormat)
         => Task.Run(() => ReadNextImage(stream, imageFormat));
 
-    private static MemoryStream ReadNextWebp(this Stream stream)
-    {
-        // WebP is a RIFF container. Bytes 0-3: 'RIFF', 4-7: size (little endian), 8-11: 'WEBP'.
-        // We first synchronize on the 12-byte header pattern (matching RIFF and WEBP with any size), then read the payload.
-        var result = new MemoryStream();
-
-        byte[] header = new byte[12];
-        int filled = 0;
-        // Fill rolling buffer until we match RIFF....WEBP
-        while (true)
-        {
-            int b = stream.ReadByte();
-            if (b < 0)
-            {
-                result.Position = 0;
-                return result;
-            }
-            if (filled < 12)
-            {
-                header[filled++] = (byte)b;
-            }
-            else
-            {
-                // Slide window by 1
-                Buffer.BlockCopy(header, 1, header, 0, 11);
-                header[11] = (byte)b;
-            }
-
-            if (filled == 12)
-            {
-                if (header[0] == (byte)'R' && header[1] == (byte)'I' && header[2] == (byte)'F' && header[3] == (byte)'F'
-                    && header[8] == (byte)'W' && header[9] == (byte)'E' && header[10] == (byte)'B' && header[11] == (byte)'P')
-                {
-                    // Found header; write it into result and proceed
-                    result.Write(header, 0, 12);
-                    break;
-                }
-            }
-        }
-
-        uint size = (uint)(header[4] | (header[5] << 8) | (header[6] << 16) | (header[7] << 24));
-        long totalSize = size + 8; // RIFF size semantics
-        long remaining = totalSize - 12; // we already wrote 12 bytes
-        if (remaining <= 0)
-        {
-            result.Position = 0;
-            return result;
-        }
-
-        // Read the remaining bytes
-        CopyExactly(stream, result, remaining);
-        result.Position = 0;
-        return result;
-    }
 
     private static void CopyExactly(Stream input, Stream output, long bytesToCopy)
     {

@@ -78,36 +78,4 @@ public class ImageParseTests
         Assert.True(data.AsSpan(0, 2).SequenceEqual(new byte[] { 0xFF, 0xD8 }));
         Assert.True(data.AsSpan(data.Length - 2, 2).SequenceEqual(new byte[] { 0xFF, 0xD9 }));
     }
-
-    [Fact]
-    public void ReadNextWebp_SynchronizesOnRiffAndCopiesBySize()
-    {
-        using var ms = new MemoryStream();
-        // prefix noise
-        ms.Write(new byte[] { 0x77, 0x88, 0x99 });
-        // RIFF header
-        ms.WriteByte((byte)'R'); ms.WriteByte((byte)'I'); ms.WriteByte((byte)'F'); ms.WriteByte((byte)'F');
-        // size: 8 (so total size = 16, remaining after 12 header = 4)
-        ms.WriteByte(8); ms.WriteByte(0); ms.WriteByte(0); ms.WriteByte(0);
-        ms.WriteByte((byte)'W'); ms.WriteByte((byte)'E'); ms.WriteByte((byte)'B'); ms.WriteByte((byte)'P');
-        // 4 bytes payload
-        ms.Write(new byte[] { 1, 2, 3, 4 });
-        ms.Position = 0;
-
-        var image = ms.ReadNextImage("webp");
-        Assert.NotNull(image);
-        var data = image.ToArray();
-        // RIFF
-        Assert.Equal((byte)'R', data[0]);
-        Assert.Equal((byte)'I', data[1]);
-        Assert.Equal((byte)'F', data[2]);
-        Assert.Equal((byte)'F', data[3]);
-        // WEBP
-        Assert.Equal((byte)'W', data[8]);
-        Assert.Equal((byte)'E', data[9]);
-        Assert.Equal((byte)'B', data[10]);
-        Assert.Equal((byte)'P', data[11]);
-        Assert.Equal(16, data.Length); // size (8) + 8 = 16 total
-        Assert.True(data.AsSpan(data.Length - 4, 4).SequenceEqual(new byte[] { 1, 2, 3, 4 }));
-    }
 }
