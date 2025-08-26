@@ -35,6 +35,6 @@ public static class StorageExtensions
     {
         if (uri is null)
             return null;
-        return Uri.UnescapeDataString(uri.AbsolutePath);
+        return Uri.UnescapeDataString(uri.IsAbsoluteUri ? uri.AbsolutePath : uri.OriginalString);
     }
 }
