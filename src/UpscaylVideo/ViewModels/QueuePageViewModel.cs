@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
+using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
 using UpscaylVideo.Services;
 
@@ -47,8 +48,11 @@ public partial class QueuePageViewModel : PageBase
         {
             if (e.PropertyName == nameof(JobProcessingService.IsProcessing))
             {
-                UpdateStartButtonVisibility();
-                UpdateCancelButtonVisibility();
+                CommonHelpers.TryPostToMainThread(() =>
+                {
+                    UpdateStartButtonVisibility();
+                    UpdateCancelButtonVisibility();
+                });
             }
         };
         JobProcessingService.Instance.JobQueue.CollectionChanged += (s, e) => UpdateStartButtonVisibility();

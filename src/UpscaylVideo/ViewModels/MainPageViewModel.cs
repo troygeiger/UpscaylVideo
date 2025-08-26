@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -86,14 +87,15 @@ public partial class MainPageViewModel : PageBase
             queueBtn,
             settingsBtn,
         ];
+        _cancelButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
 
         // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
-        UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
+        /*UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
             .Subscribe(x =>
             {
                 if (_cancelButton != null)
                     _cancelButton.IsVisible = x.Value;
-            });
+            });*/
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
             .Subscribe(j => CheckReadyToRun());
