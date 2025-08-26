@@ -97,6 +97,14 @@ public partial class AppConfiguration : ObservableValidator
     [RegularExpression("^\\d+:\\d+(?:,\\d+)*:\\d+$", ErrorMessage = "Invalid thread format")] // UI also shows localized message
     private string _upscaylThreadConfig = "1:2:2";
 
+    // Hacky way to allow serialization of UpscaylThreadConfig with source generation
+    [JsonInclude, JsonPropertyName("UpscaylThreadConfig")]
+    public string UpscaylThreadConfigSerialization
+    {
+        get => UpscaylThreadConfig;
+        set => UpscaylThreadConfig = value;
+    }
+    
     partial void OnUpscaylThreadConfigChanged(string value)
     {
         IsUpscaylThreadConfigInvalid = HasErrors && GetErrors(nameof(UpscaylThreadConfig)).Any();
