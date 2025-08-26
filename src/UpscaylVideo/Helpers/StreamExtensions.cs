@@ -6,7 +6,7 @@ namespace UpscaylVideo.Helpers;
 
 public static class StreamExtensions
 {
-    public static byte[] PngEndSequence = [0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82];
+    /*public static byte[] PngEndSequence = [0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82];
     public static byte[] JpegEndSequence = [0xFF, 0xD9];
     
     public static MemoryStream ReadToDelimiter(this Stream stream, Memory<byte> delimiter)
@@ -42,12 +42,12 @@ public static class StreamExtensions
     }
     
     public static Task<MemoryStream> ReadToDelimiterAsync(this Stream stream, Memory<byte> delimiter) 
-        => Task.Run(() => ReadToDelimiter(stream, delimiter));
+        => Task.Run(() => ReadToDelimiter(stream, delimiter));*/
 
     public static MemoryStream ReadNextPng(this Stream stream)
     {
         var result = new MemoryStream();
-        ReadOnlySpan<byte> sig = stackalloc byte[8] { 0x89, (byte)'P', (byte)'N', (byte)'G', 0x0D, 0x0A, 0x1A, 0x0A };
+        ReadOnlySpan<byte> sig = [0x89, (byte)'P', (byte)'N', (byte)'G', 0x0D, 0x0A, 0x1A, 0x0A];
 
         // Scan for PNG signature without emitting bytes until full match
         Span<byte> sigBuf = stackalloc byte[8];
@@ -123,7 +123,7 @@ public static class StreamExtensions
         }
     }
     
-    public static Task<MemoryStream> ReadNextPngAsync(this Stream stream) => Task.Run(() => ReadNextPng(stream)); 
+    /*public static Task<MemoryStream> ReadNextPngAsync(this Stream stream) => Task.Run(() => ReadNextPng(stream)); */
 
     public static MemoryStream ReadNextJpeg(this Stream stream)
     {

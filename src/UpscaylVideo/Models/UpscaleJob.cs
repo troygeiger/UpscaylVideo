@@ -181,7 +181,7 @@ public partial class UpscaleJob : ObservableObject
     // Display helpers for UI bindings in progress panel
     public string GpuNumberDisplay => (GpuNumber != null && GpuNumber.Length > 0)
         ? string.Join(',', GpuNumber)
-        : "auto";
+        : "Auto";
 
     public string DeleteWorkingFolderDisplay => DeleteWorkingFolderWhenCompleted ? "Yes" : "No";
 

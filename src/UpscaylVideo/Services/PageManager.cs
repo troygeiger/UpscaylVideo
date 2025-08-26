@@ -13,14 +13,6 @@ public partial class PageManager : ObservableObject
 
     private readonly Dictionary<Type, ViewModelBase> _loadedPages = new();
 
-    // Reference the job queue service for queue/progress
-    public JobProcessingService JobQueueService => JobProcessingService.Instance;
-
-    public IEnumerable<Type> AvailablePages { get; } =
-    [
-        typeof(MainPageViewModel)
-    ];
-
     [ObservableProperty] private string _title = GlobalConst.AppTitle;
     [ObservableProperty] private ViewModelBase? _currentPage;
     [ObservableProperty] private IEnumerable<Control> _leftToolStripControls = [];

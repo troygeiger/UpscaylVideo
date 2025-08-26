@@ -8,7 +8,7 @@ namespace UpscaylVideo.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     public UpscaylVideo.Services.PageManager PageManager { get; } = UpscaylVideo.Services.PageManager.Instance;
-    public JobProcessingService JobQueueService { get; } = JobProcessingService.Instance;
+    public JobProcessingService JobProcessingService { get; } = JobProcessingService.Instance;
     public UpdateService UpdateService { get; } = UpdateService.Instance;
 
     public string Version { get; }

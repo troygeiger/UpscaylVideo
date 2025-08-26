@@ -8,7 +8,7 @@ namespace UpscaylVideo.FFMpegWrap;
 
 public static class FFMpeg
 {
-    public static Task<bool> ExtractFrames(
+    /*public static Task<bool> ExtractFrames(
         string inputFilePath,
         string outputFilePath,
         double framerate,
@@ -59,9 +59,9 @@ public static class FFMpeg
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => { progressAction?.Invoke(line); }));
         var result = await cmd.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         return result.ExitCode == 0;
-    }
+    }*/
 
-    public static async Task<bool> CreateVideoFromFrames(
+    /*public static async Task<bool> CreateVideoFromFrames(
         IEnumerable<string> framePaths,
         string outputFilePath,
         double frameRate,
@@ -99,9 +99,9 @@ public static class FFMpeg
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         File.Delete(tmpList);
         return result.ExitCode == 0;
-    }
+    }*/
 
-    public static async Task<bool> ConcatinateFiles(
+    /*public static async Task<bool> ConcatinateFiles(
         IEnumerable<string> filePaths,
         string outputFilePath,
         FFMpegOptions? options = null,
@@ -134,7 +134,7 @@ public static class FFMpeg
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         File.Delete(tmpList);
         return result.ExitCode == 0;
-    }
+    }*/
 
     public static async Task<bool> CopyStreams(
         string inputFilePath,
@@ -189,7 +189,7 @@ public static class FFMpeg
         return result.ExitCode == 0;
     }
 
-    public static async Task<bool> MergeFiles(
+    /*public static async Task<bool> MergeFiles(
         IEnumerable<string> inputFilePaths,
         string outputFilePath,
         FFMpegOptions? options = null,
@@ -214,7 +214,7 @@ public static class FFMpeg
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         return result.ExitCode == 0;
-    }
+    }*/
     
     public static async Task<bool> MergeFiles(
         string videoFile,
@@ -242,7 +242,7 @@ public static class FFMpeg
         return result.ExitCode == 0;
     }
 
-    public static (Process ffProcess, Stream stdOutStream) StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
+    /*public static (Process ffProcess, Stream stdOutStream) StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
     {
         ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
             "-i",
@@ -263,7 +263,7 @@ public static class FFMpeg
         if (process == null)
             throw new Exception("Unable to start FFMpeg");
         return (process, new BufferedStream(process.StandardOutput.BaseStream));
-    }
+    }*/
 
     public static (Process ffProcess, Stream stdOutStream) StartImagePipe(string inputFilePath, double framerate, string? imageFormat, FFMpegOptions? options = null)
     {
@@ -311,7 +311,7 @@ public static class FFMpeg
         return (process, new BufferedStream(process.StandardOutput.BaseStream));
     }
 
-    public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(
+    /*public static (Process ffProcess, Stream stdInStream) StartPngFramesToVideoPipe(
         string outputFilePath,
         double framerate,
         FFMpegOptions? options = null,
@@ -357,7 +357,7 @@ public static class FFMpeg
         if (process == null)
             throw new Exception("Unable to start FFMpeg");
         return (process, process.StandardInput.BaseStream);
-    }
+    }*/
 
     public static (Process ffProcess, Stream stdInStream) StartFramesToVideoPipe(
         string outputFilePath,
@@ -417,7 +417,7 @@ public static class FFMpeg
         return (process, process.StandardInput.BaseStream);
     }
 
-    public static async Task<bool> CopyWithAspectRatio(
+    /*public static async Task<bool> CopyWithAspectRatio(
         string inputFilePath,
         string outputFilePath,
         string aspectRatioValue,
@@ -438,5 +438,5 @@ public static class FFMpeg
             .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
         var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
         return result.ExitCode == 0;
-    }
+    }*/
 }
