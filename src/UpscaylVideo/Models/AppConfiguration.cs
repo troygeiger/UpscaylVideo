@@ -89,6 +89,8 @@ public partial class AppConfiguration : ObservableValidator
     public Uri? LastBrowsedWorkingFolder { get; set; }
     
     public Uri? LastBrowsedOutputPath { get; set; }
+    
+    public bool ProgressPanelDetailsExpanded { get; set; } = false;
 
     // Global upscayl threads config (-j load:proc:save). Examples: 1:2:2 or 1:2,2,2:2
     [ObservableProperty]
