@@ -6,7 +6,7 @@
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:resx="clr-namespace:UpscaylVideo"
              x:DataType="vm:ConfigPageViewModel"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="UpscaylVideo.Views.ConfigPageView">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -26,7 +26,7 @@
     <TabControl Margin="8">
         <TabItem Header="Paths">
             <Grid ColumnDefinitions="Auto, *"
-                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto">
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
 
                 <Label Grid.Row="0"
                        Grid.Column="0"
@@ -105,6 +105,28 @@
                 <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Vertical">
                     <TextBox Text="{Binding Path=Configuration.UpscaylThreadConfig, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="{x:Static resx:Localization.ConfigPageView_UpscaylThreadsHelp}" FontSize="12" Foreground="Gray"/>
+                </StackPanel>
+                
+                <Label Grid.Row="6" Grid.Column="0" Classes="form-label"
+                       Content="FFMpeg Jpeg Quality"
+                       />
+                <StackPanel Grid.Row="6" Grid.Column="1" 
+                            Orientation="Vertical"
+                            Margin="0,24,0,0">
+                    <Slider IsSnapToTickEnabled="True"
+                            Classes="Discrete Accent"
+                            TickPlacement="TopLeft"
+                            TickFrequency="1"
+                            Minimum="1"
+                            Maximum="31" 
+                            Margin="6 0 0 0"
+                            Width="300"
+                            HorizontalAlignment="Left"
+                            Value="{Binding Configuration.FFMpegJpegQuality}"/>
+                    <TextBlock Text="Used for frame extraction (1-31 - Lower is better)" 
+                               FontSize="12" 
+                               Foreground="Gray"
+                               Margin="0 8"/>
                 </StackPanel>
             </Grid>
         </TabItem>

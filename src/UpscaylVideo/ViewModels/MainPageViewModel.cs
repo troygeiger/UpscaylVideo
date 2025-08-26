@@ -35,12 +35,8 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
     [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
 
-    // Hold references for dynamic updates
-    private Button? _cancelButton;
-    private TextBlock? _startText;
-
     // New: options for output image formats used by Upscayl-bin (-f)
-    public IEnumerable<string> ImageFormats { get; } = new[] { "png", "jpg" };
+    public IEnumerable<string> ImageFormats { get; } = ["jpeg", "png"];
 
     public MainPageViewModel()
     {
@@ -63,8 +59,8 @@ public partial class MainPageViewModel : PageBase
             ], showText:false); 
         
 
-        var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, "Start", RunCommand, out _startText, toolTip: "Start", showText: true);
-        _cancelButton = CreateToolButton(MaterialIconKind.Cancel, "Cancel", CancelJobCommand, toolTip: "Cancel", showText: true);
+        var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, "Start", RunCommand, out var startText, toolTip: "Start", showText: true);
+        var cancelButton = CreateToolButton(MaterialIconKind.Cancel, "Cancel", CancelJobCommand, toolTip: "Cancel", showText: true);
         //var settingsBtn = CreateToolButton(MaterialIconKind.Gear, "Settings", SettingsCommand, toolTip: "Settings", showText: false);
         var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, "Queue", OpenQueueCommand, toolTip: "Queue", showText: false);
         //var updateBtn = CreateToolButton(MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand, toolTip: checkUpdateText, showText: false);
@@ -76,7 +72,7 @@ public partial class MainPageViewModel : PageBase
                 CreateMenuItem(checkUpdateText, MaterialIconKind.Update, CheckUpdatesCommand),
             ], showText:false
         );
-        _cancelButton.IsVisible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing;
+        cancelButton.IsVisible = UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing;
 
         LeftToolStripControls =
         [
@@ -85,11 +81,11 @@ public partial class MainPageViewModel : PageBase
         RightToolStripControls =
         [
             startBtn,
-            _cancelButton,
+            cancelButton,
             queueBtn,
             settingsBtn,
         ];
-        _cancelButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
+        cancelButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
 
         // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
         /*UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
@@ -135,8 +131,8 @@ public partial class MainPageViewModel : PageBase
         UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.CollectionChanged += (s, e) =>
         {
             var queueCount = UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.Count;
-            if (_startText != null)
-                _startText.Text = queueCount > 0 ? "Add to Queue" : "Start";
+            if (startText != null)
+                startText.Text = queueCount > 0 ? "Add to Queue" : "Start";
         };
     }
 

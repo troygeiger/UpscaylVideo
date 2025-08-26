@@ -247,7 +247,7 @@ public partial class JobProcessingService : ObservableObject
                 $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
 
             // Sanitize image format (only png/jpg are supported for image2pipe)
-            var imageFormat = job.OutputImageFormat ?? "png" switch
+            var imageFormat =  (job.OutputImageFormat ?? "png") switch
             {
                 var s when s.Equals("png", StringComparison.OrdinalIgnoreCase) => "png",
                 var s when s.Equals("jpg", StringComparison.OrdinalIgnoreCase) => "jpg",

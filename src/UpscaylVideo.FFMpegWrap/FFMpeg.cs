@@ -267,6 +267,10 @@ public static class FFMpeg
 
     public static (Process ffProcess, Stream stdOutStream) StartImagePipe(string inputFilePath, double framerate, string? imageFormat, FFMpegOptions? options = null)
     {
+        options ??= FFMpegOptions.Global;
+        if (options.JpegQuality < 1 || options.JpegQuality > 31)
+            options.JpegQuality = 2; // reset to default if out of range
+        
         var fmt = (imageFormat ?? "png").ToLowerInvariant();
         var decoder = fmt switch
         {
@@ -275,17 +279,27 @@ public static class FFMpeg
             "jpeg" => "mjpeg",
             _ => "png"
         };
-        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
+        List<string> args = new()
+        {
             "-i",
             inputFilePath,
             "-r", framerate.ToString(CultureInfo.InvariantCulture),
             "-vf",
             "scale='max(iw,iw*sar)':'max(ih,ih/sar)'",
-            "-q:v", "2",
+        };
+        if (decoder == "mjpeg")
+        {
+            args.AddRange([
+                "-q:v", options.JpegQuality.ToString(),
+            ]);
+        }
+        args.AddRange([
             "-c:v",
             decoder, "-f", "image2pipe",
             "-",
-        ])
+        ]);
+        
+        ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), args)
         {
             RedirectStandardOutput = true,
             WindowStyle = ProcessWindowStyle.Hidden,

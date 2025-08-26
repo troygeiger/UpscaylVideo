@@ -56,7 +56,7 @@ public partial class AppConfiguration : ObservableValidator
     public int LastUpscaleFrameChunkSize { get; set; } = 1000;
     
     // New: last-used image format (-f) and tile size (-t)
-    public string LastImageFormat { get; set; } = "png";
+    public string LastImageFormat { get; set; } = "jpeg";
     public int LastTileSize { get; set; } = 31;
     
     
@@ -103,6 +103,18 @@ public partial class AppConfiguration : ObservableValidator
     {
         get => UpscaylThreadConfig;
         set => UpscaylThreadConfig = value;
+    }
+    
+    public int FFMpegJpegQuality
+    {
+        get => FFMpegOptions.Global.JpegQuality;
+        set
+        {
+            if (value < 1) value = 1;
+            if (value > 31) value = 31;
+            FFMpegOptions.Global.JpegQuality = value;
+            OnPropertyChanged(nameof(FFMpegJpegQuality));
+        }
     }
     
     partial void OnUpscaylThreadConfigChanged(string value)

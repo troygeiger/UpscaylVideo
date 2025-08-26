@@ -10,6 +10,8 @@ public class FFMpegOptions
 
     public string TempFolder { get; set; } = Path.GetTempPath();
 
+    public int JpegQuality { get; set; } = 2; // 1-31, lower is better quality
+    
     public string GetFFMpegBinaryPath()
     {
         var bin = FFMpegHelper.FFMpegExecutable;
