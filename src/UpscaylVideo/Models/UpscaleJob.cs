@@ -49,7 +49,7 @@ public partial class UpscaleJob : ObservableObject
     // -t tile-size (>=32; 0 = auto). UI slider maps 31 -> 0 (auto), default slider start at 31.
     [ObservableProperty] private int _tileSize = 31;
     // New: display text for tile size (localized "Auto" when 31, else number)
-    [ObservableProperty] private string _tileSizeDisplay;
+    [ObservableProperty] private string _tileSizeDisplay = Localization.Common_Auto;
 
     partial void OnTileSizeChanged(int value)
     {

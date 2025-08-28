@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MainWindow_Input" xml:space="preserve"><value>入力:</value></data>
+  <data name="MainWindow_Output" xml:space="preserve"><value>出力:</value></data>
+  <data name="MainWindow_Model" xml:space="preserve"><value>モデル:</value></data>
+  <data name="MainWindow_Scale" xml:space="preserve"><value>スケール:</value></data>
+  <data name="MainWindow_Frames" xml:space="preserve"><value>フレーム:</value></data>
+  <data name="MainWindow_TotalFrames" xml:space="preserve"><value>総フレーム数:</value></data>
+  <data name="MainWindow_ETA" xml:space="preserve"><value>残り時間:</value></data>
+  <data name="MainWindow_Elapsed" xml:space="preserve"><value>経過時間:</value></data>
+  <data name="MainWindow_UpscaleProgress" xml:space="preserve"><value>アップスケールの進捗:</value></data>
+  <data name="MainWindow_OverallProgress" xml:space="preserve"><value>全体の進捗:</value></data>
+  <data name="MainWindow_ChunkSize" xml:space="preserve"><value>チャンクサイズ</value></data>
+  <data name="MainWindow_Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="MainWindow_ImageFormat" xml:space="preserve"><value>画像形式</value></data>
+  <data name="MainWindow_TileSize" xml:space="preserve"><value>タイルサイズ</value></data>
+  <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve"><value>作業フォルダーを削除しますか？</value></data>
+  <data name="MainPageView_VideoFile" xml:space="preserve"><value>動画ファイル</value></data>
+  <data name="MainPageView_WorkingFolder" xml:space="preserve"><value>作業フォルダー</value></data>
+  <data name="MainPageView_OutputPath" xml:space="preserve"><value>出力パス</value></data>
+  <data name="MainPageView_ImageScale" xml:space="preserve"><value>画像スケール（{0}倍）</value></data>
+  <data name="MainPageView_Model" xml:space="preserve"><value>モデル</value></data>
+  <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Upscayl バッチサイズ</value></data>
+  <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve"><value>一度に処理するフレーム数です。現在 Upscayl の CLI プロセスにメモリリークがあるため、数値が大きいとシステムメモリを使い切る可能性があります。</value></data>
+  <data name="MainPageView_GpuNumberList" xml:space="preserve"><value>GPU 番号（自動は空欄、複数はカンマ区切り）</value></data>
+  <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve"><value>完了時に作業フォルダーを削除しますか？</value></data>
+  <data name="MainPageView_FrameCount" xml:space="preserve"><value>フレーム数:</value></data>
+  <data name="MainPageView_OriginalDimension" xml:space="preserve"><value>元のサイズ:</value></data>
+  <data name="MainPageView_ScaledDimension" xml:space="preserve"><value>変更後のサイズ:</value></data>
+  <data name="MainPageView_Duration" xml:space="preserve"><value>再生時間:</value></data>
+  <data name="MainPageView_NotLoaded" xml:space="preserve"><value>未読み込み</value></data>
+  <data name="MainPageView_Framerate" xml:space="preserve"><value>フレームレート:</value></data>
+  <data name="MainPageView_ImageFormat" xml:space="preserve"><value>画像形式</value></data>
+  <data name="MainPageView_TileSize" xml:space="preserve"><value>タイルサイズ（31 = 自動）</value></data>
+  <data name="MainPageView_TileSizeFormat" xml:space="preserve"><value>タイルサイズ（{0}）</value></data>
+  <data name="ConfigPageView_UpscaylPath" xml:space="preserve"><value>Upscayl のパス:</value></data>
+  <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve"><value>FFMpeg バイナリのパス:</value></data>
+  <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve"><value>一時作業フォルダー:</value></data>
+  <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve"><value>既定の出力パス:</value></data>
+  <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve"><value>既定の出力ファイルテンプレート:</value></data>
+  <data name="ConfigPageView_LeaveBlank" xml:space="preserve"><value>空欄の場合はソースフォルダーに出力します。</value></data>
+  <data name="ConfigPageView_DefaultTemplate" xml:space="preserve"><value>既定: {{OriginalFile}}-upscaled{{OriginalExtension}}</value></data>
+  <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve"><value>利用可能: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--任意}}</value></data>
+  <data name="ConfigPageView_CustomDateTime" xml:space="preserve"><value>カスタムの日付/時刻には {{Now "format"}} を使用します。例: {{Now 'yyyyMMdd_HHmmss'}}</value></data>
+  <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve"><value>既定のテンプレートにリセット</value></data>
+  <data name="QueuePageView_Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="QueuePageView_ClearQueue" xml:space="preserve"><value>キューをクリア</value></data>
+  <data name="QueuePageView_Status" xml:space="preserve"><value>ステータス</value></data>
+  <data name="QueuePageView_VideoPath" xml:space="preserve"><value>動画パス</value></data>
+  <data name="QueuePageView_Model" xml:space="preserve"><value>モデル</value></data>
+  <data name="QueuePageView_Scale" xml:space="preserve"><value>スケール</value></data>
+  <data name="QueuePageView_OutputFile" xml:space="preserve"><value>出力ファイル</value></data>
+  <data name="QueuePageView_Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="QueuePageView_Remove" xml:space="preserve"><value>削除</value></data>
+  <data name="QueuePageView_ElapsedTime" xml:space="preserve"><value>経過時間</value></data>
+  <data name="Status_Queued" xml:space="preserve"><value>待機中</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>実行中</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>完了</value></data>
+  <data name="ConfigPageView_UpscaylThreads" xml:space="preserve"><value>Upscayl スレッド (-j):</value></data>
+  <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve"><value>load/proc/save のスレッド数（既定=1:2:2）。例: 1:2:2 または 1:2,2,2:2（複数 GPU）</value></data>
+  <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve"><value>形式が無効です。load:proc:save の形式で指定してください。例: 1:2:2、複数 GPU の場合 1:2,2,2:2</value></data>
+  <data name="MainPageView_CheckUpdates" xml:space="preserve"><value>更新を確認</value></data>
+  <data name="MainWindow_GetUpdate" xml:space="preserve"><value>更新を入手</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>更新を確認中…</value></data>
+  <data name="Update_NotConfigured" xml:space="preserve"><value>更新の確認は構成されていません。</value></data>
+  <data name="Update_NoReleases" xml:space="preserve"><value>リリースが見つかりません。</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>利用可能な更新: {0}</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>最新です。</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>更新の確認に失敗しました: {0}</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>はい</value></data>
+  <data name="Common_No" xml:space="preserve"><value>いいえ</value></data>
+  <data name="Common_Auto" xml:space="preserve"><value>自動</value></data>
+  <data name="Common_Videos" xml:space="preserve"><value>ビデオ</value></data>
+  <data name="Common_png" xml:space="preserve"><value>png</value></data>
+  <data name="MainWindow_StatusFormat" xml:space="preserve"><value>ステータス: {0}</value></data>
+  <data name="MainWindow_Detailed" xml:space="preserve"><value>詳細</value></data>
+  <data name="MainWindow_Calculating" xml:space="preserve"><value>計算中…</value></data>
+  <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>パス</value></data>
+  <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>FFMpeg JPEG 品質</value></data>
+  <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>フレーム抽出に使用します（1〜31 — 数値が小さいほど高品質）</value></data>
+  <data name="MainPageView_NewJob" xml:space="preserve"><value>新規ジョブ</value></data>
+  <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>複数をキューに追加</value></data>
+  <data name="MainPageView_Start" xml:space="preserve"><value>開始</value></data>
+  <data name="MainPageView_AddToQueue" xml:space="preserve"><value>キューに追加</value></data>
+  <data name="MainPageView_Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="MainPageView_Queue" xml:space="preserve"><value>キュー</value></data>
+  <data name="MainPageView_Settings" xml:space="preserve"><value>設定</value></data>
+  <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>動画ファイルを選択</value></data>
+  <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>動画ファイルを選択</value></data>
+  <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>出力パスを選択</value></data>
+  <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>出力ファイルを選択</value></data>
+  <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>無効な数値</value></data>
+  <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>補間なし（ソースと同じ）</value></data>
+  <data name="Status_InputMissing" xml:space="preserve"><value>入力動画または作業フォルダーが見つかりません。</value></data>
+  <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Upscayl のパスが見つかりません。</value></data>
+  <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Upscayl のバイナリが見つかりません。</value></data>
+  <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>Upscayl のモデルフォルダーが見つかりません。</value></data>
+  <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>ソース動画フォルダーが見つかりません。</value></data>
+  <data name="Status_OutputPathEmpty" xml:space="preserve"><value>出力ファイルパスが空です。</value></data>
+  <data name="Status_ExtractingAudio" xml:space="preserve"><value>音声を抽出中...</value></data>
+  <data name="Status_ExtractingMetadata" xml:space="preserve"><value>章メタデータを抽出中...</value></data>
+  <data name="Status_ExtractingFrames" xml:space="preserve"><value>フレームを抽出中...</value></data>
+  <data name="Status_UpscalingFrames" xml:space="preserve"><value>フレームをアップスケール中...</value></data>
+  <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>アップスケールが中止または失敗しました。</value></data>
+  <data name="Status_JobCancelled" xml:space="preserve"><value>ジョブをキャンセルしました。</value></data>
+  <data name="Status_Merging" xml:space="preserve"><value>動画と音声を結合中...</value></data>
+  <data name="Status_JobCompleted" xml:space="preserve"><value>ジョブが完了しました。</value></data>
+  <data name="Status_CleaningUp" xml:space="preserve"><value>クリーンアップ中...</value></data>
+  <data name="Status_CleanupFailed" xml:space="preserve"><value>クリーンアップに失敗しました: {0}</value></data>
+  <data name="Error_Prefix" xml:space="preserve"><value>エラー: {0}</value></data>
+</root>

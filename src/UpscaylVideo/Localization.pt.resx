@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MainWindow_Input" xml:space="preserve"><value>Entrada:</value></data>
+  <data name="MainWindow_Output" xml:space="preserve"><value>Saída:</value></data>
+  <data name="MainWindow_Model" xml:space="preserve"><value>Modelo:</value></data>
+  <data name="MainWindow_Scale" xml:space="preserve"><value>Escala:</value></data>
+  <data name="MainWindow_Frames" xml:space="preserve"><value>Fotogramas:</value></data>
+  <data name="MainWindow_TotalFrames" xml:space="preserve"><value>Total de fotogramas:</value></data>
+  <data name="MainWindow_ETA" xml:space="preserve"><value>Tempo restante:</value></data>
+  <data name="MainWindow_Elapsed" xml:space="preserve"><value>Decorrido:</value></data>
+  <data name="MainWindow_UpscaleProgress" xml:space="preserve"><value>Progresso do upscale:</value></data>
+  <data name="MainWindow_OverallProgress" xml:space="preserve"><value>Progresso geral:</value></data>
+  <data name="MainWindow_ChunkSize" xml:space="preserve"><value>Tamanho do bloco</value></data>
+  <data name="MainWindow_Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="MainWindow_ImageFormat" xml:space="preserve"><value>Formato da imagem</value></data>
+  <data name="MainWindow_TileSize" xml:space="preserve"><value>Tamanho dos mosaicos</value></data>
+  <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve"><value>Eliminar a pasta de trabalho?</value></data>
+  <data name="MainPageView_VideoFile" xml:space="preserve"><value>Ficheiro de vídeo</value></data>
+  <data name="MainPageView_WorkingFolder" xml:space="preserve"><value>Pasta de trabalho</value></data>
+  <data name="MainPageView_OutputPath" xml:space="preserve"><value>Caminho de saída</value></data>
+  <data name="MainPageView_ImageScale" xml:space="preserve"><value>Escala da imagem ({0}x)</value></data>
+  <data name="MainPageView_Model" xml:space="preserve"><value>Modelo</value></data>
+  <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Tamanho do lote do Upscayl</value></data>
+  <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve"><value>Número de fotogramas processados de cada vez. Existe uma fuga de memória no processo de CLI do Upscayl; valores elevados podem usar a memória do sistema.</value></data>
+  <data name="MainPageView_GpuNumberList" xml:space="preserve"><value>Nº da GPU (deixe em branco para automático ou separe por vírgulas para várias)</value></data>
+  <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve"><value>Eliminar a pasta de trabalho ao concluir?</value></data>
+  <data name="MainPageView_FrameCount" xml:space="preserve"><value>Contagem de fotogramas:</value></data>
+  <data name="MainPageView_OriginalDimension" xml:space="preserve"><value>Dimensão original:</value></data>
+  <data name="MainPageView_ScaledDimension" xml:space="preserve"><value>Dimensão redimensionada:</value></data>
+  <data name="MainPageView_Duration" xml:space="preserve"><value>Duração:</value></data>
+  <data name="MainPageView_NotLoaded" xml:space="preserve"><value>Não carregado</value></data>
+  <data name="MainPageView_Framerate" xml:space="preserve"><value>Taxa de fotogramas:</value></data>
+  <data name="MainPageView_ImageFormat" xml:space="preserve"><value>Formato da imagem</value></data>
+  <data name="MainPageView_TileSize" xml:space="preserve"><value>Tamanho dos mosaicos (31 = Automático)</value></data>
+  <data name="MainPageView_TileSizeFormat" xml:space="preserve"><value>Tamanho dos mosaicos ({0})</value></data>
+  <data name="ConfigPageView_UpscaylPath" xml:space="preserve"><value>Caminho do Upscayl:</value></data>
+  <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve"><value>Caminho dos binários do FFMpeg:</value></data>
+  <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve"><value>Pasta de trabalho temporária:</value></data>
+  <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve"><value>Caminho de saída predefinido:</value></data>
+  <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve"><value>Modelo de nome de ficheiro predefinido:</value></data>
+  <data name="ConfigPageView_LeaveBlank" xml:space="preserve"><value>Deixe em branco para guardar na pasta de origem.</value></data>
+  <data name="ConfigPageView_DefaultTemplate" xml:space="preserve"><value>Predefinição: {{OriginalFile}}-upscaled{{OriginalExtension}}</value></data>
+  <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve"><value>Disponível: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--opcional}}</value></data>
+  <data name="ConfigPageView_CustomDateTime" xml:space="preserve"><value>Use {{Now "format"}} para data/hora personalizada, por ex.: {{Now 'yyyyMMdd_HHmmss'}}</value></data>
+  <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve"><value>Repor modelo predefinido</value></data>
+  <data name="QueuePageView_Back" xml:space="preserve"><value>Voltar</value></data>
+  <data name="QueuePageView_ClearQueue" xml:space="preserve"><value>Limpar fila</value></data>
+  <data name="QueuePageView_Status" xml:space="preserve"><value>Estado</value></data>
+  <data name="QueuePageView_VideoPath" xml:space="preserve"><value>Caminho do vídeo</value></data>
+  <data name="QueuePageView_Model" xml:space="preserve"><value>Modelo</value></data>
+  <data name="QueuePageView_Scale" xml:space="preserve"><value>Escala</value></data>
+  <data name="QueuePageView_OutputFile" xml:space="preserve"><value>Ficheiro de saída</value></data>
+  <data name="QueuePageView_Actions" xml:space="preserve"><value>Ações</value></data>
+  <data name="QueuePageView_Remove" xml:space="preserve"><value>Remover</value></data>
+  <data name="QueuePageView_ElapsedTime" xml:space="preserve"><value>Tempo decorrido</value></data>
+  <data name="Status_Queued" xml:space="preserve"><value>Em fila</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>A executar</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>Concluído</value></data>
+  <data name="ConfigPageView_UpscaylThreads" xml:space="preserve"><value>Threads do Upscayl (-j):</value></data>
+  <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve"><value>Número de threads para load/proc/save (predefinição=1:2:2). Exemplos: 1:2:2 ou 1:2,2,2:2 para várias GPUs</value></data>
+  <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve"><value>Formato inválido. Use load:proc:save, ex.: 1:2:2 ou multi-GPU como 1:2,2,2:2</value></data>
+  <data name="MainPageView_CheckUpdates" xml:space="preserve"><value>Verificar atualizações</value></data>
+  <data name="MainWindow_GetUpdate" xml:space="preserve"><value>Obter atualização</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>A verificar atualizações…</value></data>
+  <data name="Update_NotConfigured" xml:space="preserve"><value>As verificações de atualização não estão configuradas.</value></data>
+  <data name="Update_NoReleases" xml:space="preserve"><value>Não foram encontradas versões.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>Atualização disponível: {0}</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>Está atualizado.</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>Falha na verificação de atualizações: {0}</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Sim</value></data>
+  <data name="Common_No" xml:space="preserve"><value>Não</value></data>
+  <data name="Common_Auto" xml:space="preserve"><value>Automático</value></data>
+  <data name="Common_Videos" xml:space="preserve"><value>Vídeos</value></data>
+  <data name="Common_png" xml:space="preserve"><value>png</value></data>
+  <data name="MainWindow_StatusFormat" xml:space="preserve"><value>Estado: {0}</value></data>
+  <data name="MainWindow_Detailed" xml:space="preserve"><value>Detalhado</value></data>
+  <data name="MainWindow_Calculating" xml:space="preserve"><value>A calcular…</value></data>
+  <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>Caminhos</value></data>
+  <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>Qualidade JPEG do FFMpeg</value></data>
+  <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>Usada para extração de fotogramas (1-31 - menor é melhor)</value></data>
+  <data name="MainPageView_NewJob" xml:space="preserve"><value>Novo trabalho</value></data>
+  <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>Enfileirar vários</value></data>
+  <data name="MainPageView_Start" xml:space="preserve"><value>Iniciar</value></data>
+  <data name="MainPageView_AddToQueue" xml:space="preserve"><value>Adicionar à fila</value></data>
+  <data name="MainPageView_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="MainPageView_Queue" xml:space="preserve"><value>Fila</value></data>
+  <data name="MainPageView_Settings" xml:space="preserve"><value>Definições</value></data>
+  <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Selecionar ficheiro de vídeo</value></data>
+  <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Selecionar ficheiros de vídeo</value></data>
+  <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Selecionar caminho de saída</value></data>
+  <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Selecionar ficheiro de saída</value></data>
+  <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Número inválido</value></data>
+  <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Sem interpolação (igual à origem)</value></data>
+  <data name="Status_InputMissing" xml:space="preserve"><value>Vídeo de entrada ou pasta de trabalho em falta.</value></data>
+  <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Caminho do Upscayl não encontrado.</value></data>
+  <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Binário do Upscayl não encontrado.</value></data>
+  <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>Pasta de modelos do Upscayl não encontrada.</value></data>
+  <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>Pasta de vídeo de origem não encontrada.</value></data>
+  <data name="Status_OutputPathEmpty" xml:space="preserve"><value>O caminho do ficheiro de saída está vazio.</value></data>
+  <data name="Status_ExtractingAudio" xml:space="preserve"><value>A extrair áudio...</value></data>
+  <data name="Status_ExtractingMetadata" xml:space="preserve"><value>A extrair metadados de capítulos...</value></data>
+  <data name="Status_ExtractingFrames" xml:space="preserve"><value>A extrair fotogramas...</value></data>
+  <data name="Status_UpscalingFrames" xml:space="preserve"><value>A fazer upscale de fotogramas...</value></data>
+  <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>Upscale cancelado ou falhou.</value></data>
+  <data name="Status_JobCancelled" xml:space="preserve"><value>Trabalho cancelado.</value></data>
+  <data name="Status_Merging" xml:space="preserve"><value>A combinar vídeo e áudio...</value></data>
+  <data name="Status_JobCompleted" xml:space="preserve"><value>Trabalho concluído.</value></data>
+  <data name="Status_CleaningUp" xml:space="preserve"><value>A limpar...</value></data>
+  <data name="Status_CleanupFailed" xml:space="preserve"><value>Falha na limpeza: {0}</value></data>
+  <data name="Error_Prefix" xml:space="preserve"><value>Erro: {0}</value></data>
+</root>

@@ -62,7 +62,7 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Localization.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Localization.de-de.resx">
+      <EmbeddedResource Update="Localization.*.resx">
         <DependentUpon>Localization.resx</DependentUpon>
       </EmbeddedResource>
     </ItemGroup>

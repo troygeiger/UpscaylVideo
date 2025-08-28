@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MainWindow_Input" xml:space="preserve"><value>Input:</value></data>
+  <data name="MainWindow_Output" xml:space="preserve"><value>Output:</value></data>
+  <data name="MainWindow_Model" xml:space="preserve"><value>Model:</value></data>
+  <data name="MainWindow_Scale" xml:space="preserve"><value>Skala:</value></data>
+  <data name="MainWindow_Frames" xml:space="preserve"><value>Bingkai:</value></data>
+  <data name="MainWindow_TotalFrames" xml:space="preserve"><value>Jumlah Bingkai:</value></data>
+  <data name="MainWindow_ETA" xml:space="preserve"><value>Anggaran Masa:</value></data>
+  <data name="MainWindow_Elapsed" xml:space="preserve"><value>Masa Berlalu:</value></data>
+  <data name="MainWindow_UpscaleProgress" xml:space="preserve"><value>Kemajuan Upscale:</value></data>
+  <data name="MainWindow_OverallProgress" xml:space="preserve"><value>Kemajuan Keseluruhan:</value></data>
+  <data name="MainWindow_ChunkSize" xml:space="preserve"><value>Saiz Cebisan</value></data>
+  <data name="MainWindow_Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="MainWindow_ImageFormat" xml:space="preserve"><value>Format Imej</value></data>
+  <data name="MainWindow_TileSize" xml:space="preserve"><value>Saiz Jubin</value></data>
+  <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve"><value>Padam folder kerja?</value></data>
+  <data name="MainPageView_VideoFile" xml:space="preserve"><value>Fail Video</value></data>
+  <data name="MainPageView_WorkingFolder" xml:space="preserve"><value>Folder Kerja</value></data>
+  <data name="MainPageView_OutputPath" xml:space="preserve"><value>Laluan Output</value></data>
+  <data name="MainPageView_ImageScale" xml:space="preserve"><value>Skala Imej ({0}x)</value></data>
+  <data name="MainPageView_Model" xml:space="preserve"><value>Model</value></data>
+  <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Saiz Kelompok Upscayl</value></data>
+  <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve"><value>Bilangan bingkai yang diproses sekali gus. Terdapat kebocoran memori dalam proses CLI Upscayl; nilai besar boleh menggunakan memori sistem.</value></data>
+  <data name="MainPageView_GpuNumberList" xml:space="preserve"><value>No. GPU (biarkan kosong untuk auto atau pisahkan dengan koma untuk berbilang)</value></data>
+  <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve"><value>Padam folder kerja apabila selesai?</value></data>
+  <data name="MainPageView_FrameCount" xml:space="preserve"><value>Kiraan Bingkai:</value></data>
+  <data name="MainPageView_OriginalDimension" xml:space="preserve"><value>Dimensi Asal:</value></data>
+  <data name="MainPageView_ScaledDimension" xml:space="preserve"><value>Dimensi Diskala:</value></data>
+  <data name="MainPageView_Duration" xml:space="preserve"><value>Tempoh:</value></data>
+  <data name="MainPageView_NotLoaded" xml:space="preserve"><value>Tidak Dimuat</value></data>
+  <data name="MainPageView_Framerate" xml:space="preserve"><value>Kadar Bingkai:</value></data>
+  <data name="MainPageView_ImageFormat" xml:space="preserve"><value>Format Imej</value></data>
+  <data name="MainPageView_TileSize" xml:space="preserve"><value>Saiz Jubin (31 = Auto)</value></data>
+  <data name="MainPageView_TileSizeFormat" xml:space="preserve"><value>Saiz Jubin ({0})</value></data>
+  <data name="ConfigPageView_UpscaylPath" xml:space="preserve"><value>Laluan Upscayl:</value></data>
+  <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve"><value>Laluan Binari FFMpeg:</value></data>
+  <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve"><value>Folder Kerja Sementara:</value></data>
+  <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve"><value>Laluan Output Lalai:</value></data>
+  <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve"><value>Templat Nama Fail Output Lalai:</value></data>
+  <data name="ConfigPageView_LeaveBlank" xml:space="preserve"><value>Biarkan kosong untuk keluarkan ke folder sumber.</value></data>
+  <data name="ConfigPageView_DefaultTemplate" xml:space="preserve"><value>Lalai: {{OriginalFile}}-upscaled{{OriginalExtension}}</value></data>
+  <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve"><value>Tersedia: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--pilihan}}</value></data>
+  <data name="ConfigPageView_CustomDateTime" xml:space="preserve"><value>Guna {{Now "format"}} untuk tarikh/masa tersuai, cth. {{Now 'yyyyMMdd_HHmmss'}}</value></data>
+  <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve"><value>Tetapkan semula ke templat lalai</value></data>
+  <data name="QueuePageView_Back" xml:space="preserve"><value>Kembali</value></data>
+  <data name="QueuePageView_ClearQueue" xml:space="preserve"><value>Kosongkan Baris Gilir</value></data>
+  <data name="QueuePageView_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="QueuePageView_VideoPath" xml:space="preserve"><value>Laluan Video</value></data>
+  <data name="QueuePageView_Model" xml:space="preserve"><value>Model</value></data>
+  <data name="QueuePageView_Scale" xml:space="preserve"><value>Skala</value></data>
+  <data name="QueuePageView_OutputFile" xml:space="preserve"><value>Fail Output</value></data>
+  <data name="QueuePageView_Actions" xml:space="preserve"><value>Tindakan</value></data>
+  <data name="QueuePageView_Remove" xml:space="preserve"><value>Buang</value></data>
+  <data name="QueuePageView_ElapsedTime" xml:space="preserve"><value>Masa Berlalu</value></data>
+  <data name="Status_Queued" xml:space="preserve"><value>Dalam Giliran</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>Berjalan</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>Selesai</value></data>
+  <data name="ConfigPageView_UpscaylThreads" xml:space="preserve"><value>Benang Upscayl (-j):</value></data>
+  <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve"><value>Kiraan benang untuk load/proc/save (lalai=1:2:2). Contoh: 1:2:2 atau 1:2,2,2:2 untuk multi-GPU</value></data>
+  <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve"><value>Format tidak sah. Guna load:proc:save, cth. 1:2:2 atau multi-GPU seperti 1:2,2,2:2</value></data>
+  <data name="MainPageView_CheckUpdates" xml:space="preserve"><value>Semak Kemas Kini</value></data>
+  <data name="MainWindow_GetUpdate" xml:space="preserve"><value>Dapatkan Kemas Kini</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>Menyemak kemas kini…</value></data>
+  <data name="Update_NotConfigured" xml:space="preserve"><value>Semakan kemas kini tidak dikonfigurasikan.</value></data>
+  <data name="Update_NoReleases" xml:space="preserve"><value>Tiada keluaran ditemui.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>Kemas kini tersedia: {0}</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>Anda sudah terkini.</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>Semakan kemas kini gagal: {0}</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Ya</value></data>
+  <data name="Common_No" xml:space="preserve"><value>Tidak</value></data>
+  <data name="Common_Auto" xml:space="preserve"><value>Auto</value></data>
+  <data name="Common_Videos" xml:space="preserve"><value>Video</value></data>
+  <data name="Common_png" xml:space="preserve"><value>png</value></data>
+  <data name="MainWindow_StatusFormat" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="MainWindow_Detailed" xml:space="preserve"><value>Terperinci</value></data>
+  <data name="MainWindow_Calculating" xml:space="preserve"><value>Mengira…</value></data>
+  <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>Laluan</value></data>
+  <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>Kualiti JPEG FFMpeg</value></data>
+  <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>Digunakan untuk pengekstrakan bingkai (1-31 - lebih rendah lebih baik)</value></data>
+  <data name="MainPageView_NewJob" xml:space="preserve"><value>Kerja Baharu</value></data>
+  <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>Baris Gilir Berbilang</value></data>
+  <data name="MainPageView_Start" xml:space="preserve"><value>Mula</value></data>
+  <data name="MainPageView_AddToQueue" xml:space="preserve"><value>Tambah ke Baris Gilir</value></data>
+  <data name="MainPageView_Cancel" xml:space="preserve"><value>Batal</value></data>
+  <data name="MainPageView_Queue" xml:space="preserve"><value>Baris Gilir</value></data>
+  <data name="MainPageView_Settings" xml:space="preserve"><value>Tetapan</value></data>
+  <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Pilih fail video</value></data>
+  <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Pilih fail video</value></data>
+  <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Pilih laluan output</value></data>
+  <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Pilih fail output</value></data>
+  <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Rentetan nombor tidak sah</value></data>
+  <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Tiada Interpolasi (Sama seperti sumber)</value></data>
+  <data name="Status_InputMissing" xml:space="preserve"><value>Video input atau folder kerja tiada.</value></data>
+  <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Laluan Upscayl tidak ditemui.</value></data>
+  <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Binari Upscayl tidak ditemui.</value></data>
+  <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>Folder model Upscayl tidak ditemui.</value></data>
+  <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>Folder video sumber tidak ditemui.</value></data>
+  <data name="Status_OutputPathEmpty" xml:space="preserve"><value>Laluan fail output kosong.</value></data>
+  <data name="Status_ExtractingAudio" xml:space="preserve"><value>Mengekstrak audio...</value></data>
+  <data name="Status_ExtractingMetadata" xml:space="preserve"><value>Mengekstrak metadata bab...</value></data>
+  <data name="Status_ExtractingFrames" xml:space="preserve"><value>Mengekstrak bingkai...</value></data>
+  <data name="Status_UpscalingFrames" xml:space="preserve"><value>Menaik skala bingkai...</value></data>
+  <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>Upscale dibatalkan atau gagal.</value></data>
+  <data name="Status_JobCancelled" xml:space="preserve"><value>Kerja dibatalkan.</value></data>
+  <data name="Status_Merging" xml:space="preserve"><value>Menggabungkan video dan audio...</value></data>
+  <data name="Status_JobCompleted" xml:space="preserve"><value>Kerja selesai.</value></data>
+  <data name="Status_CleaningUp" xml:space="preserve"><value>Pembersihan...</value></data>
+  <data name="Status_CleanupFailed" xml:space="preserve"><value>Pembersihan gagal: {0}</value></data>
+  <data name="Error_Prefix" xml:space="preserve"><value>Ralat: {0}</value></data>
+</root>

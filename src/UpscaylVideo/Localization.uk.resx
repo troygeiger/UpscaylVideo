@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MainWindow_Input" xml:space="preserve"><value>Вхід:</value></data>
+  <data name="MainWindow_Output" xml:space="preserve"><value>Вихід:</value></data>
+  <data name="MainWindow_Model" xml:space="preserve"><value>Модель:</value></data>
+  <data name="MainWindow_Scale" xml:space="preserve"><value>Масштаб:</value></data>
+  <data name="MainWindow_Frames" xml:space="preserve"><value>Кадри:</value></data>
+  <data name="MainWindow_TotalFrames" xml:space="preserve"><value>Всього кадрів:</value></data>
+  <data name="MainWindow_ETA" xml:space="preserve"><value>Залишилось часу:</value></data>
+  <data name="MainWindow_Elapsed" xml:space="preserve"><value>Минуло часу:</value></data>
+  <data name="MainWindow_UpscaleProgress" xml:space="preserve"><value>Прогрес масштабування:</value></data>
+  <data name="MainWindow_OverallProgress" xml:space="preserve"><value>Загальний прогрес:</value></data>
+  <data name="MainWindow_ChunkSize" xml:space="preserve"><value>Розмір блоку</value></data>
+  <data name="MainWindow_Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="MainWindow_ImageFormat" xml:space="preserve"><value>Формат зображення</value></data>
+  <data name="MainWindow_TileSize" xml:space="preserve"><value>Розмір тайла</value></data>
+  <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve"><value>Видалити робочу теку?</value></data>
+  <data name="MainPageView_VideoFile" xml:space="preserve"><value>Відеофайл</value></data>
+  <data name="MainPageView_WorkingFolder" xml:space="preserve"><value>Робоча тека</value></data>
+  <data name="MainPageView_OutputPath" xml:space="preserve"><value>Шлях виводу</value></data>
+  <data name="MainPageView_ImageScale" xml:space="preserve"><value>Масштаб зображення ({0}x)</value></data>
+  <data name="MainPageView_Model" xml:space="preserve"><value>Модель</value></data>
+  <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Розмір пакета Upscayl</value></data>
+  <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve"><value>Кількість кадрів, що обробляються за один раз. У процесі CLI Upscayl є витік пам'яті; великі значення можуть використовувати пам'ять системи.</value></data>
+  <data name="MainPageView_GpuNumberList" xml:space="preserve"><value>№ GPU (порожньо для авто або через кому для декількох)</value></data>
+  <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve"><value>Видаляти робочу теку після завершення?</value></data>
+  <data name="MainPageView_FrameCount" xml:space="preserve"><value>Кількість кадрів:</value></data>
+  <data name="MainPageView_OriginalDimension" xml:space="preserve"><value>Початковий розмір:</value></data>
+  <data name="MainPageView_ScaledDimension" xml:space="preserve"><value>Масштабований розмір:</value></data>
+  <data name="MainPageView_Duration" xml:space="preserve"><value>Тривалість:</value></data>
+  <data name="MainPageView_NotLoaded" xml:space="preserve"><value>Не завантажено</value></data>
+  <data name="MainPageView_Framerate" xml:space="preserve"><value>Частота кадрів:</value></data>
+  <data name="MainPageView_ImageFormat" xml:space="preserve"><value>Формат зображення</value></data>
+  <data name="MainPageView_TileSize" xml:space="preserve"><value>Розмір тайла (31 = Авто)</value></data>
+  <data name="MainPageView_TileSizeFormat" xml:space="preserve"><value>Розмір тайла ({0})</value></data>
+  <data name="ConfigPageView_UpscaylPath" xml:space="preserve"><value>Шлях до Upscayl:</value></data>
+  <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve"><value>Шлях до бінарних файлів FFMpeg:</value></data>
+  <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve"><value>Тимчасова робоча тека:</value></data>
+  <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve"><value>Шлях виводу за замовчуванням:</value></data>
+  <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve"><value>Шаблон імені файлу за замовчуванням:</value></data>
+  <data name="ConfigPageView_LeaveBlank" xml:space="preserve"><value>Залиште порожнім для виводу до теки джерела.</value></data>
+  <data name="ConfigPageView_DefaultTemplate" xml:space="preserve"><value>За замовчуванням: {{OriginalFile}}-upscaled{{OriginalExtension}}</value></data>
+  <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve"><value>Доступно: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--необов'язково}}</value></data>
+  <data name="ConfigPageView_CustomDateTime" xml:space="preserve"><value>Використовуйте {{Now "format"}} для власного формату дати/часу, напр.: {{Now 'yyyyMMdd_HHmmss'}}</value></data>
+  <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve"><value>Скинути до шаблону за замовчуванням</value></data>
+  <data name="QueuePageView_Back" xml:space="preserve"><value>Назад</value></data>
+  <data name="QueuePageView_ClearQueue" xml:space="preserve"><value>Очистити чергу</value></data>
+  <data name="QueuePageView_Status" xml:space="preserve"><value>Статус</value></data>
+  <data name="QueuePageView_VideoPath" xml:space="preserve"><value>Шлях до відео</value></data>
+  <data name="QueuePageView_Model" xml:space="preserve"><value>Модель</value></data>
+  <data name="QueuePageView_Scale" xml:space="preserve"><value>Масштаб</value></data>
+  <data name="QueuePageView_OutputFile" xml:space="preserve"><value>Вихідний файл</value></data>
+  <data name="QueuePageView_Actions" xml:space="preserve"><value>Дії</value></data>
+  <data name="QueuePageView_Remove" xml:space="preserve"><value>Видалити</value></data>
+  <data name="QueuePageView_ElapsedTime" xml:space="preserve"><value>Минувший час</value></data>
+  <data name="Status_Queued" xml:space="preserve"><value>У черзі</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>Виконується</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>Завершено</value></data>
+  <data name="ConfigPageView_UpscaylThreads" xml:space="preserve"><value>Потоки Upscayl (-j):</value></data>
+  <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve"><value>Кількість потоків для load/proc/save (типово=1:2:2). Приклади: 1:2:2 або для кількох GPU 1:2,2,2:2</value></data>
+  <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve"><value>Невірний формат. Використовуйте load:proc:save, напр. 1:2:2 або для кількох GPU 1:2,2,2:2</value></data>
+  <data name="MainPageView_CheckUpdates" xml:space="preserve"><value>Перевірити оновлення</value></data>
+  <data name="MainWindow_GetUpdate" xml:space="preserve"><value>Отримати оновлення</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>Перевірка оновлень…</value></data>
+  <data name="Update_NotConfigured" xml:space="preserve"><value>Перевірка оновлень не налаштована.</value></data>
+  <data name="Update_NoReleases" xml:space="preserve"><value>Випуски не знайдено.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>Доступне оновлення: {0}</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>У вас актуальна версія.</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>Помилка перевірки оновлень: {0}</value></data>
+  <data name="Common_Yes" xml:space="preserve"><value>Так</value></data>
+  <data name="Common_No" xml:space="preserve"><value>Ні</value></data>
+  <data name="Common_Auto" xml:space="preserve"><value>Авто</value></data>
+  <data name="Common_Videos" xml:space="preserve"><value>Відео</value></data>
+  <data name="Common_png" xml:space="preserve"><value>png</value></data>
+  <data name="MainWindow_StatusFormat" xml:space="preserve"><value>Статус: {0}</value></data>
+  <data name="MainWindow_Detailed" xml:space="preserve"><value>Детально</value></data>
+  <data name="MainWindow_Calculating" xml:space="preserve"><value>Обчислення…</value></data>
+  <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>Шляхи</value></data>
+  <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>Якість JPEG FFMpeg</value></data>
+  <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>Використовується для вилучення кадрів (1-31 — менше краще)</value></data>
+  <data name="MainPageView_NewJob" xml:space="preserve"><value>Нове завдання</value></data>
+  <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>Додати декілька в чергу</value></data>
+  <data name="MainPageView_Start" xml:space="preserve"><value>Почати</value></data>
+  <data name="MainPageView_AddToQueue" xml:space="preserve"><value>Додати до черги</value></data>
+  <data name="MainPageView_Cancel" xml:space="preserve"><value>Скасувати</value></data>
+  <data name="MainPageView_Queue" xml:space="preserve"><value>Черга</value></data>
+  <data name="MainPageView_Settings" xml:space="preserve"><value>Налаштування</value></data>
+  <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Вибрати відеофайл</value></data>
+  <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Вибрати відеофайли</value></data>
+  <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Вибрати шлях виводу</value></data>
+  <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Вибрати вихідний файл</value></data>
+  <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Недійсне число</value></data>
+  <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Без інтерполяції (як у джерела)</value></data>
+  <data name="Status_InputMissing" xml:space="preserve"><value>Вхідне відео або робоча тека відсутні.</value></data>
+  <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Шлях до Upscayl не знайдено.</value></data>
+  <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Бінарний файл Upscayl не знайдено.</value></data>
+  <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>Теку моделей Upscayl не знайдено.</value></data>
+  <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>Теку вихідного відео не знайдено.</value></data>
+  <data name="Status_OutputPathEmpty" xml:space="preserve"><value>Шлях до вихідного файлу порожній.</value></data>
+  <data name="Status_ExtractingAudio" xml:space="preserve"><value>Витягнення аудіо...</value></data>
+  <data name="Status_ExtractingMetadata" xml:space="preserve"><value>Витягнення метаданих розділів...</value></data>
+  <data name="Status_ExtractingFrames" xml:space="preserve"><value>Витягнення кадрів...</value></data>
+  <data name="Status_UpscalingFrames" xml:space="preserve"><value>Масштабування кадрів...</value></data>
+  <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>Масштабування скасовано або не вдалося.</value></data>
+  <data name="Status_JobCancelled" xml:space="preserve"><value>Завдання скасовано.</value></data>
+  <data name="Status_Merging" xml:space="preserve"><value>Об'єднання відео та аудіо...</value></data>
+  <data name="Status_JobCompleted" xml:space="preserve"><value>Завдання завершено.</value></data>
+  <data name="Status_CleaningUp" xml:space="preserve"><value>Очищення...</value></data>
+  <data name="Status_CleanupFailed" xml:space="preserve"><value>Помилка очищення: {0}</value></data>
+  <data name="Error_Prefix" xml:space="preserve"><value>Помилка: {0}</value></data>
+</root>

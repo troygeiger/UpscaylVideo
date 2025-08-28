@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="MainWindow_Input" xml:space="preserve"><value>Entrada:</value></data>
+  <data name="MainWindow_Output" xml:space="preserve"><value>Eixida:</value></data>
+  <data name="MainWindow_Model" xml:space="preserve"><value>Model:</value></data>
+  <data name="MainWindow_Scale" xml:space="preserve"><value>Escala:</value></data>
+  <data name="MainWindow_Frames" xml:space="preserve"><value>Fotogrames:</value></data>
+  <data name="MainWindow_TotalFrames" xml:space="preserve"><value>Total de fotogrames:</value></data>
+  <data name="MainWindow_ETA" xml:space="preserve"><value>Temps estimat:</value></data>
+  <data name="MainWindow_Elapsed" xml:space="preserve"><value>Temps transcorregut:</value></data>
+  <data name="MainWindow_UpscaleProgress" xml:space="preserve"><value>Progrés de l'escalat:</value></data>
+  <data name="MainWindow_OverallProgress" xml:space="preserve"><value>Progrés general:</value></data>
+  <data name="MainWindow_ChunkSize" xml:space="preserve"><value>Mida del bloc</value></data>
+  <data name="MainWindow_Gpu" xml:space="preserve"><value>GPU</value></data>
+  <data name="MainWindow_ImageFormat" xml:space="preserve"><value>Format d'imatge</value></data>
+  <data name="MainWindow_TileSize" xml:space="preserve"><value>Mida de la tessel·la</value></data>
+  <data name="MainWindow_DeleteWorkingFolder" xml:space="preserve"><value>Eliminar la carpeta de treball?</value></data>
+
+  <data name="MainPageView_VideoFile" xml:space="preserve"><value>Fitxer de vídeo</value></data>
+  <data name="MainPageView_WorkingFolder" xml:space="preserve"><value>Carpeta de treball</value></data>
+  <data name="MainPageView_OutputPath" xml:space="preserve"><value>Ruta d'eixida</value></data>
+  <data name="MainPageView_ImageScale" xml:space="preserve"><value>Escala d'imatge ({0}x)</value></data>
+  <data name="MainPageView_Model" xml:space="preserve"><value>Model</value></data>
+  <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Mida del lot d'Upscayl</value></data>
+  <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve"><value>És el nombre de fotogrames que es processen a la vegada. Com que actualment hi ha una pèrdua de memòria en el procés CLI d'Upscayl, un nombre alt pot consumir molta memòria del sistema.</value></data>
+  <data name="MainPageView_GpuNumberList" xml:space="preserve"><value>GPU núm. (en blanc per a automàtic o separades per comes per a múltiples)</value></data>
+  <data name="MainPageView_DeleteWorkingFolderWhenCompleted" xml:space="preserve"><value>Eliminar la carpeta de treball quan acabe?</value></data>
+  <data name="MainPageView_FrameCount" xml:space="preserve"><value>Nombre de fotogrames:</value></data>
+  <data name="MainPageView_OriginalDimension" xml:space="preserve"><value>Dimensions originals:</value></data>
+  <data name="MainPageView_ScaledDimension" xml:space="preserve"><value>Dimensions escalades:</value></data>
+  <data name="MainPageView_Duration" xml:space="preserve"><value>Durada:</value></data>
+  <data name="MainPageView_NotLoaded" xml:space="preserve"><value>No carregat</value></data>
+  <data name="MainPageView_Framerate" xml:space="preserve"><value>Freqüència de fotogrames:</value></data>
+  <data name="MainPageView_ImageFormat" xml:space="preserve"><value>Format d'imatge</value></data>
+  <data name="MainPageView_TileSize" xml:space="preserve"><value>Mida de la tessel·la (31 = Automàtic)</value></data>
+  <data name="MainPageView_TileSizeFormat" xml:space="preserve"><value>Mida de la tessel·la ({0})</value></data>
+
+  <data name="ConfigPageView_UpscaylPath" xml:space="preserve"><value>Ruta d'Upscayl:</value></data>
+  <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve"><value>Ruta dels binaris de FFmpeg:</value></data>
+  <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve"><value>Carpeta de treball temporal:</value></data>
+  <data name="ConfigPageView_DefaultOutputPath" xml:space="preserve"><value>Ruta d'eixida per defecte:</value></data>
+  <data name="ConfigPageView_OutputFileNameTemplate" xml:space="preserve"><value>Plantilla de fitxer d'eixida per defecte:</value></data>
+  <data name="ConfigPageView_LeaveBlank" xml:space="preserve"><value>Deixa-ho en blanc per a exportar a la carpeta d'origen.</value></data>
+  <data name="ConfigPageView_DefaultTemplate" xml:space="preserve"><value>Per defecte: {{OriginalFile}}-upscaled{{OriginalExtension}}</value></data>
+  <data name="ConfigPageView_AvailableTemplateVars" xml:space="preserve"><value>Disponibles: {{OriginalFile}}, {{OriginalExtension}}, {{Now "yyyy-MM-dd"&lt;--opcional}}</value></data>
+  <data name="ConfigPageView_CustomDateTime" xml:space="preserve"><value>Utilitza {{Now "format"}} per a data/hora personalitzada, p. ex. {{Now 'yyyyMMdd_HHmmss'}}</value></data>
+  <data name="ConfigPageView_ResetToDefaultTemplate" xml:space="preserve"><value>Restablir la plantilla per defecte</value></data>
+
+  <data name="QueuePageView_Back" xml:space="preserve"><value>Arrere</value></data>
+  <data name="QueuePageView_ClearQueue" xml:space="preserve"><value>Buidar la cua</value></data>
+  <data name="QueuePageView_Status" xml:space="preserve"><value>Estat</value></data>
+  <data name="QueuePageView_VideoPath" xml:space="preserve"><value>Ruta del vídeo</value></data>
+  <data name="QueuePageView_Model" xml:space="preserve"><value>Model</value></data>
+  <data name="QueuePageView_Scale" xml:space="preserve"><value>Escala</value></data>
+  <data name="QueuePageView_OutputFile" xml:space="preserve"><value>Fitxer d'eixida</value></data>
+  <data name="QueuePageView_Actions" xml:space="preserve"><value>Accions</value></data>
+  <data name="QueuePageView_Remove" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="QueuePageView_ElapsedTime" xml:space="preserve"><value>Temps transcorregut</value></data>
+
+  <data name="Status_Queued" xml:space="preserve"><value>En cua</value></data>
+  <data name="Status_Running" xml:space="preserve"><value>En execució</value></data>
+  <data name="Status_Completed" xml:space="preserve"><value>Completat</value></data>
+
+  <data name="ConfigPageView_UpscaylThreads" xml:space="preserve"><value>Fils d'Upscayl (-j):</value></data>
+  <data name="ConfigPageView_UpscaylThreadsHelp" xml:space="preserve"><value>nombre de fils per a load/proc/save (per defecte=1:2:2). Exemples: 1:2:2 o 1:2,2,2:2 per a multi-GPU</value></data>
+  <data name="ConfigPageView_UpscaylThreadsInvalid" xml:space="preserve"><value>Format no vàlid. Usa load:proc:save, p. ex. 1:2:2 o multi-GPU com 1:2,2,2:2</value></data>
+
+  <data name="MainPageView_CheckUpdates" xml:space="preserve"><value>Comprovar si hi ha actualitzacions</value></data>
+  <data name="MainWindow_GetUpdate" xml:space="preserve"><value>Obtindre actualització</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>Comprovant si hi ha actualitzacions…</value></data>
+  <data name="Update_NotConfigured" xml:space="preserve"><value>La comprovació d'actualitzacions no està configurada.</value></data>
+  <data name="Update_NoReleases" xml:space="preserve"><value>No s'han trobat llançaments.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>Actualització disponible: {0}</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>Estàs al dia.</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>Ha fallat la comprovació d'actualitzacions: {0}</value></data>
+
+  <data name="Common_Yes" xml:space="preserve"><value>Sí</value></data>
+  <data name="Common_No" xml:space="preserve"><value>No</value></data>
+  <data name="Common_Auto" xml:space="preserve"><value>Automàtic</value></data>
+  <data name="Common_Videos" xml:space="preserve"><value>Vídeos</value></data>
+  <data name="Common_png" xml:space="preserve"><value>png</value></data>
+
+  <data name="MainWindow_StatusFormat" xml:space="preserve"><value>Estat: {0}</value></data>
+  <data name="MainWindow_Detailed" xml:space="preserve"><value>Detallat</value></data>
+  <data name="MainWindow_Calculating" xml:space="preserve"><value>Calculant…</value></data>
+
+  <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>Rutes</value></data>
+  <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>Qualitat JPEG de FFmpeg</value></data>
+  <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>S'usa per a l'extracció de fotogrames (1-31 - com més baix, millor)</value></data>
+
+  <data name="MainPageView_NewJob" xml:space="preserve"><value>Nou treball</value></data>
+  <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>Posar múltiples en cua</value></data>
+  <data name="MainPageView_Start" xml:space="preserve"><value>Iniciar</value></data>
+  <data name="MainPageView_AddToQueue" xml:space="preserve"><value>Afegir a la cua</value></data>
+  <data name="MainPageView_Cancel" xml:space="preserve"><value>Cancel·lar</value></data>
+  <data name="MainPageView_Queue" xml:space="preserve"><value>Cua</value></data>
+  <data name="MainPageView_Settings" xml:space="preserve"><value>Configuració</value></data>
+  <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Selecciona fitxer de vídeo</value></data>
+  <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Selecciona fitxers de vídeo</value></data>
+  <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Selecciona la ruta d'eixida</value></data>
+  <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Selecciona el fitxer d'eixida</value></data>
+  <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Cadena numèrica no vàlida</value></data>
+  <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>S'sense interpolació (igual que l'origen)</value></data>
+
+  <data name="Status_InputMissing" xml:space="preserve"><value>Falta el vídeo d'entrada o la carpeta de treball.</value></data>
+  <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>No s'ha trobat la ruta d'Upscayl.</value></data>
+  <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>No s'ha trobat l'executable d'Upscayl.</value></data>
+  <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>No s'ha trobat la carpeta de models d'Upscayl.</value></data>
+  <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>No s'ha trobat la carpeta del vídeo d'origen.</value></data>
+  <data name="Status_OutputPathEmpty" xml:space="preserve"><value>La ruta del fitxer d'eixida està buida.</value></data>
+  <data name="Status_ExtractingAudio" xml:space="preserve"><value>Extraient l'àudio...</value></data>
+  <data name="Status_ExtractingMetadata" xml:space="preserve"><value>Extraient les metadades de capítols...</value></data>
+  <data name="Status_ExtractingFrames" xml:space="preserve"><value>Extraient fotogrames...</value></data>
+  <data name="Status_UpscalingFrames" xml:space="preserve"><value>Escalant fotogrames...</value></data>
+  <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>L'escalat s'ha cancel·lat o ha fallat.</value></data>
+  <data name="Status_JobCancelled" xml:space="preserve"><value>Treball cancel·lat.</value></data>
+  <data name="Status_Merging" xml:space="preserve"><value>Combinant vídeo i àudio...</value></data>
+  <data name="Status_JobCompleted" xml:space="preserve"><value>Treball completat.</value></data>
+  <data name="Status_CleaningUp" xml:space="preserve"><value>Netejant...</value></data>
+  <data name="Status_CleanupFailed" xml:space="preserve"><value>La neteja ha fallat: {0}</value></data>
+
+  <data name="Error_Prefix" xml:space="preserve"><value>Error: {0}</value></data>
+</root>
