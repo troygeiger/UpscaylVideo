@@ -7,6 +7,7 @@ using UpscaylVideo.Helpers;
 using UpscaylVideo.FFMpegWrap;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UpscaylVideo.Models;
+using UpscaylVideo; // for Localization
 
 namespace UpscaylVideo.Services;
 
@@ -179,13 +180,13 @@ public partial class JobProcessingService : ObservableObject
         {
             if (!System.IO.File.Exists(job.VideoPath) || job.VideoStream is null || job.WorkingFolder is null)
             {
-                StatusMessage = "Input video or working folder missing.";
+                StatusMessage = Localization.Status_InputMissing;
                 return;
             }
 
             if (!System.IO.Directory.Exists(AppConfiguration.Instance.UpscaylPath))
             {
-                StatusMessage = "Upscayl path not found.";
+                StatusMessage = Localization.Status_UpscaylPathNotFound;
                 return;
             }
 
@@ -193,21 +194,21 @@ public partial class JobProcessingService : ObservableObject
                 OperatingSystem.IsWindows() ? "upscayl-bin.exe" : "upscayl-bin");
             if (!System.IO.File.Exists(upscaylBin))
             {
-                StatusMessage = "Upscayl binary not found.";
+                StatusMessage = Localization.Status_UpscaylBinaryNotFound;
                 return;
             }
 
             string modelsPath = System.IO.Path.Combine(AppConfiguration.Instance.UpscaylPath, "resources", "models");
             if (!System.IO.Directory.Exists(modelsPath))
             {
-                StatusMessage = "Upscayl models folder not found.";
+                StatusMessage = Localization.Status_UpscaylModelsFolderNotFound;
                 return;
             }
 
             var srcVideoFolder = System.IO.Path.GetDirectoryName(job.VideoPath);
             if (srcVideoFolder == null)
             {
-                StatusMessage = "Source video folder not found.";
+                StatusMessage = Localization.Status_SourceFolderNotFound;
                 return;
             }
 
@@ -228,7 +229,7 @@ public partial class JobProcessingService : ObservableObject
             System.IO.Directory.CreateDirectory(upscaleOutput);
             if (string.IsNullOrWhiteSpace(job.OutputFilePath))
             {
-                StatusMessage = "Output file path is empty.";
+                StatusMessage = Localization.Status_OutputPathEmpty;
                 return;
             }
 
@@ -236,12 +237,12 @@ public partial class JobProcessingService : ObservableObject
             var audioFile = System.IO.Path.Combine(job.WorkingFolder, $"Audio{extension}");
             var metadataFile = System.IO.Path.Combine(job.WorkingFolder, $"Metadata.ffmeta");
             // Extract audio
-            StatusMessage = "Extracting audio...";
+            StatusMessage = Localization.Status_ExtractingAudio;
             await FFMpeg.CopyStreams(job.VideoPath, audioFile,
                 job.VideoDetails.Streams.Where(d => d.CodecType != "video" && d.CodecName != "dvd_subtitle" && d.CodecName != "bin_data"),
                 cancellationToken: jobCancellation.Token);
             // Extract chapter metadata
-            StatusMessage = "Extracting chapter metadata...";
+            StatusMessage = Localization.Status_ExtractingMetadata;
             await FFMpeg.ExtractFFMetadata(job.VideoPath, metadataFile, cancellationToken: jobCancellation.Token);
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder,
                 $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
@@ -263,7 +264,7 @@ public partial class JobProcessingService : ObservableObject
             long outFrameNumber = 0;
             while (!cancellationToken.IsCancellationRequested && pngVideo.IsRunning)
             {
-                StatusMessage = "Extracting frames...";
+                StatusMessage = Localization.Status_ExtractingFrames;
                 await Task.Run(() => ClearFolders(framesFolder));
                 string upscaleChunkFolder = System.IO.Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
                 System.IO.Directory.CreateDirectory(upscaleChunkFolder);
@@ -286,11 +287,11 @@ public partial class JobProcessingService : ObservableObject
                 do
                 {
                     shouldResume = false;
-                    StatusMessage = "Upscaling frames...";
+                    StatusMessage = Localization.Status_UpscalingFrames;
                     if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, job.GpuNumber, jobCancellation.Token, imageFormat) ==
                         false)
                     {
-                        StatusMessage = "Upscaling cancelled or failed.";
+                        StatusMessage = Localization.Status_UpscalingCancelledOrFailed;
                         return;
                     }
                 } while (shouldResume && !cancellationToken.IsCancellationRequested);
@@ -303,11 +304,11 @@ public partial class JobProcessingService : ObservableObject
             await pngVideo.CompleteAsync();
             if (cancellationToken.IsCancellationRequested)
             {
-                StatusMessage = "Job cancelled.";
+                StatusMessage = Localization.Status_JobCancelled;
                 return;
             }
 
-            StatusMessage = "Merging video and audio...";
+            StatusMessage = Localization.Status_Merging;
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: jobCancellation.Token);
 
             // Mark progress complete for the job
@@ -316,16 +317,16 @@ public partial class JobProcessingService : ObservableObject
             Eta = TimeSpan.Zero;
             DspEta = Eta?.ToString(TimespanFormat);
 
-            StatusMessage = "Job completed.";
+            StatusMessage = Localization.Status_JobCompleted;
         }
         catch (OperationCanceledException)
         {
-            StatusMessage = "Job cancelled.";
+            StatusMessage = Localization.Status_JobCancelled;
             // Silently catch cancellation
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error: {ex.Message}";
+            StatusMessage = string.Format(Localization.Error_Prefix, ex.Message);
             // Silently catch all other exceptions
         }
         finally
@@ -366,12 +367,12 @@ public partial class JobProcessingService : ObservableObject
             {
                 try
                 {
-                    StatusMessage = "Cleaning up...";
+                    StatusMessage = Localization.Status_CleaningUp;
                     System.IO.Directory.Delete(job.WorkingFolder!, true);
                 }
                 catch (Exception cleanupEx)
                 {
-                    StatusMessage = $"Cleanup failed: {cleanupEx.Message}";
+                    StatusMessage = string.Format(Localization.Status_CleanupFailed, cleanupEx.Message);
                 }
             }
 

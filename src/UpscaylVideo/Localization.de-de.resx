@@ -56,9 +56,6 @@
     <data name="MainPageView_Model" xml:space="preserve">
         <value>Modell</value>
     </data>
-    <data name="MainPageView_UpscaleChunkSize" xml:space="preserve">
-        <value>Upscale-Chunks</value>
-    </data>
     <data name="MainPageView_UpscaleChunkSizeTooltip" xml:space="preserve">
         <value>Dies ist die Anzahl der Bilder, die gleichzeitig verarbeitet werden. Da es derzeit ein Speicherleck im Upscayl-Cli-Prozess gibt, kann eine hohe Zahl den Systemspeicher aufbrauchen.</value>
     </data>
@@ -206,4 +203,56 @@
     <data name="Update_Failed" xml:space="preserve">
         <value>Update-Prüfung fehlgeschlagen: {0}</value>
     </data>
+
+    <!-- New common strings -->
+    <data name="Common_Yes" xml:space="preserve"><value>Ja</value></data>
+    <data name="Common_No" xml:space="preserve"><value>Nein</value></data>
+    <data name="Common_Auto" xml:space="preserve"><value>Auto</value></data>
+    <data name="Common_Videos" xml:space="preserve"><value>Videos</value></data>
+    <data name="Common_png" xml:space="preserve"><value>png</value></data>
+
+    <!-- MainWindow additions -->
+    <data name="MainWindow_StatusFormat" xml:space="preserve"><value>Status: {0}</value></data>
+    <data name="MainWindow_Detailed" xml:space="preserve"><value>Detailliert</value></data>
+    <data name="MainWindow_Calculating" xml:space="preserve"><value>Wird berechnet…</value></data>
+
+    <!-- ConfigPageView additions -->
+    <data name="ConfigPageView_Tab_Paths" xml:space="preserve"><value>Pfade</value></data>
+    <data name="ConfigPageView_FFMpegJpegQuality" xml:space="preserve"><value>FFMpeg JPEG-Qualität</value></data>
+    <data name="ConfigPageView_FFMpegJpegQualityHelp" xml:space="preserve"><value>Wird für die Frame-Extraktion verwendet (1-31 – niedriger ist besser)</value></data>
+
+    <!-- MainPageViewModel toolbar and dialogs -->
+    <data name="MainPageView_NewJob" xml:space="preserve"><value>Neuer Auftrag</value></data>
+    <data name="MainPageView_QueueMultiple" xml:space="preserve"><value>Mehrere einreihen</value></data>
+    <data name="MainPageView_Start" xml:space="preserve"><value>Start</value></data>
+    <data name="MainPageView_AddToQueue" xml:space="preserve"><value>Zur Warteschlange hinzufügen</value></data>
+    <data name="MainPageView_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+    <data name="MainPageView_Queue" xml:space="preserve"><value>Warteschlange</value></data>
+    <data name="MainPageView_Settings" xml:space="preserve"><value>Einstellungen</value></data>
+    <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Videodatei auswählen</value></data>
+    <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Videodateien auswählen</value></data>
+    <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Ausgabepfad auswählen</value></data>
+    <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Ausgabedatei auswählen</value></data>
+    <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Ungültige Zahleneingabe</value></data>
+    <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Keine Interpolation (wie Quelle)</value></data>
+
+    <!-- JobProcessingService status messages -->
+    <data name="Status_InputMissing" xml:space="preserve"><value>Quellvideo oder Arbeitsordner fehlt.</value></data>
+    <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Upscayl-Pfad nicht gefunden.</value></data>
+    <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Upscayl-Binärdatei nicht gefunden.</value></data>
+    <data name="Status_UpscaylModelsFolderNotFound" xml:space="preserve"><value>Upscayl-Modelle-Ordner nicht gefunden.</value></data>
+    <data name="Status_SourceFolderNotFound" xml:space="preserve"><value>Quellvideo-Ordner nicht gefunden.</value></data>
+    <data name="Status_OutputPathEmpty" xml:space="preserve"><value>Ausgabedateipfad ist leer.</value></data>
+    <data name="Status_ExtractingAudio" xml:space="preserve"><value>Audio wird extrahiert…</value></data>
+    <data name="Status_ExtractingMetadata" xml:space="preserve"><value>Kapitel-Metadaten werden extrahiert…</value></data>
+    <data name="Status_ExtractingFrames" xml:space="preserve"><value>Frames werden extrahiert…</value></data>
+    <data name="Status_UpscalingFrames" xml:space="preserve"><value>Frames werden hochskaliert…</value></data>
+    <data name="Status_UpscalingCancelledOrFailed" xml:space="preserve"><value>Hochskalierung abgebrochen oder fehlgeschlagen.</value></data>
+    <data name="Status_JobCancelled" xml:space="preserve"><value>Auftrag abgebrochen.</value></data>
+    <data name="Status_Merging" xml:space="preserve"><value>Video und Audio werden zusammengeführt…</value></data>
+    <data name="Status_JobCompleted" xml:space="preserve"><value>Auftrag abgeschlossen.</value></data>
+    <data name="Status_CleaningUp" xml:space="preserve"><value>Bereinige…</value></data>
+    <data name="Status_CleanupFailed" xml:space="preserve"><value>Bereinigung fehlgeschlagen: {0}</value></data>
+    <data name="Error_Prefix" xml:space="preserve"><value>Fehler: {0}</value></data>
+    <data name="MainPageView_UpscaylBatchSize" xml:space="preserve"><value>Upscayl Batchgröße</value></data>
 </root>

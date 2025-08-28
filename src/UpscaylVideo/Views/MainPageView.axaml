@@ -109,7 +109,7 @@
                 
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="{x:Static resx:Localization.MainPageView_UpscaleChunkSize}"/>
+                        <Label Content="{x:Static resx:Localization.MainPageView_UpscaylBatchSize}"/>
                         <Label Background="CornflowerBlue"
                                Content=" ? "
                                CornerRadius="16"

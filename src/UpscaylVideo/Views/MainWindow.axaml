@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:UpscaylVideo"
+        xmlns:resx="clr-namespace:UpscaylVideo"
         xmlns:vm="using:UpscaylVideo.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -45,7 +45,7 @@
                 </ItemsControl>
             </Grid>
         </Border>
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage, Mode=OneWay}"
                                          Margin="8">
                 <TransitioningContentControl.PageTransition>
@@ -62,89 +62,90 @@
                 IsVisible="{Binding JobProcessingService.IsProcessing, Mode=OneWay}"
                 >
             <StackPanel Orientation="Vertical" Spacing="6">
-                <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobProcessingService.StatusMessage, StringFormat='Status: {0}'}"/>
-                <Expander Header="Detailed" 
+                <!-- Localized status format -->
+                <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobProcessingService.StatusMessage, StringFormat={x:Static resx:Localization.MainWindow_StatusFormat}}"/>
+                <Expander Header="{x:Static resx:Localization.MainWindow_Detailed}"
                           IsExpanded="{Binding Configuration.ProgressPanelDetailsExpanded}">
                     <StackPanel Margin="8">
                         <Grid  ColumnDefinitions="3*,3*,2*,*,*" RowDefinitions="Auto,12,Auto,12,Auto">
                             <!-- First row (5 columns) -->
                             <StackPanel Grid.Column="0" Grid.Row="0">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Input}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Input}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.VideoPath, FallbackValue=N/A}"
                                            ToolTip.Tip="{Binding JobProcessingService.CurrentJob.VideoPath}" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="0">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Output}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Output}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.OutputFilePath, FallbackValue=N/A}"
                                            ToolTip.Tip="{Binding JobProcessingService.CurrentJob.OutputFilePath}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="0">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Model}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Model}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.SelectedModel.Name, FallbackValue=N/A}" />
                             </StackPanel>
                             <StackPanel Grid.Column="3" Grid.Row="0">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Scale}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Scale}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.SelectedScale, FallbackValue=N/A}" />
                             </StackPanel>
                             <StackPanel Grid.Column="4" Grid.Row="0">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_ImageFormat}"
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ImageFormat}"
                                            FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.CurrentJob.OutputImageFormat, FallbackValue=png}" />
+                                           Text="{Binding JobProcessingService.CurrentJob.OutputImageFormat, FallbackValue={x:Static resx:Localization.Common_png}}" />
                             </StackPanel>
                             <!-- Spacer row (12px) -->
                             <!-- Second row (5 columns) -->
                             <StackPanel Grid.Column="0" Grid.Row="2">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Frames}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Frames}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CompletedFrames}" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="2">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_TotalFrames}"
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_TotalFrames}"
                                            FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.TotalFrames}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="2">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_ETA}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ETA}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.DspEta, TargetNullValue=Calculating..}" />
+                                           Text="{Binding JobProcessingService.DspEta, TargetNullValue={x:Static resx:Localization.MainWindow_Calculating}}" />
                             </StackPanel>
                             <StackPanel Grid.Column="3" Grid.Row="2">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Elapsed}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Elapsed}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.DspElapsedTime}" />
                             </StackPanel>
                             <StackPanel Grid.Column="4" Grid.Row="2">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_Gpu}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Gpu}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.GpuNumberDisplay}" />
                             </StackPanel>
                             <!-- Spacer row (12px) -->
                             <!-- Third row (remaining details) -->
                             <StackPanel Grid.Column="0" Grid.Row="4">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_ChunkSize}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ChunkSize}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.UpscaleFrameChunkSize}" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="4">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_TileSize}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_TileSize}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.CurrentJob.TileSizeDisplay}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" Grid.Row="4" Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="{x:Static local:Localization.MainWindow_DeleteWorkingFolder}"
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_DeleteWorkingFolder}"
                                            FontWeight="Bold" />
                                 <TextBlock
-                                    Text="{Binding JobProcessingService.CurrentJob.DeleteWorkingFolderDisplay, FallbackValue=No}" />
+                                    Text="{Binding JobProcessingService.CurrentJob.DeleteWorkingFolderDisplay, FallbackValue={x:Static resx:Localization.Common_No}}" />
                             </StackPanel>
                         </Grid>
                         <StackPanel>
-                            <TextBlock Text="{x:Static local:Localization.MainWindow_UpscaleProgress}" FontWeight="Bold"/>
+                            <TextBlock Text="{x:Static resx:Localization.MainWindow_UpscaleProgress}" FontWeight="Bold"/>
                             <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobProcessingService.Progress}"
                                          ShowProgressText="True"
                                          CornerRadius="6"/>
@@ -153,13 +154,14 @@
                 </Expander>
                 
                 <StackPanel Spacing="8" Margin="0,8,0,0">
-                    <TextBlock Text="{x:Static local:Localization.MainWindow_OverallProgress}" FontWeight="Bold"/>
+                    <TextBlock Text="{x:Static resx:Localization.MainWindow_OverallProgress}" FontWeight="Bold"/>
                     <ProgressBar Minimum="0" Maximum="100" Height="18" Value="{Binding JobProcessingService.OverallProgress}"
-                                 ShowProgressText="True"
-                                 CornerRadius="6"/>
+                                ShowProgressText="True"
+                                CornerRadius="6"/>
                 </StackPanel>
             </StackPanel>
         </Border>
+        
         <!-- Version + Update Panel -->
         <Border Grid.Row="3" Background="Transparent" Padding="8">
             <DockPanel LastChildFill="False">
@@ -168,7 +170,7 @@
                     <TextBlock Text="-" VerticalAlignment="Center" FontSize="12" Foreground="Gray"/>
                     <TextBlock Text="{Binding UpdateService.StatusMessage}" VerticalAlignment="Center" FontSize="12" Foreground="Gray"/>
                 </StackPanel>
-                <Button Content="{x:Static local:Localization.MainWindow_GetUpdate}"
+                <Button Content="{x:Static resx:Localization.MainWindow_GetUpdate}"
                         Command="{Binding OpenLatestReleaseCommand}"
                         IsVisible="{Binding UpdateService.IsUpdateAvailable}"
                         HorizontalAlignment="Right"

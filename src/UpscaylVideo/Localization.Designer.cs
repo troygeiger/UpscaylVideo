@@ -165,9 +165,9 @@ namespace UpscaylVideo {
             }
         }
         
-        public static string MainPageView_UpscaleChunkSize {
+        public static string MainPageView_UpscaylBatchSize {
             get {
-                return ResourceManager.GetString("MainPageView_UpscaleChunkSize", resourceCulture);
+                return ResourceManager.GetString("MainPageView_UpscaylBatchSize", resourceCulture);
             }
         }
         
@@ -444,6 +444,252 @@ namespace UpscaylVideo {
         public static string Update_Failed {
             get {
                 return ResourceManager.GetString("Update_Failed", resourceCulture);
+            }
+        }
+        
+        public static string Common_Yes {
+            get {
+                return ResourceManager.GetString("Common_Yes", resourceCulture);
+            }
+        }
+        
+        public static string Common_No {
+            get {
+                return ResourceManager.GetString("Common_No", resourceCulture);
+            }
+        }
+        
+        public static string Common_Auto {
+            get {
+                return ResourceManager.GetString("Common_Auto", resourceCulture);
+            }
+        }
+        
+        public static string Common_Videos {
+            get {
+                return ResourceManager.GetString("Common_Videos", resourceCulture);
+            }
+        }
+        
+        public static string Common_png {
+            get {
+                return ResourceManager.GetString("Common_png", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_StatusFormat {
+            get {
+                return ResourceManager.GetString("MainWindow_StatusFormat", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_Detailed {
+            get {
+                return ResourceManager.GetString("MainWindow_Detailed", resourceCulture);
+            }
+        }
+        
+        public static string MainWindow_Calculating {
+            get {
+                return ResourceManager.GetString("MainWindow_Calculating", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_Tab_Paths {
+            get {
+                return ResourceManager.GetString("ConfigPageView_Tab_Paths", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_FFMpegJpegQuality {
+            get {
+                return ResourceManager.GetString("ConfigPageView_FFMpegJpegQuality", resourceCulture);
+            }
+        }
+        
+        public static string ConfigPageView_FFMpegJpegQualityHelp {
+            get {
+                return ResourceManager.GetString("ConfigPageView_FFMpegJpegQualityHelp", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_NewJob {
+            get {
+                return ResourceManager.GetString("MainPageView_NewJob", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_QueueMultiple {
+            get {
+                return ResourceManager.GetString("MainPageView_QueueMultiple", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_Start {
+            get {
+                return ResourceManager.GetString("MainPageView_Start", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_AddToQueue {
+            get {
+                return ResourceManager.GetString("MainPageView_AddToQueue", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_Cancel {
+            get {
+                return ResourceManager.GetString("MainPageView_Cancel", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_Queue {
+            get {
+                return ResourceManager.GetString("MainPageView_Queue", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_Settings {
+            get {
+                return ResourceManager.GetString("MainPageView_Settings", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_SelectVideoFile {
+            get {
+                return ResourceManager.GetString("MainPageView_SelectVideoFile", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_SelectVideoFiles {
+            get {
+                return ResourceManager.GetString("MainPageView_SelectVideoFiles", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_SelectOutputPath {
+            get {
+                return ResourceManager.GetString("MainPageView_SelectOutputPath", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_SelectOutputFile {
+            get {
+                return ResourceManager.GetString("MainPageView_SelectOutputFile", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_InvalidNumberString {
+            get {
+                return ResourceManager.GetString("MainPageView_InvalidNumberString", resourceCulture);
+            }
+        }
+        
+        public static string MainPageView_NoInterpolation {
+            get {
+                return ResourceManager.GetString("MainPageView_NoInterpolation", resourceCulture);
+            }
+        }
+        
+        public static string Status_InputMissing {
+            get {
+                return ResourceManager.GetString("Status_InputMissing", resourceCulture);
+            }
+        }
+        
+        public static string Status_UpscaylPathNotFound {
+            get {
+                return ResourceManager.GetString("Status_UpscaylPathNotFound", resourceCulture);
+            }
+        }
+        
+        public static string Status_UpscaylBinaryNotFound {
+            get {
+                return ResourceManager.GetString("Status_UpscaylBinaryNotFound", resourceCulture);
+            }
+        }
+        
+        public static string Status_UpscaylModelsFolderNotFound {
+            get {
+                return ResourceManager.GetString("Status_UpscaylModelsFolderNotFound", resourceCulture);
+            }
+        }
+        
+        public static string Status_SourceFolderNotFound {
+            get {
+                return ResourceManager.GetString("Status_SourceFolderNotFound", resourceCulture);
+            }
+        }
+        
+        public static string Status_OutputPathEmpty {
+            get {
+                return ResourceManager.GetString("Status_OutputPathEmpty", resourceCulture);
+            }
+        }
+        
+        public static string Status_ExtractingAudio {
+            get {
+                return ResourceManager.GetString("Status_ExtractingAudio", resourceCulture);
+            }
+        }
+        
+        public static string Status_ExtractingMetadata {
+            get {
+                return ResourceManager.GetString("Status_ExtractingMetadata", resourceCulture);
+            }
+        }
+        
+        public static string Status_ExtractingFrames {
+            get {
+                return ResourceManager.GetString("Status_ExtractingFrames", resourceCulture);
+            }
+        }
+        
+        public static string Status_UpscalingFrames {
+            get {
+                return ResourceManager.GetString("Status_UpscalingFrames", resourceCulture);
+            }
+        }
+        
+        public static string Status_UpscalingCancelledOrFailed {
+            get {
+                return ResourceManager.GetString("Status_UpscalingCancelledOrFailed", resourceCulture);
+            }
+        }
+        
+        public static string Status_JobCancelled {
+            get {
+                return ResourceManager.GetString("Status_JobCancelled", resourceCulture);
+            }
+        }
+        
+        public static string Status_Merging {
+            get {
+                return ResourceManager.GetString("Status_Merging", resourceCulture);
+            }
+        }
+        
+        public static string Status_JobCompleted {
+            get {
+                return ResourceManager.GetString("Status_JobCompleted", resourceCulture);
+            }
+        }
+        
+        public static string Status_CleaningUp {
+            get {
+                return ResourceManager.GetString("Status_CleaningUp", resourceCulture);
+            }
+        }
+        
+        public static string Status_CleanupFailed {
+            get {
+                return ResourceManager.GetString("Status_CleanupFailed", resourceCulture);
+            }
+        }
+        
+        public static string Error_Prefix {
+            get {
+                return ResourceManager.GetString("Error_Prefix", resourceCulture);
             }
         }
     }

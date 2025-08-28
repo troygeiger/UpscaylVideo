@@ -48,16 +48,19 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private string? _outputImageFormat;
     // -t tile-size (>=32; 0 = auto). UI slider maps 31 -> 0 (auto), default slider start at 31.
     [ObservableProperty] private int _tileSize = 31;
-    // New: display text for tile size ("Auto" when 31, else number)
-    [ObservableProperty] private string _tileSizeDisplay = "Auto";
+    // New: display text for tile size (localized "Auto" when 31, else number)
+    [ObservableProperty] private string _tileSizeDisplay;
 
     partial void OnTileSizeChanged(int value)
     {
-        TileSizeDisplay = value <= 31 ? "Auto" : value.ToString();
+        TileSizeDisplay = value <= 31 ? Localization.Common_Auto : value.ToString();
     }
 
     public UpscaleJob()
     {
+        // Initialize tile size display localized default
+        OnTileSizeChanged(_tileSize);
+        
         this.WhenPropertyChanged(p => p.VideoPath, false)
             .Subscribe(async void (p) =>
             {
@@ -78,15 +81,9 @@ public partial class UpscaleJob : ObservableObject
                 _previousVideoPath = p.Value;
             });
 
-        /*this.WhenPropertyChanged(p => p.VideoStream)
-            .Subscribe(stream =>
-            {
-                IsLoaded = _videoStream is not null && !string.IsNullOrWhiteSpace(WorkingFolder) && !string.IsNullOrWhiteSpace(OutputFilePath);
-            });*/
-        
         InterpolatedFpsOptions =
         [
-            new(null, "No Interpolation (Same as source)"),
+            new(null, Localization.MainPageView_NoInterpolation),
             new(5),
             new(10),
             new(12),
@@ -181,9 +178,11 @@ public partial class UpscaleJob : ObservableObject
     // Display helpers for UI bindings in progress panel
     public string GpuNumberDisplay => (GpuNumber != null && GpuNumber.Length > 0)
         ? string.Join(',', GpuNumber)
-        : "Auto";
+        : Localization.Common_Auto;
 
-    public string DeleteWorkingFolderDisplay => DeleteWorkingFolderWhenCompleted ? "Yes" : "No";
+    public string DeleteWorkingFolderDisplay => DeleteWorkingFolderWhenCompleted 
+        ? Localization.Common_Yes 
+        : Localization.Common_No;
 
     partial void OnGpuNumberChanged(int[] value)
     {

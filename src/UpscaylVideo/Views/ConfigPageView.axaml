@@ -24,7 +24,7 @@
         </Style>
     </UserControl.Styles>
     <TabControl Margin="8">
-        <TabItem Header="Paths">
+        <TabItem Header="{x:Static resx:Localization.ConfigPageView_Tab_Paths}">
             <Grid ColumnDefinitions="Auto, *"
                   RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
 
@@ -108,7 +108,7 @@
                 </StackPanel>
                 
                 <Label Grid.Row="6" Grid.Column="0" Classes="form-label"
-                       Content="FFMpeg Jpeg Quality"
+                       Content="{x:Static resx:Localization.ConfigPageView_FFMpegJpegQuality}"
                        />
                 <StackPanel Grid.Row="6" Grid.Column="1" 
                             Orientation="Vertical"
@@ -123,7 +123,7 @@
                             Width="300"
                             HorizontalAlignment="Left"
                             Value="{Binding Configuration.FFMpegJpegQuality}"/>
-                    <TextBlock Text="Used for frame extraction (1-31 - Lower is better)" 
+                    <TextBlock Text="{x:Static resx:Localization.ConfigPageView_FFMpegJpegQualityHelp}" 
                                FontSize="12" 
                                Foreground="Gray"
                                Margin="0 8"/>

@@ -17,6 +17,7 @@ using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.Helpers;
 using UpscaylVideo.Models;
 using UpscaylVideo.Services;
+using UpscaylVideo; // for Localization
 
 namespace UpscaylVideo.ViewModels;
 
@@ -52,21 +53,21 @@ public partial class MainPageViewModel : PageBase
         // SplitButton: primary New Job, dropdown has Queue Multiple
         var newJobSplit = CreateSplitButton(
             MaterialIconKind.Note,
-            "New Job",
+            Localization.MainPageView_NewJob,
             NewJobCommand,
             [
-                CreateMenuItem("Queue Multiple", MaterialIconKind.FileMultiple, AddBatchCommand),
+                CreateMenuItem(Localization.MainPageView_QueueMultiple, MaterialIconKind.FileMultiple, AddBatchCommand),
             ], showText:false); 
         
 
-        var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, "Start", RunCommand, out var startText, toolTip: "Start", showText: true);
-        var cancelButton = CreateToolButton(MaterialIconKind.Cancel, "Cancel", CancelJobCommand, toolTip: "Cancel", showText: true);
+        var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, Localization.MainPageView_Start, RunCommand, out var startText, toolTip: Localization.MainPageView_Start, showText: true);
+        var cancelButton = CreateToolButton(MaterialIconKind.Cancel, Localization.MainPageView_Cancel, CancelJobCommand, toolTip: Localization.MainPageView_Cancel, showText: true);
         //var settingsBtn = CreateToolButton(MaterialIconKind.Gear, "Settings", SettingsCommand, toolTip: "Settings", showText: false);
-        var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, "Queue", OpenQueueCommand, toolTip: "Queue", showText: false);
+        var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, Localization.MainPageView_Queue, OpenQueueCommand, toolTip: Localization.MainPageView_Queue, showText: false);
         //var updateBtn = CreateToolButton(MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand, toolTip: checkUpdateText, showText: false);
         var settingsBtn = CreateSplitButton(
             MaterialIconKind.Gear,
-            "Settings",
+            Localization.MainPageView_Settings,
             SettingsCommand,
             [
                 CreateMenuItem(checkUpdateText, MaterialIconKind.Update, CheckUpdatesCommand),
@@ -86,14 +87,6 @@ public partial class MainPageViewModel : PageBase
             settingsBtn,
         ];
         cancelButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
-
-        // Subscribe to JobProcessingService.IsProcessing to update Cancel button visibility using WhenPropertyChanged
-        /*UpscaylVideo.Services.JobProcessingService.Instance.WhenPropertyChanged(x => x.IsProcessing, false)
-            .Subscribe(x =>
-            {
-                if (_cancelButton != null)
-                    _cancelButton.IsVisible = x.Value;
-            });*/
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
             .Subscribe(j => CheckReadyToRun());
@@ -123,7 +116,7 @@ public partial class MainPageViewModel : PageBase
                     anyInvalid = true;
                 }
                 if (anyInvalid)
-                    throw new ArgumentException("Invalid number string");
+                    throw new ArgumentException(Localization.MainPageView_InvalidNumberString);
                 Job.GpuNumber = results.ToArray();
                 
             });
@@ -132,7 +125,7 @@ public partial class MainPageViewModel : PageBase
         {
             var queueCount = UpscaylVideo.Services.JobProcessingService.Instance.JobQueue.Count;
             if (startText != null)
-                startText.Text = queueCount > 0 ? "Add to Queue" : "Start";
+                startText.Text = queueCount > 0 ? Localization.MainPageView_AddToQueue : Localization.MainPageView_Start;
         };
     }
 
@@ -212,10 +205,10 @@ public partial class MainPageViewModel : PageBase
         var lastStorage = await AppConfiguration.Instance.LastBrowsedVideoPath.TryGetStorageFolderAsync(provider);
         var result = await provider.OpenFilePickerAsync(new()
         {
-            Title = "Select video file",
+            Title = Localization.MainPageView_SelectVideoFile,
             AllowMultiple = false,
             SuggestedStartLocation = lastStorage, 
-            FileTypeFilter = [ new("Videos")
+            FileTypeFilter = [ new(Localization.Common_Videos)
             {
                 Patterns = _supportedVideoExtensions,
             }, 
@@ -236,10 +229,10 @@ public partial class MainPageViewModel : PageBase
         var lastStorage = await AppConfiguration.Instance.LastBrowsedVideoPath.TryGetStorageFolderAsync(provider);
         var result = await provider.OpenFilePickerAsync(new()
         {
-            Title = "Select video files",
+            Title = Localization.MainPageView_SelectVideoFiles,
             AllowMultiple = true,
             SuggestedStartLocation = lastStorage, 
-            FileTypeFilter = [ new("Videos")
+            FileTypeFilter = [ new(Localization.Common_Videos)
                 {
                     Patterns = _supportedVideoExtensions,
                 }, 
@@ -277,7 +270,7 @@ public partial class MainPageViewModel : PageBase
         var lastStorage = await AppConfiguration.Instance.LastBrowsedWorkingFolder.TryGetStorageFolderAsync(provider);
         var result = await provider.OpenFolderPickerAsync(new()
         {
-            Title = "Select output path",
+            Title = Localization.MainPageView_SelectOutputPath,
             SuggestedStartLocation = lastStorage,
         });
         var selected = result.FirstOrDefault();
@@ -300,7 +293,7 @@ public partial class MainPageViewModel : PageBase
         var lastStorage = await AppConfiguration.Instance.LastBrowsedOutputPath.TryGetStorageFolderAsync(provider);
         var result = await provider.SaveFilePickerAsync(new()
         {
-            Title = "Select output file",
+            Title = Localization.MainPageView_SelectOutputFile,
             SuggestedFileName = Job.OutputFilePath ?? UpscaleJob.GenerateDefaultOutputPath(Job.VideoPath),
             FileTypeChoices = [new(videoExtension)
             {
