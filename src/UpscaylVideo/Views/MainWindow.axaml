@@ -62,12 +62,25 @@
                 IsVisible="{Binding JobProcessingService.IsProcessing, Mode=OneWay}"
                 >
             <StackPanel Orientation="Vertical" Spacing="6">
-                <!-- Localized status format -->
-                <TextBlock FontWeight="Bold" FontSize="16" Text="{Binding JobProcessingService.StatusMessage, StringFormat={x:Static resx:Localization.MainWindow_StatusFormat}}"/>
+                <!-- Status + Always-visible ETA/Elapsed -->
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <TextBlock Grid.Column="0" FontWeight="Bold" FontSize="16"
+                               Text="{Binding JobProcessingService.StatusMessage, StringFormat={x:Static resx:Localization.MainWindow_StatusFormat}}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static resx:Localization.MainWindow_ETA}" FontWeight="Bold" />
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                   Text="{Binding JobProcessingService.DspEta, TargetNullValue={x:Static resx:Localization.MainWindow_Calculating}}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static resx:Localization.MainWindow_Elapsed}" FontWeight="Bold" />
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                   Text="{Binding JobProcessingService.DspElapsedTime}" />
+                    </StackPanel>
+                </Grid>
                 <Expander Header="{x:Static resx:Localization.MainWindow_Detailed}"
                           IsExpanded="{Binding Configuration.ProgressPanelDetailsExpanded}">
                     <StackPanel Margin="8">
-                        <Grid  ColumnDefinitions="3*,3*,2*,*,*" RowDefinitions="Auto,12,Auto,12,Auto">
+                        <Grid  ColumnDefinitions="4*,4*,*,*,*" RowDefinitions="Auto,12,Auto,12,Auto">
                             <!-- First row (5 columns) -->
                             <StackPanel Grid.Column="0" Grid.Row="0">
                                 <TextBlock Text="{x:Static resx:Localization.MainWindow_Input}" FontWeight="Bold" />
@@ -110,16 +123,18 @@
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                            Text="{Binding JobProcessingService.TotalFrames}" />
                             </StackPanel>
+                            <!-- Fill former ETA/Elapsed slots with Chunk Size and Tile Size -->
                             <StackPanel Grid.Column="2" Grid.Row="2">
-                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ETA}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ChunkSize}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.DspEta, TargetNullValue={x:Static resx:Localization.MainWindow_Calculating}}" />
+                                           Text="{Binding JobProcessingService.CurrentJob.UpscaleFrameChunkSize}" />
                             </StackPanel>
                             <StackPanel Grid.Column="3" Grid.Row="2">
-                                <TextBlock Text="{x:Static resx:Localization.MainWindow_Elapsed}" FontWeight="Bold" />
+                                <TextBlock Text="{x:Static resx:Localization.MainWindow_TileSize}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.DspElapsedTime}" />
+                                           Text="{Binding JobProcessingService.CurrentJob.TileSizeDisplay}" />
                             </StackPanel>
+                            
                             <StackPanel Grid.Column="4" Grid.Row="2">
                                 <TextBlock Text="{x:Static resx:Localization.MainWindow_Gpu}" FontWeight="Bold" />
                                 <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
@@ -127,17 +142,7 @@
                             </StackPanel>
                             <!-- Spacer row (12px) -->
                             <!-- Third row (remaining details) -->
-                            <StackPanel Grid.Column="0" Grid.Row="4">
-                                <TextBlock Text="{x:Static resx:Localization.MainWindow_ChunkSize}" FontWeight="Bold" />
-                                <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.CurrentJob.UpscaleFrameChunkSize}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Grid.Row="4">
-                                <TextBlock Text="{x:Static resx:Localization.MainWindow_TileSize}" FontWeight="Bold" />
-                                <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                                           Text="{Binding JobProcessingService.CurrentJob.TileSizeDisplay}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" Grid.Row="4" Orientation="Horizontal" Spacing="6">
+                            <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal" Spacing="6">
                                 <TextBlock Text="{x:Static resx:Localization.MainWindow_DeleteWorkingFolder}"
                                            FontWeight="Bold" />
                                 <TextBlock
