@@ -308,6 +308,12 @@ public partial class JobProcessingService : ObservableObject
                 return;
             }
 
+            if (pngVideo.LastError != null)
+            {
+                StatusMessage = string.Format(Localization.Error_Prefix, pngVideo.LastError.Message);
+                return;
+            }
+
             StatusMessage = Localization.Status_Merging;
             await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: jobCancellation.Token);
 

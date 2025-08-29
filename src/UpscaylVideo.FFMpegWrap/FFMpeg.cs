@@ -400,7 +400,7 @@ public static class FFMpeg
         }
 
         args.AddRange([
-            "-vf", $"format={string.Join(',', formats)}",
+            "-vf", $"format={string.Join(',', formats)},pad=ceil(iw/2)*2:ceil(ih/2)*2",
             outputFilePath
         ]);
 

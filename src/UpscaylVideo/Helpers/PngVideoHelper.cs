@@ -41,6 +41,8 @@ public class PngVideoHelper : IDisposable
 
     public bool IsRunning => _isRuning;
 
+    public Exception? LastError { get; private set; }
+
     public void EnqueueFramePath(string framePath)
     {
         _frameQueue.Enqueue(framePath);
@@ -78,8 +80,12 @@ public class PngVideoHelper : IDisposable
                 Thread.Sleep(1000);
             }
         }
-        catch (OperationCanceledException)
+        catch (Exception ex)
         {
+            if (ex is not OperationCanceledException)
+            {
+                LastError = ex;
+            }
             // Ignore cancellation
         }
 
