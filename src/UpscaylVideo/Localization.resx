@@ -245,6 +245,7 @@
     <data name="MainPageView_Cancel" xml:space="preserve"><value>Cancel</value></data>
     <data name="MainPageView_Queue" xml:space="preserve"><value>Queue</value></data>
     <data name="MainPageView_Settings" xml:space="preserve"><value>Settings</value></data>
+    <data name="MainPageView_Preview" xml:space="preserve"><value>Preview</value></data>
     <data name="MainPageView_SelectVideoFile" xml:space="preserve"><value>Select video file</value></data>
     <data name="MainPageView_SelectVideoFiles" xml:space="preserve"><value>Select video files</value></data>
     <data name="MainPageView_SelectOutputPath" xml:space="preserve"><value>Select output path</value></data>
@@ -270,4 +271,13 @@
     <data name="Status_CleaningUp" xml:space="preserve"><value>Cleaning up...</value></data>
     <data name="Status_CleanupFailed" xml:space="preserve"><value>Cleanup failed: {0}</value></data>
     <data name="Error_Prefix" xml:space="preserve"><value>Error: {0}</value></data>
+    
+    <!-- Preview Page -->
+    <data name="PreviewPage_Title" xml:space="preserve"><value>Preview</value></data>
+    <data name="PreviewPage_AutoRefresh" xml:space="preserve"><value>Auto-Refresh</value></data>
+    <data name="PreviewPage_AutoRefreshFormat" xml:space="preserve"><value>Auto-Refresh ({0}s)</value></data>
+    <data name="PreviewPage_BeforeFileFormat" xml:space="preserve"><value>Before: {0}</value></data>
+    <data name="PreviewPage_AfterFileFormat" xml:space="preserve"><value>After: {0}</value></data>
+    <data name="PreviewPage_Tooltip_PreviousFrame" xml:space="preserve"><value>Previous Frame</value></data>
+    <data name="PreviewPage_Tooltip_NextFrame" xml:space="preserve"><value>Next Frame</value></data>
 </root>

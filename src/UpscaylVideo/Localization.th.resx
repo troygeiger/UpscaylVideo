@@ -112,4 +112,12 @@
   <data name="Status_CleaningUp" xml:space="preserve"><value>กำลังล้างข้อมูล...</value></data>
   <data name="Status_CleanupFailed" xml:space="preserve"><value>ล้างข้อมูลล้มเหลว: {0}</value></data>
   <data name="Error_Prefix" xml:space="preserve"><value>ข้อผิดพลาด: {0}</value></data>
+  <!-- Preview Page -->
+  <data name="PreviewPage_Title" xml:space="preserve"><value>ดูตัวอย่าง</value></data>
+  <data name="PreviewPage_AutoRefresh" xml:space="preserve"><value>รีเฟรชอัตโนมัติ</value></data>
+  <data name="PreviewPage_AutoRefreshFormat" xml:space="preserve"><value>รีเฟรชอัตโนมัติ ({0} วินาที)</value></data>
+  <data name="PreviewPage_BeforeFileFormat" xml:space="preserve"><value>ก่อน: {0}</value></data>
+  <data name="PreviewPage_AfterFileFormat" xml:space="preserve"><value>หลัง: {0}</value></data>
+  <data name="PreviewPage_Tooltip_PreviousFrame" xml:space="preserve"><value>เฟรมก่อนหน้า</value></data>
+  <data name="PreviewPage_Tooltip_NextFrame" xml:space="preserve"><value>เฟรมถัดไป</value></data>
 </root>

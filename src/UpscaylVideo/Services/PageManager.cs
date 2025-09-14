@@ -17,6 +17,9 @@ public partial class PageManager : ObservableObject
     [ObservableProperty] private ViewModelBase? _currentPage;
     [ObservableProperty] private IEnumerable<Control> _leftToolStripControls = [];
     [ObservableProperty] private IEnumerable<Control> _rightToolStripControls = [];
+    [ObservableProperty] private Avalonia.Controls.Primitives.ScrollBarVisibility _verticalScrollBarVisibility 
+        = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto;
+    // Let main window bind to this to control the root ScrollViewer
 
     public void SetPage(Type pageType)
     {
@@ -50,7 +53,13 @@ public partial class PageManager : ObservableObject
             LeftToolStripControls = page.LeftToolStripControls?.ToArray() ?? [];
             RightToolStripControls = page.RightToolStripControls?.ToArray() ?? [];
             pageTitle = page.PageTitle;
+            // Apply page-specific scroll preference
+            VerticalScrollBarVisibility = page.VerticalScrollBarVisibility;
             page.OnAppearing();
+        }
+        else
+        {
+            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto;
         }
         
         Title = string.IsNullOrEmpty(pageTitle) ? GlobalConst.AppTitle : $"{GlobalConst.AppTitle} - {pageTitle}";

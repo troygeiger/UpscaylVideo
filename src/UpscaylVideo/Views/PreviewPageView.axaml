@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UpscaylVideo.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:resx="clr-namespace:UpscaylVideo"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:DataType="vm:PreviewPageViewModel"
+             x:Class="UpscaylVideo.Views.PreviewPageView">
+    <Design.DataContext>
+        <vm:PreviewPageViewModel />
+    </Design.DataContext>
+    <Grid Margin="8" RowDefinitions="Auto,*">
+        <!-- Fixed info bar at the top -->
+        <Border Grid.Row="0" CornerRadius="4" Padding="6,4">
+            <Grid ColumnDefinitions="*, Auto" VerticalAlignment="Center">
+                <!-- Left: file names -->
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding BeforeFileName, StringFormat={x:Static resx:Localization.PreviewPage_BeforeFileFormat}}"/>
+                    <TextBlock Foreground="White" Text="|"/>
+                    <TextBlock Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{Binding AfterFileName, StringFormat={x:Static resx:Localization.PreviewPage_AfterFileFormat}}"/>
+                </StackPanel>
+
+                <!-- Right: Auto-Refresh + Prev/Next -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <ToggleSwitch IsChecked="{Binding AutoRefresh}"
+                                  Content="{Binding SecondsUntilRefresh, StringFormat={x:Static resx:Localization.PreviewPage_AutoRefreshFormat}}"/>
+                    
+                    <Button Content="{materialIcons:MaterialIconExt Kind=ChevronLeft}"
+                ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_PreviousFrame}"
+                            Command="{Binding StepLeftCommand}"/>
+                    <Button Content="{materialIcons:MaterialIconExt Kind=ChevronRight}"
+                ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_NextFrame}"
+                            Command="{Binding StepRightCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Image stack with overlay -->
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid Grid.Row="1">
+                <Grid Background="Black">
+                    <Image Source="{Binding AfterImage}" Stretch="Uniform" />
+                    <Border Name="ClipBorder" Background="Transparent">
+                        <Image Name="AfterImage" Source="{Binding BeforeImage}" Stretch="Uniform" />
+                    </Border>
+                </Grid>
+                <Canvas Name="Overlay" IsHitTestVisible="True" Background="Transparent" HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                    <Border Name="SplitLine" Width="4" Background="#66FFFFFF" />
+                    <Border Name="SplitHandle"
+                            Width="32" Height="32"
+                            Background="#CCFFFFFF"
+                            CornerRadius="16"
+                            BorderBrush="#88000000"
+                            BorderThickness="1">
+                        <materialIcons:MaterialIcon Kind="ArrowLeftRightBold"
+                                                    Foreground="Black"
+                                                    Width="24"
+                                                    Height="24" />
+                    </Border>
+                </Canvas>
+            </Grid></ScrollViewer>
+        
+    </Grid>
+</UserControl>

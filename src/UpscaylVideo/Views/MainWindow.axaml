@@ -45,7 +45,7 @@
                 </ItemsControl>
             </Grid>
         </Border>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="{Binding PageManager.VerticalScrollBarVisibility}">
             <TransitioningContentControl Content="{Binding Path=PageManager.CurrentPage, Mode=OneWay}"
                                          Margin="8">
                 <TransitioningContentControl.PageTransition>

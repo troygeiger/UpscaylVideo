@@ -32,6 +32,7 @@ public partial class JobProcessingService : ObservableObject
     [ObservableProperty] private string? _dspElapsedTime;
     [ObservableProperty] private string? _dspEta;
     [ObservableProperty] private string _statusMessage = string.Empty;
+    [ObservableProperty] private string? _currentUpscaledBatchPath;
     private CancellationTokenSource? _cancellationTokenSource;
     private Task? _processingTask;
     AverageProvider<long> averageProvider = new();
@@ -154,6 +155,8 @@ public partial class JobProcessingService : ObservableObject
             OverallProgress = 0;
             CurrentJob = null;
 
+            CurrentUpscaledBatchPath = null;
+
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
             //if (JobQueue.Count == 0 || (JobQueue.Count == 1 && JobQueue[0] == CurrentJob))
@@ -266,8 +269,8 @@ public partial class JobProcessingService : ObservableObject
             {
                 StatusMessage = Localization.Status_ExtractingFrames;
                 await Task.Run(() => ClearFolders(framesFolder));
-                string upscaleChunkFolder = System.IO.Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
-                System.IO.Directory.CreateDirectory(upscaleChunkFolder);
+                CurrentUpscaledBatchPath = System.IO.Path.Combine(upscaleOutput, Guid.NewGuid().ToString());
+                System.IO.Directory.CreateDirectory(CurrentUpscaledBatchPath);
                 var shouldResume = false;
                 var hasNewFrames = false;
                 for (int i = 0; i < job.UpscaleFrameChunkSize; i++)
@@ -288,7 +291,7 @@ public partial class JobProcessingService : ObservableObject
                 {
                     shouldResume = false;
                     StatusMessage = Localization.Status_UpscalingFrames;
-                    if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, upscaleChunkFolder, job.GpuNumber, jobCancellation.Token, imageFormat) ==
+                    if (await RunUpscayl(job, upscaylBin, modelsPath, framesFolder, CurrentUpscaledBatchPath, job.GpuNumber, jobCancellation.Token, imageFormat) ==
                         false)
                     {
                         StatusMessage = Localization.Status_UpscalingCancelledOrFailed;
@@ -297,7 +300,7 @@ public partial class JobProcessingService : ObservableObject
                 } while (shouldResume && !cancellationToken.IsCancellationRequested);
 
                 cancellationToken.ThrowIfCancellationRequested();
-                pngVideo.EnqueueFramePath(upscaleChunkFolder);
+                pngVideo.EnqueueFramePath(CurrentUpscaledBatchPath);
             }
 
             upscaleRuntimeStopwatch.Stop();

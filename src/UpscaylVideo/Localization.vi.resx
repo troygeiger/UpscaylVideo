@@ -112,4 +112,12 @@
   <data name="Status_CleaningUp" xml:space="preserve"><value>Đang dọn dẹp...</value></data>
   <data name="Status_CleanupFailed" xml:space="preserve"><value>Dọn dẹp thất bại: {0}</value></data>
   <data name="Error_Prefix" xml:space="preserve"><value>Lỗi: {0}</value></data>
+  <!-- Preview Page -->
+  <data name="PreviewPage_Title" xml:space="preserve"><value>Xem trước</value></data>
+  <data name="PreviewPage_AutoRefresh" xml:space="preserve"><value>Tự động làm mới</value></data>
+  <data name="PreviewPage_AutoRefreshFormat" xml:space="preserve"><value>Tự động làm mới ({0}s)</value></data>
+  <data name="PreviewPage_BeforeFileFormat" xml:space="preserve"><value>Trước: {0}</value></data>
+  <data name="PreviewPage_AfterFileFormat" xml:space="preserve"><value>Sau: {0}</value></data>
+  <data name="PreviewPage_Tooltip_PreviousFrame" xml:space="preserve"><value>Khung hình trước</value></data>
+  <data name="PreviewPage_Tooltip_NextFrame" xml:space="preserve"><value>Khung hình tiếp theo</value></data>
 </root>

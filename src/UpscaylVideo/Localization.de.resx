@@ -113,5 +113,12 @@
   <data name="Status_CleaningUp" xml:space="preserve"><value>Cleaning up...</value></data>
   <data name="Status_CleanupFailed" xml:space="preserve"><value>Cleanup failed: {0}</value></data>
   <data name="Error_Prefix" xml:space="preserve"><value>Error: {0}</value></data>
+  <!-- Preview Page -->
+  <data name="PreviewPage_Title" xml:space="preserve"><value>Vorschau</value></data>
+  <data name="PreviewPage_AutoRefresh" xml:space="preserve"><value>Auto-Aktualisierung</value></data>
+  <data name="PreviewPage_AutoRefreshFormat" xml:space="preserve"><value>Auto-Aktualisierung ({0}s)</value></data>
+  <data name="PreviewPage_BeforeFileFormat" xml:space="preserve"><value>Vorher: {0}</value></data>
+  <data name="PreviewPage_AfterFileFormat" xml:space="preserve"><value>Nachher: {0}</value></data>
+  <data name="PreviewPage_Tooltip_PreviousFrame" xml:space="preserve"><value>Vorheriges Bild</value></data>
+  <data name="PreviewPage_Tooltip_NextFrame" xml:space="preserve"><value>Nächstes Bild</value></data>
 </root>
-

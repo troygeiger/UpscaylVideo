@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Material.Icons;
 using Material.Icons.Avalonia;
@@ -34,6 +35,9 @@ public abstract class PageBase : ViewModelBase
     {
         
     }
+
+    // Allow pages to control the main ScrollViewer's vertical behavior (default Auto)
+    public virtual ScrollBarVisibility VerticalScrollBarVisibility => ScrollBarVisibility.Auto;
 
     // Helper to create a toolbar button with Material icon and optional text
     protected Button CreateToolButton(MaterialIconKind iconKind, string text, System.Windows.Input.ICommand command, string? toolTip = null, bool showText = false)

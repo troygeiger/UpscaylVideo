@@ -63,7 +63,8 @@ public partial class MainPageViewModel : PageBase
         var startBtn = CreateToolButton(MaterialIconKind.PlayArrow, Localization.MainPageView_Start, RunCommand, out var startText, toolTip: Localization.MainPageView_Start, showText: true);
         var cancelButton = CreateToolButton(MaterialIconKind.Cancel, Localization.MainPageView_Cancel, CancelJobCommand, toolTip: Localization.MainPageView_Cancel, showText: true);
         //var settingsBtn = CreateToolButton(MaterialIconKind.Gear, "Settings", SettingsCommand, toolTip: "Settings", showText: false);
-        var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, Localization.MainPageView_Queue, OpenQueueCommand, toolTip: Localization.MainPageView_Queue, showText: false);
+    var queueBtn = CreateToolButton(MaterialIconKind.ListStatus, Localization.MainPageView_Queue, OpenQueueCommand, toolTip: Localization.MainPageView_Queue, showText: false);
+    var previewBtn = CreateToolButton(MaterialIconKind.ImageSearch, Localization.MainPageView_Preview, OpenPreviewCommand, toolTip: Localization.MainPageView_Preview, showText: false);
         //var updateBtn = CreateToolButton(MaterialIconKind.Update, checkUpdateText, CheckUpdatesCommand, toolTip: checkUpdateText, showText: false);
         var settingsBtn = CreateSplitButton(
             MaterialIconKind.Gear,
@@ -83,10 +84,12 @@ public partial class MainPageViewModel : PageBase
         [
             startBtn,
             cancelButton,
+            previewBtn,
             queueBtn,
             settingsBtn,
         ];
         cancelButton.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
+        previewBtn.Bind(Visual.IsVisibleProperty, new Binding(nameof(JobProcessingService.IsProcessing)){ Source = UpscaylVideo.Services.JobProcessingService.Instance });
 
         this.WhenPropertyChanged(p => p.Job.IsLoaded, false)
             .Subscribe(j => CheckReadyToRun());
@@ -377,6 +380,15 @@ public partial class MainPageViewModel : PageBase
     private void OpenQueue()
     {
         UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(QueuePageViewModel));
+    }
+
+    [RelayCommand]
+    private void OpenPreview()
+    {
+        if (UpscaylVideo.Services.JobProcessingService.Instance.IsProcessing)
+        {
+            UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(PreviewPageViewModel));
+        }
     }
 
     [RelayCommand]
