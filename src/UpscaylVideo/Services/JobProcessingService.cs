@@ -237,16 +237,6 @@ public partial class JobProcessingService : ObservableObject
             }
 
             string final = job.OutputFilePath;
-            var audioFile = System.IO.Path.Combine(job.WorkingFolder, $"Audio{extension}");
-            var metadataFile = System.IO.Path.Combine(job.WorkingFolder, $"Metadata.ffmeta");
-            // Extract audio
-            StatusMessage = Localization.Status_ExtractingAudio;
-            await FFMpeg.CopyStreams(job.VideoPath, audioFile,
-                job.VideoDetails.Streams.Where(d => d.CodecType != "video" && d.CodecName != "dvd_subtitle" && d.CodecName != "bin_data"),
-                cancellationToken: jobCancellation.Token);
-            // Extract chapter metadata
-            StatusMessage = Localization.Status_ExtractingMetadata;
-            await FFMpeg.ExtractFFMetadata(job.VideoPath, metadataFile, cancellationToken: jobCancellation.Token);
             string upscaledVideoPath = System.IO.Path.Combine(job.WorkingFolder,
                 $"{System.IO.Path.GetFileNameWithoutExtension(job.VideoPath)}-video{extension}");
 
@@ -318,7 +308,8 @@ public partial class JobProcessingService : ObservableObject
             }
 
             StatusMessage = Localization.Status_Merging;
-            await FFMpeg.MergeFiles(upscaledVideoPath, audioFile, metadataFile, final, cancellationToken: jobCancellation.Token);
+            // New: directly remux all non-video streams (audio, subtitles, attachments) and chapters/metadata from source
+            await FFMpeg.MergeVideoWithSourceStreams(upscaledVideoPath, job.VideoPath, final, cancellationToken: jobCancellation.Token);
 
             // Mark progress complete for the job
             Progress = 100;

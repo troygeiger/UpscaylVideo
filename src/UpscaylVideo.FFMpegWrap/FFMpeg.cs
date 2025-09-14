@@ -242,6 +242,55 @@ public static class FFMpeg
         return result.ExitCode == 0;
     }
 
+    /// <summary>
+    /// Merge the newly created video file with all non-video streams from the source media (audio, subtitles, attachments),
+    /// while also copying chapters and global metadata from the source. This avoids temporary audio/metadata extraction.
+    /// NOTE: Container compatibility applies. For example, MP4 does not support image-based subtitles (VobSub/PGS).
+    /// Prefer MKV to preserve DVD/BD subtitles.
+    /// </summary>
+    public static async Task<bool> MergeVideoWithSourceStreams(
+        string newVideoFile,
+        string sourceMediaFile,
+        string outputFilePath,
+        FFMpegOptions? options = null,
+        CancellationToken cancellationToken = default,
+        Action<string>? progressAction = null)
+    {
+        // Input 0: the upscaled video
+        // Input 1: the original source with audio/subs/etc
+        // Map: take video from 0, everything from 1 except video
+        var args = new List<string>
+        {
+            "-y",
+            // 0 = new video with upscaled frames
+            "-i", newVideoFile,
+            // 1 = original source (audio, subs, chapters, attachments)
+            "-i", sourceMediaFile,
+            // Take video only from input 0
+            "-map", "0:v",
+            // Optionally take all audio streams from input 1
+            "-map", "1:a?",
+            // Optionally take all subtitle streams from input 1
+            "-map", "1:s?",
+            // Optionally take all attachments from input 1 (e.g., fonts in MKV)
+            "-map", "1:t?",
+            // Copy chapters and global metadata from source
+            "-map_chapters", "1",
+            "-map_metadata", "1",
+            // Stream copy for all, no re-encode
+            "-c", "copy",
+            "-progress", "pipe:1",
+            outputFilePath
+        };
+
+        var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
+            .WithArguments(args)
+            .WithStandardOutputPipe(PipeTarget.ToDelegate(line => progressAction?.Invoke(line)));
+
+        var result = await cmd.ExecuteBufferedAsync(cancellationToken).ConfigureAwait(false);
+        return result.ExitCode == 0;
+    }
+
     /*public static (Process ffProcess, Stream stdOutStream) StartPngPipe(string inputFilePath, double framerate, FFMpegOptions? options = null)
     {
         ProcessStartInfo ffStart = new(FFMpegHelper.GetFFMpegBinaryPath(options), [
