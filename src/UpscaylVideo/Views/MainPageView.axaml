@@ -7,9 +7,14 @@
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:resx="clr-namespace:UpscaylVideo"
+             xmlns:models="clr-namespace:UpscaylVideo.Models"
+             xmlns:h="clr-namespace:UpscaylVideo.Helpers"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
              x:DataType="vm:MainPageViewModel"
              x:Class="UpscaylVideo.Views.MainPageView">
+    <UserControl.Resources>
+        <h:BooleanAndMultiConverter x:Key="BoolAnd" />
+    </UserControl.Resources>
     <Design.DataContext>
         <vm:MainPageViewModel />
     </Design.DataContext>
@@ -146,8 +151,8 @@
                 </CheckBox>
             </StackPanel>
 
-            <!-- Right column: image format and tile size -->
-            <StackPanel Grid.Column="1" Spacing="12">
+            <!-- Right column: image format, tile size, subtitle options -->
+            <StackPanel Grid.Column="1" Spacing="12" Margin="16,0,0,0">
                 <ComboBox Width="300"
                           HorizontalAlignment="Left"
                           Theme="{StaticResource MaterialOutlineComboBox}"
@@ -164,6 +169,57 @@
                             TickPlacement="TopLeft"
                             Value="{Binding Path=Job.TileSize, Mode=TwoWay}"/>
                 </StackPanel>
+
+                <CheckBox IsChecked="{Binding Path=Job.PreserveSubtitlesAndAttachments, Mode=TwoWay}"
+                          IsVisible="{Binding Path=Job.IsLoaded}">
+                    <TextBlock Text="{x:Static resx:Localization.MainPageView_PreserveSubsAttachments}"/>
+                </CheckBox>
+
+                <DataGrid ItemsSource="{Binding Path=Job.SubtitleTracks}"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="All"
+                          MaxHeight="200"
+                          MaxWidth="600"
+                          Margin="0,4,0,0"
+                          HorizontalAlignment="Left">
+                    <DataGrid.IsVisible>
+                        <MultiBinding Converter="{StaticResource BoolAnd}">
+                            <Binding Path="Job.IsLoaded"/>
+                            <Binding Path="Job.PreserveSubtitlesAndAttachments"/>
+                        </MultiBinding>
+                    </DataGrid.IsVisible>
+                  
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SubtitleTrackOption">
+                                    <CheckBox IsChecked="{Binding Selected, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{x:Static resx:Localization.MainPageView_Language}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SubtitleTrackOption">
+                                    <TextBlock Text="{Binding Language}" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{x:Static resx:Localization.MainPageView_Codec}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SubtitleTrackOption">
+                                    <TextBlock Text="{Binding Codec}" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{x:Static resx:Localization.MainPageView_Forced}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate x:DataType="models:SubtitleTrackOption">
+                                    <CheckBox IsChecked="{Binding Forced}" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </Grid>
 

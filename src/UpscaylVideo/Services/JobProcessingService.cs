@@ -308,8 +308,36 @@ public partial class JobProcessingService : ObservableObject
             }
 
             StatusMessage = Localization.Status_Merging;
-            // New: directly remux all non-video streams (audio, subtitles, attachments) and chapters/metadata from source
-            await FFMpeg.MergeVideoWithSourceStreams(upscaledVideoPath, job.VideoPath, final, cancellationToken: jobCancellation.Token);
+            // Container guard: if output is MP4 and we need to preserve image-based subs, switch to MKV
+            var ext = System.IO.Path.GetExtension(final).ToLowerInvariant();
+            if (job.PreserveSubtitlesAndAttachments && job.HasImageBasedSubs && (ext == ".mp4" || ext == ".m4v"))
+            {
+                var mkvPath = System.IO.Path.ChangeExtension(final, ".mkv");
+                // Informational message for UI; localized
+                job.Messages.Add(Localization.MainPageView_OutputContainerChangedToMKV);
+                final = mkvPath;
+            }
+
+            // Build selected subtitle indices if preserving subs; else pass empty to skip subs
+            System.Collections.Generic.IEnumerable<int>? selectedSubs = null;
+            if (job.PreserveSubtitlesAndAttachments)
+            {
+                selectedSubs = job.SubtitleTracks.Where(t => t.Selected).Select(t => t.StreamIndex).ToArray();
+            }
+            else
+            {
+                selectedSubs = System.Array.Empty<int>();
+            }
+
+            // Remux with chosen options
+            await FFMpeg.MergeVideoWithSourceStreams(
+                upscaledVideoPath,
+                job.VideoPath,
+                final,
+                selectedSubtitleIndices: selectedSubs,
+                includeAudio: true,
+                includeAttachments: job.PreserveSubtitlesAndAttachments,
+                cancellationToken: jobCancellation.Token);
 
             // Mark progress complete for the job
             Progress = 100;

@@ -242,6 +242,42 @@ namespace UpscaylVideo {
                 return ResourceManager.GetString("MainPageView_TileSizeFormat", resourceCulture);
             }
         }
+
+        public static string MainPageView_PreserveSubsAttachments {
+            get {
+                return ResourceManager.GetString("MainPageView_PreserveSubsAttachments", resourceCulture);
+            }
+        }
+
+        public static string MainPageView_SubtitleTracks {
+            get {
+                return ResourceManager.GetString("MainPageView_SubtitleTracks", resourceCulture);
+            }
+        }
+
+        public static string MainPageView_Language {
+            get {
+                return ResourceManager.GetString("MainPageView_Language", resourceCulture);
+            }
+        }
+
+        public static string MainPageView_Codec {
+            get {
+                return ResourceManager.GetString("MainPageView_Codec", resourceCulture);
+            }
+        }
+
+        public static string MainPageView_Forced {
+            get {
+                return ResourceManager.GetString("MainPageView_Forced", resourceCulture);
+            }
+        }
+
+        public static string MainPageView_OutputContainerChangedToMKV {
+            get {
+                return ResourceManager.GetString("MainPageView_OutputContainerChangedToMKV", resourceCulture);
+            }
+        }
         
         public static string ConfigPageView_UpscaylPath {
             get {

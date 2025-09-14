@@ -123,6 +123,24 @@
     <data name="ConfigPageView_FFmpegBinariesPath" xml:space="preserve">
         <value>FFMpeg Binaries Path:</value>
     </data>
+        <data name="MainPageView_PreserveSubsAttachments" xml:space="preserve">
+            <value>Preserve subtitles and attachments</value>
+        </data>
+        <data name="MainPageView_SubtitleTracks" xml:space="preserve">
+            <value>Subtitle Tracks</value>
+        </data>
+        <data name="MainPageView_Language" xml:space="preserve">
+            <value>Language</value>
+        </data>
+        <data name="MainPageView_Codec" xml:space="preserve">
+            <value>Codec</value>
+        </data>
+        <data name="MainPageView_Forced" xml:space="preserve">
+            <value>Forced</value>
+        </data>
+        <data name="MainPageView_OutputContainerChangedToMKV" xml:space="preserve">
+            <value>Output container changed to MKV to preserve image-based subtitles.</value>
+        </data>
     <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve">
         <value>Temporary Working Folder:</value>
     </data>

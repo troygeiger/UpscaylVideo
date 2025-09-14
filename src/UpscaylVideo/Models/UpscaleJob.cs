@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData.Binding;
 using UpscaylVideo.FFMpegWrap;
 using UpscaylVideo.FFMpegWrap.Models.Probe;
+using System.Collections.ObjectModel;
 
 
 namespace UpscaylVideo.Models;
@@ -50,6 +51,14 @@ public partial class UpscaleJob : ObservableObject
     [ObservableProperty] private int _tileSize = 31;
     // New: display text for tile size (localized "Auto" when 31, else number)
     [ObservableProperty] private string _tileSizeDisplay = Localization.Common_Auto;
+
+    // New: subtitle/attachment preservation and selection
+    [ObservableProperty]
+    private bool _preserveSubtitlesAndAttachments = true;
+
+    public ObservableCollection<SubtitleTrackOption> SubtitleTracks { get; } = new();
+
+    public bool HasImageBasedSubs => SubtitleTracks.Any(t => t.IsImageBased);
 
     partial void OnTileSizeChanged(int value)
     {
@@ -133,6 +142,17 @@ public partial class UpscaleJob : ObservableObject
             VideoDetails = detail.result;
 
             VideoStream = VideoDetails.Streams.FirstOrDefault(s => s.CodecType == "video");
+
+            // Build subtitle track list
+            SubtitleTracks.Clear();
+            foreach (var s in VideoDetails.Streams.Where(s => s.CodecType == "subtitle"))
+            {
+                var lang = s.Tags?.Language;
+                var codec = s.CodecName ?? string.Empty;
+                var forced = s.Disposition?.Forced == 1;
+                var isImage = IsImageBasedSubtitleCodec(codec);
+                SubtitleTracks.Add(new SubtitleTrackOption(s.Index, lang, codec, forced, isImage));
+            }
         }
         catch (Exception e)
         {
@@ -192,5 +212,12 @@ public partial class UpscaleJob : ObservableObject
     partial void OnDeleteWorkingFolderWhenCompletedChanged(bool value)
     {
         OnPropertyChanged(nameof(DeleteWorkingFolderDisplay));
+    }
+
+    private static bool IsImageBasedSubtitleCodec(string? codec)
+    {
+        if (string.IsNullOrWhiteSpace(codec)) return false;
+        codec = codec.ToLowerInvariant();
+        return codec is "dvd_subtitle" or "hdmv_pgs_subtitle" or "pgssub" or "xsub" or "dvb_subtitle";
     }
 }

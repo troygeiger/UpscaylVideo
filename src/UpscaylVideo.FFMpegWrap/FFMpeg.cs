@@ -252,6 +252,9 @@ public static class FFMpeg
         string newVideoFile,
         string sourceMediaFile,
         string outputFilePath,
+        IEnumerable<int>? selectedSubtitleIndices = null,
+        bool includeAudio = true,
+        bool includeAttachments = true,
         FFMpegOptions? options = null,
         CancellationToken cancellationToken = default,
         Action<string>? progressAction = null)
@@ -268,12 +271,34 @@ public static class FFMpeg
             "-i", sourceMediaFile,
             // Take video only from input 0
             "-map", "0:v",
-            // Optionally take all audio streams from input 1
-            "-map", "1:a?",
-            // Optionally take all subtitle streams from input 1
-            "-map", "1:s?",
+        };
+
+        if (includeAudio)
+        {
+            args.AddRange(["-map", "1:a?"]);
+        }
+
+        if (selectedSubtitleIndices != null)
+        {
+            foreach (var idx in selectedSubtitleIndices)
+            {
+                args.AddRange(["-map", $"1:{idx}"]);
+            }
+        }
+        else
+        {
+            // default: include all subtitle streams if any
+            args.AddRange(["-map", "1:s?"]);
+        }
+
+        if (includeAttachments)
+        {
             // Optionally take all attachments from input 1 (e.g., fonts in MKV)
-            "-map", "1:t?",
+            args.AddRange(["-map", "1:t?"]);
+        }
+
+        args.AddRange(new[]
+        {
             // Copy chapters and global metadata from source
             "-map_chapters", "1",
             "-map_metadata", "1",
@@ -281,7 +306,7 @@ public static class FFMpeg
             "-c", "copy",
             "-progress", "pipe:1",
             outputFilePath
-        };
+        });
 
         var cmd = FFMpegHelper.GetFFMpeg(options ?? FFMpegOptions.Global)
             .WithArguments(args)
