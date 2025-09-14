@@ -278,6 +278,15 @@ namespace UpscaylVideo {
                 return ResourceManager.GetString("MainPageView_OutputContainerChangedToMKV", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Image-based subtitles detected. MP4/M4V cannot carry them; output will switch to MKV during merge. You can turn off “Preserve subtitles and attachments” to keep MP4/M4V.. 
+        /// </summary>
+        public static string MainPageView_ImageBasedSubsDetected {
+            get {
+                return ResourceManager.GetString("MainPageView_ImageBasedSubsDetected", resourceCulture);
+            }
+        }
         
         public static string ConfigPageView_UpscaylPath {
             get {

@@ -19,6 +19,25 @@
         <vm:MainPageViewModel />
     </Design.DataContext>
     <StackPanel Margin="16" Spacing="12">
+        <!-- Toast banner (top of page) -->
+        <Border IsVisible="{Binding IsToastVisible}"
+                Background="#FF9800"
+                CornerRadius="6"
+                Padding="10"
+                HorizontalAlignment="Stretch"
+                ToolTip.Tip="{Binding ToastMessage}">
+            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding ToastMessage}"
+                           Foreground="Black"
+                           TextWrapping="Wrap"
+                           MaxLines="3"
+                           Margin="0,0,8,0"/>
+                <Button Grid.Column="1" Command="{Binding DismissToastCommand}" Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Right">
+                    <materialIcons:MaterialIcon Kind="CloseBox" Foreground="Black"/>
+                </Button>
+            </Grid>
+        </Border>
         <!-- Top two-column area: left = path fields, right = video details -->
         <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto">
             <StackPanel Grid.Column="0" Spacing="12">

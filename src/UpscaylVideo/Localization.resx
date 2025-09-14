@@ -141,6 +141,9 @@
         <data name="MainPageView_OutputContainerChangedToMKV" xml:space="preserve">
             <value>Output container changed to MKV to preserve image-based subtitles.</value>
         </data>
+            <data name="MainPageView_ImageBasedSubsDetected" xml:space="preserve">
+                <value>Image-based subtitles detected. MP4/M4V cannot carry them; output will switch to MKV during merge. You can turn off “Preserve subtitles and attachments” to keep MP4/M4V.</value>
+            </data>
     <data name="ConfigPageView_TemporaryWorkingFolder" xml:space="preserve">
         <value>Temporary Working Folder:</value>
     </data>

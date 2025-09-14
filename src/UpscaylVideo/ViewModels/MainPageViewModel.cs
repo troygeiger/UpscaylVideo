@@ -35,6 +35,12 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private UpscaleJob _job = new();
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(RunCommand))] private bool _readyToRun;
     [ObservableProperty] private string _gpuNumberList = string.Join(',', AppConfiguration.Instance.GpuNumbers);
+    [ObservableProperty] private string? _toastMessage;
+    [ObservableProperty] private bool _isToastVisible;
+    private UpscaleJob? _previousJobForMessages;
+    private UpscaleJob? _serviceCurrentJob;
+    [RelayCommand]
+    private void DismissToast() => IsToastVisible = false;
 
     // New: options for output image formats used by Upscayl-bin (-f)
     public IEnumerable<string> ImageFormats { get; } = ["jpeg", "png"];
@@ -95,6 +101,11 @@ public partial class MainPageViewModel : PageBase
             .Subscribe(j => CheckReadyToRun());
         this.WhenPropertyChanged(p => p.Job.SelectedModel, false)
             .Subscribe(p => CheckReadyToRun());
+        // Early MKV warning triggers
+        Job.WhenPropertyChanged(p => p.IsLoaded, false)
+            .Subscribe(p => TryShowEarlyMkvWarning());
+        Job.WhenPropertyChanged(p => p.PreserveSubtitlesAndAttachments, false)
+            .Subscribe(p => TryShowEarlyMkvWarning());
         AppConfiguration.Instance.WhenPropertyChanged(p => p.UpscaylPath)
             .Subscribe(p => LoadModelOptions(p.Value));
 
@@ -130,6 +141,10 @@ public partial class MainPageViewModel : PageBase
             if (startText != null)
                 startText.Text = queueCount > 0 ? Localization.MainPageView_AddToQueue : Localization.MainPageView_Start;
         };
+
+        // Wire toast to processing service's CurrentJob messages
+        UpscaylVideo.Services.JobProcessingService.Instance.PropertyChanged += ServiceOnPropertyChanged;
+        WireServiceCurrentJob(UpscaylVideo.Services.JobProcessingService.Instance.CurrentJob);
     }
 
     [RelayCommand]
@@ -307,6 +322,7 @@ public partial class MainPageViewModel : PageBase
         if (result is null)
             return;
         Job.OutputFilePath = result.Path.LocalPath;
+        TryShowEarlyMkvWarning();
     }
         
     
@@ -344,6 +360,82 @@ public partial class MainPageViewModel : PageBase
         Job.OutputImageFormat = string.IsNullOrWhiteSpace(lastFmt) ? "png" : lastFmt;
         Job.TileSize = AppConfiguration.Instance.LastTileSize;
         UpdateSelectedModel();
+        // No need to wire form Job messages for the MKV toast; handled via service.CurrentJob
+    }
+
+    partial void OnJobChanging(UpscaleJob value)
+    {
+        // Detach from previous job
+        if (_previousJobForMessages != null)
+        {
+            try
+            {
+                _previousJobForMessages.Messages.ListChanged -= MessagesOnListChanged;
+            }
+            catch { /* ignore */ }
+        }
+    }
+
+    partial void OnJobChanged(UpscaleJob value)
+    {
+        WireJobMessages(value);
+    }
+
+    private void WireJobMessages(UpscaleJob? job)
+    {
+        if (job == null) return;
+        _previousJobForMessages = job;
+        job.Messages.ListChanged -= MessagesOnListChanged; // ensure not double-subscribed
+        job.Messages.ListChanged += MessagesOnListChanged;
+    }
+
+    private void ServiceOnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(JobProcessingService.CurrentJob))
+        {
+            WireServiceCurrentJob(JobProcessingService.Instance.CurrentJob);
+        }
+    }
+
+    private void WireServiceCurrentJob(UpscaleJob? job)
+    {
+        if (_serviceCurrentJob != null)
+        {
+            try { _serviceCurrentJob.Messages.ListChanged -= MessagesOnListChanged; } catch { }
+        }
+        _serviceCurrentJob = job;
+        if (_serviceCurrentJob != null)
+        {
+            _serviceCurrentJob.Messages.ListChanged -= MessagesOnListChanged;
+            _serviceCurrentJob.Messages.ListChanged += MessagesOnListChanged;
+        }
+    }
+
+    private void MessagesOnListChanged(object? sender, System.ComponentModel.ListChangedEventArgs e)
+    {
+        if (sender is not UpscaleJob j) return;
+        if (e.ListChangedType == System.ComponentModel.ListChangedType.ItemAdded && e.NewIndex >= 0 && e.NewIndex < j.Messages.Count)
+        {
+            var msg = j.Messages[e.NewIndex];
+            ShowToast(msg);
+        }
+    }
+
+    private async void ShowToast(string message)
+    {
+        ToastMessage = message;
+        IsToastVisible = true;
+        try
+        {
+            await Task.Delay(15000);
+        }
+        catch { /* ignore */ }
+        finally
+        {
+            // Only hide if the message hasn't changed
+            if (ToastMessage == message)
+                IsToastVisible = false;
+        }
     }
     
     private void LoadModelOptions(string? upscaylPath)
@@ -374,6 +466,21 @@ public partial class MainPageViewModel : PageBase
         if (Job.SelectedModel is not null)
             return;
         Job.SelectedModel = ModelOptions.FirstOrDefault(m => m.Name == AppConfiguration.Instance.LastModelUsed);
+    }
+
+    private void TryShowEarlyMkvWarning()
+    {
+        if (!Job.IsLoaded)
+            return;
+        if (!Job.PreserveSubtitlesAndAttachments)
+            return;
+        if (!Job.HasImageBasedSubs)
+            return;
+        var outExt = Path.GetExtension(Job.OutputFilePath ?? string.Empty).ToLowerInvariant();
+        if (outExt is ".mp4" or ".m4v")
+        {
+            ShowToast(Localization.MainPageView_ImageBasedSubsDetected);
+        }
     }
 
     [RelayCommand]
