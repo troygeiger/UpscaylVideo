@@ -14,12 +14,19 @@ UpscaylVideo is a cross-platform batch video upscaling tool that orchestrates [U
 
 ## Requirements
 
-- [Upscayl](https://github.com/upscayl/upscayl) (CLI binary must be installed)
-- [ffmpeg](https://ffmpeg.org/) (must be in your PATH)
+- [Upscayl](https://github.com/upscayl/upscayl) (CLI binary must be installed
+  and path accessible)
+- [ffmpeg](https://ffmpeg.org/)
 
 ## Installation
 
-### Windows (using Winget)
+- Download UpscaylVideo from
+  [Releases](https://github.com/troygeiger/UpscaylVideo/releases) Assets for your
+  platform and extract (sorry, no installers or packages yet while focusing on features).
+
+### Install Prerequisites
+
+#### Windows (using Winget)
 
 Install both ffmpeg and Upscayl with:
 
@@ -27,13 +34,13 @@ Install both ffmpeg and Upscayl with:
 winget install Gyan.FFmpeg Upscayl.Upscayl
 ```
 
-### Linux
+#### Linux
 
 - Install ffmpeg using your package manager (e.g. `sudo apt install ffmpeg`)
-- Download and extract the Upscayl AppImage or binary from [Upscayl releases](https://github.com/upscayl/upscayl/releases)
+- Download and extract the Upscayl binary from [Upscayl releases](https://github.com/upscayl/upscayl/releases)
 - Make sure both `ffmpeg` and the Upscayl binary are in your PATH or specify their locations in the app settings
 
-### macOS
+#### macOS
 
 - Install ffmpeg using Homebrew: `brew install ffmpeg`
 - Download the Upscayl binary from [Upscayl releases](https://github.com/upscayl/upscayl/releases)
