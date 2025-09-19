@@ -60,6 +60,11 @@ winget install Gyan.FFmpeg Upscayl.Upscayl
 
 Output files will be saved to the location you specify when enqueuing jobs.
 
+## What's with the Upscayl Batch Size
+
+The Upscayl Cli currently has a memory leak that if I don't run the frames in
+batches, system memory will quickly be used up.
+
 ## Troubleshooting
 
 - If Upscayl or ffmpeg are not detected, check your PATH or set their locations in the app configuration.
