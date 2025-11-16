@@ -249,7 +249,7 @@ public partial class JobProcessingService : ObservableObject
                 _ => "png"
             };
             
-            (inputProcess, pngStream) = FFMpeg.StartImagePipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate, imageFormat);
+            (inputProcess, pngStream) = FFMpeg.StartImagePipe(job.VideoPath, job.VideoStream.CalcAvgFrameRate, imageFormat, null, job.CropToWidescreen, job.CropVerticalOffset);
             using var pngVideo = new PngVideoHelper(upscaledVideoPath, job.VideoStream.CalcAvgFrameRate, jobCancellation.Token,
                 imageFormat, job.SelectedInterpolatedFps.FrameRate);
             await pngVideo.StartAsync();

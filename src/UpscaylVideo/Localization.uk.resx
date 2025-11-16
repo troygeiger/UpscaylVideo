@@ -95,6 +95,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Вибрати вихідний файл</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Недійсне число</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Без інтерполяції (як у джерела)</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>Обрізати 4:3 до 16:9</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>Вертикальне зміщення обрізки</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = по центру (за замовчуванням), 0 = обрізати тільки знизу, 1 = обрізати тільки зверху</value></data>
   <data name="Status_InputMissing" xml:space="preserve"><value>Вхідне відео або робоча тека відсутні.</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Шлях до Upscayl не знайдено.</value></data>
   <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Бінарний файл Upscayl не знайдено.</value></data>

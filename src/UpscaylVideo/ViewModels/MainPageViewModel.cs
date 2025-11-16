@@ -39,6 +39,9 @@ public partial class MainPageViewModel : PageBase
     [ObservableProperty] private bool _isToastVisible;
     private UpscaleJob? _previousJobForMessages;
     private UpscaleJob? _serviceCurrentJob;
+    
+    // New: Crop detection and UI state
+    [ObservableProperty] private bool _isCropToWidescreenEnabled = false;
     [RelayCommand]
     private void DismissToast() => IsToastVisible = false;
 
@@ -106,6 +109,13 @@ public partial class MainPageViewModel : PageBase
             .Subscribe(p => TryShowEarlyMkvWarning());
         Job.WhenPropertyChanged(p => p.PreserveSubtitlesAndAttachments, false)
             .Subscribe(p => TryShowEarlyMkvWarning());
+        
+        // New: Detect aspect ratio and enable/disable crop option
+        Job.WhenPropertyChanged(p => p.IsLoaded, false)
+            .Subscribe(p => DetectAndUpdateCropOption());
+        Job.WhenPropertyChanged(p => p.VideoStream, false)
+            .Subscribe(p => DetectAndUpdateCropOption());
+        
         AppConfiguration.Instance.WhenPropertyChanged(p => p.UpscaylPath)
             .Subscribe(p => LoadModelOptions(p.Value));
 
@@ -268,6 +278,9 @@ public partial class MainPageViewModel : PageBase
             // New: copy format and tile size options
             batchJob.OutputImageFormat = Job.OutputImageFormat;
             batchJob.TileSize = Job.TileSize;
+            // New: copy crop options
+            batchJob.CropToWidescreen = Job.CropToWidescreen;
+            batchJob.CropVerticalOffset = Job.CropVerticalOffset;
             batchJob.VideoPath = selected.Path.LocalPath;
             await batchJob.WaitForLoadAsync();
             JobProcessingService.Instance.EnqueueJob(batchJob);
@@ -480,6 +493,35 @@ public partial class MainPageViewModel : PageBase
         if (outExt is ".mp4" or ".m4v")
         {
             ShowToast(Localization.MainPageView_ImageBasedSubsDetected);
+        }
+    }
+
+    private void DetectAndUpdateCropOption()
+    {
+        if (!Job.IsLoaded || Job.VideoStream == null)
+        {
+            IsCropToWidescreenEnabled = false;
+            return;
+        }
+
+        var width = Job.VideoStream.Width;
+        var height = Job.VideoStream.Height;
+        if (width <= 0 || height <= 0)
+        {
+            IsCropToWidescreenEnabled = false;
+            return;
+        }
+
+        var aspectRatio = (double)width / height;
+        // Consider 4:3-ish if ratio is between 1.2:1 and 1.55:1
+        // This includes: 6:5 (1.2), 5:4 (1.25), 4:3 (1.33), 3:2 (1.5), and close variations
+        // Common formats: 640x480 (1.33), 720x480 (1.5 - DVD), 720x576 (1.25 - PAL), 800x600 (1.33)
+        IsCropToWidescreenEnabled = aspectRatio >= 1.2 && aspectRatio <= 1.55;
+        
+        // Reset crop option if not in the 4:3-ish range
+        if (!IsCropToWidescreenEnabled)
+        {
+            Job.CropToWidescreen = false;
         }
     }
 

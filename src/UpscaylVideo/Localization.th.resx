@@ -95,6 +95,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>เลือกไฟล์เอาต์พุต</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>ตัวเลขไม่ถูกต้อง</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>ไม่อินเตอร์โพเลชัน (เหมือนต้นฉบับ)</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>ครอบตัด 4:3 เป็น 16:9</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>ค่าออฟเซ็ตการครอบตัดแนวตั้ง</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = ตรงกลาง (ค่าเริ่มต้น), 0 = ครอบตัดเฉพาะด้านล่าง, 1 = ครอบตัดเฉพาะด้านบน</value></data>
   <data name="Status_InputMissing" xml:space="preserve"><value>ไม่มีวิดีโออินพุตหรือโฟลเดอร์ทำงาน</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>ไม่พบพาธของ Upscayl</value></data>
   <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>ไม่พบไฟล์ไบนารีของ Upscayl</value></data>

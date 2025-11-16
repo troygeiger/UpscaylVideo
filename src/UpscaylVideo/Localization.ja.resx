@@ -95,6 +95,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>出力ファイルを選択</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>無効な数値</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>補間なし（ソースと同じ）</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>4:3を16:9にクロップ</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>垂直クロップオフセット</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = 中央（デフォルト）、0 = 下のみクロップ、1 = 上のみクロップ</value></data>
   <data name="Status_InputMissing" xml:space="preserve"><value>入力動画または作業フォルダーが見つかりません。</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Upscayl のパスが見つかりません。</value></data>
   <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Upscayl のバイナリが見つかりません。</value></data>

@@ -112,6 +112,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Selecciona el fitxer d'eixida</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Cadena numèrica no vàlida</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>S'sense interpolació (igual que l'origen)</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>Retallar 4:3 a 16:9</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>Desplaçament vertical de retall</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = centre (per defecte), 0 = retallar només baix, 1 = retallar només dalt</value></data>
 
   <data name="Status_InputMissing" xml:space="preserve"><value>Falta el vídeo d'entrada o la carpeta de treball.</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>No s'ha trobat la ruta d'Upscayl.</value></data>

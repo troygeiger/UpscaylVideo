@@ -95,6 +95,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Chọn tệp đầu ra</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Số không hợp lệ</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Không nội suy (giống như nguồn)</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>Cắt 4:3 thành 16:9</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>Độ lệch cắt theo chiều dọc</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = giữa (mặc định), 0 = chỉ cắt phía dưới, 1 = chỉ cắt phía trên</value></data>
   <data name="Status_InputMissing" xml:space="preserve"><value>Thiếu video đầu vào hoặc thư mục làm việc.</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Không tìm thấy đường dẫn Upscayl.</value></data>
   <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Không tìm thấy tệp nhị phân Upscayl.</value></data>

@@ -339,7 +339,7 @@ public static class FFMpeg
         return (process, new BufferedStream(process.StandardOutput.BaseStream));
     }*/
 
-    public static (Process ffProcess, Stream stdOutStream) StartImagePipe(string inputFilePath, double framerate, string? imageFormat, FFMpegOptions? options = null)
+    public static (Process ffProcess, Stream stdOutStream) StartImagePipe(string inputFilePath, double framerate, string? imageFormat, FFMpegOptions? options = null, bool cropToWidescreen = false, float cropVerticalOffset = 0.5f)
     {
         options ??= FFMpegOptions.Global;
         if (options.JpegQuality < 1 || options.JpegQuality > 31)
@@ -353,13 +353,29 @@ public static class FFMpeg
             "jpeg" => "mjpeg",
             _ => "png"
         };
+        
+        // Build video filter chain
+        var filters = new List<string>();
+        
+        // Crop filter for 4:3 to 16:9 conversion
+        if (cropToWidescreen)
+        {
+            // crop=in_w:in_w*9/16:x:y
+            // x=0 (keep full width), y=(in_h-in_w*9/16)*offset
+            var yOffset = $"(ih-iw*9/16)*{cropVerticalOffset.ToString(CultureInfo.InvariantCulture)}";
+            filters.Add($"crop=iw:iw*9/16:0:{yOffset}");
+        }
+        
+        // Scale filter (always applied to handle SAR)
+        filters.Add("scale='max(iw,iw*sar)':'max(ih,ih/sar)'");
+        
         List<string> args = new()
         {
             "-i",
             inputFilePath,
             "-r", framerate.ToString(CultureInfo.InvariantCulture),
             "-vf",
-            "scale='max(iw,iw*sar)':'max(ih,ih/sar)'",
+            string.Join(',', filters),
         };
         if (decoder == "mjpeg")
         {

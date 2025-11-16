@@ -95,6 +95,9 @@
   <data name="MainPageView_SelectOutputFile" xml:space="preserve"><value>Çıktı dosyasını seç</value></data>
   <data name="MainPageView_InvalidNumberString" xml:space="preserve"><value>Geçersiz sayı</value></data>
   <data name="MainPageView_NoInterpolation" xml:space="preserve"><value>Enterpolasyon yok (kaynakla aynı)</value></data>
+  <data name="MainPageView_CropToWidescreen" xml:space="preserve"><value>4:3'ü 16:9'a Kırp</value></data>
+  <data name="MainPageView_CropVerticalOffset" xml:space="preserve"><value>Dikey Kırpma Kaydırması</value></data>
+  <data name="MainPageView_CropVerticalOffsetTooltip" xml:space="preserve"><value>0.5 = merkez (varsayılan), 0 = sadece alttan kırp, 1 = sadece üstten kırp</value></data>
   <data name="Status_InputMissing" xml:space="preserve"><value>Girdi videosu veya çalışma klasörü eksik.</value></data>
   <data name="Status_UpscaylPathNotFound" xml:space="preserve"><value>Upscayl yolu bulunamadı.</value></data>
   <data name="Status_UpscaylBinaryNotFound" xml:space="preserve"><value>Upscayl ikilisi bulunamadı.</value></data>

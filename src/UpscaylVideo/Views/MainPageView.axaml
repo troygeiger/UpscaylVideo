@@ -189,6 +189,31 @@
                             Value="{Binding Path=Job.TileSize, Mode=TwoWay}"/>
                 </StackPanel>
 
+                <!-- New: Crop to widescreen option -->
+                <CheckBox IsChecked="{Binding Path=Job.CropToWidescreen, Mode=TwoWay}"
+                          IsEnabled="{Binding Path=IsCropToWidescreenEnabled}"
+                          IsVisible="{Binding Path=Job.IsLoaded}">
+                    <TextBlock Text="{x:Static resx:Localization.MainPageView_CropToWidescreen}"/>
+                </CheckBox>
+
+                <!-- New: Crop vertical offset (advanced) -->
+                <StackPanel Spacing="6" Width="300" HorizontalAlignment="Left"
+                            IsVisible="{Binding Path=Job.CropToWidescreen}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{x:Static resx:Localization.MainPageView_CropVerticalOffset}"/>
+                        <Label Background="CornflowerBlue"
+                               Content=" ? "
+                               CornerRadius="16"
+                               ToolTip.Tip="{x:Static resx:Localization.MainPageView_CropVerticalOffsetTooltip}"/>
+                    </StackPanel>
+                    <NumericUpDown Value="{Binding Path=Job.CropVerticalOffset, Mode=TwoWay}"
+                                   Minimum="0"
+                                   Maximum="1"
+                                   Increment="0.05"
+                                   FormatString="0.00"
+                                   HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
                 <CheckBox IsChecked="{Binding Path=Job.PreserveSubtitlesAndAttachments, Mode=TwoWay}"
                           IsVisible="{Binding Path=Job.IsLoaded}">
                     <TextBlock Text="{x:Static resx:Localization.MainPageView_PreserveSubsAttachments}"/>

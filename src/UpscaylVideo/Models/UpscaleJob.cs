@@ -58,6 +58,13 @@ public partial class UpscaleJob : ObservableObject
 
     public ObservableCollection<SubtitleTrackOption> SubtitleTracks { get; } = new();
 
+    // New: crop 4:3 to 16:9
+    [ObservableProperty]
+    private bool _cropToWidescreen = false;
+    
+    [ObservableProperty]
+    private float _cropVerticalOffset = 0.5f; // 0.5 = center, 0 = crop bottom only, 1 = crop top only
+
     public bool HasImageBasedSubs => SubtitleTracks.Any(t => t.IsImageBased);
 
     partial void OnTileSizeChanged(int value)

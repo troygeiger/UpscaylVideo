@@ -280,11 +280,38 @@ namespace UpscaylVideo {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Image-based subtitles detected. MP4/M4V cannot carry them; output will switch to MKV during merge. You can turn off “Preserve subtitles and attachments” to keep MP4/M4V.. 
+        ///   Looks up a localized string similar to Image-based subtitles detected. MP4/M4V cannot carry them; output will switch to MKV during merge. You can turn off "Preserve subtitles and attachments" to keep MP4/M4V.. 
         /// </summary>
         public static string MainPageView_ImageBasedSubsDetected {
             get {
                 return ResourceManager.GetString("MainPageView_ImageBasedSubsDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crop 4:3 to 16:9.
+        /// </summary>
+        public static string MainPageView_CropToWidescreen {
+            get {
+                return ResourceManager.GetString("MainPageView_CropToWidescreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crop Vertical Offset.
+        /// </summary>
+        public static string MainPageView_CropVerticalOffset {
+            get {
+                return ResourceManager.GetString("MainPageView_CropVerticalOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0.5 = center (default), 0 = crop bottom only, 1 = crop top only.
+        /// </summary>
+        public static string MainPageView_CropVerticalOffsetTooltip {
+            get {
+                return ResourceManager.GetString("MainPageView_CropVerticalOffsetTooltip", resourceCulture);
             }
         }
         
