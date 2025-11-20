@@ -114,7 +114,6 @@
                             Orientation="Vertical"
                             Margin="0,24,0,0">
                     <Slider IsSnapToTickEnabled="True"
-                            Classes="Discrete Accent"
                             TickPlacement="TopLeft"
                             TickFrequency="1"
                             Minimum="1"
