@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -18,7 +20,9 @@ public partial class PreviewPageView : UserControl
     private Border? _splitLine;
     private Border? _splitHandle;
     private bool _dragging;
+    private bool _sliderDragging;
     private PreviewPageViewModel? _vm;
+    private System.Threading.Timer? _sliderDragEndTimer;
 
     public PreviewPageView()
     {
@@ -41,6 +45,8 @@ public partial class PreviewPageView : UserControl
         if (frameSlider != null)
         {
             frameSlider.ValueChanged += OnFrameSliderValueChanged;
+            frameSlider.PointerPressed += OnFrameSliderPointerPressed;
+            frameSlider.PointerReleased += OnFrameSliderPointerReleased;
         }
         if (_overlay != null && _splitHandle != null)
         {
@@ -101,11 +107,13 @@ public partial class PreviewPageView : UserControl
         }
         this.DataContextChanged -= OnDataContextChanged;
         
-        // Clean up frame slider event
+        // Clean up frame slider events
         var frameSlider = this.FindControl<Slider>("FrameSlider");
         if (frameSlider != null)
         {
             frameSlider.ValueChanged -= OnFrameSliderValueChanged;
+            frameSlider.PointerPressed -= OnFrameSliderPointerPressed;
+            frameSlider.PointerReleased -= OnFrameSliderPointerReleased;
         }
         
         if (_overlay != null)
@@ -120,6 +128,10 @@ public partial class PreviewPageView : UserControl
                 _splitHandle.PointerReleased -= OverlayOnPointerReleased;
             }
         }
+        
+        // Clean up timer
+        _sliderDragEndTimer?.Dispose();
+        _sliderDragEndTimer = null;
     }
 
     private void OnDataContextChanged(object? sender, EventArgs e)
@@ -135,7 +147,18 @@ public partial class PreviewPageView : UserControl
         if (_vm != null)
         {
             _vm.PropertyChanged -= VmOnPropertyChanged;
+            // End any ongoing slider drag when ViewModel changes
+            if (_sliderDragging)
+            {
+                _sliderDragging = false;
+                _vm.EndSliderDrag();
+            }
         }
+        
+        // Clean up timer
+        _sliderDragEndTimer?.Dispose();
+        _sliderDragEndTimer = null;
+        
         _vm = vm;
         _vm.PropertyChanged += VmOnPropertyChanged;
         UpdateClip(_vm.SplitPosition);
@@ -293,12 +316,77 @@ public partial class PreviewPageView : UserControl
         if (sender is not Slider slider || DataContext is not PreviewPageViewModel vm)
             return;
 
-        // Only respond to user-initiated changes, not programmatic updates
         var newValue = e.NewValue;
-        if (Math.Abs(newValue - vm.CurrentFrameIndex) > 0.5)
+        
+        // Any value change from the slider indicates user interaction
+        // Start drag state if not already started
+        if (!_sliderDragging)
         {
-            var frameIndex = (int)Math.Round(newValue);
-            vm.SetFramePositionCommand.Execute(frameIndex - 1); // Convert to 0-based index
+            _sliderDragging = true;
+            vm.StartSliderDrag();
+        }
+        
+        // Reset the timer to end drag state after user stops interacting
+        _sliderDragEndTimer?.Dispose();
+        _sliderDragEndTimer = new System.Threading.Timer(EndSliderDragCallback, vm, 3000, System.Threading.Timeout.Infinite);
+        
+        // Execute the frame position command (convert from 1-based to 0-based)
+        var frameIndex = (int)Math.Round(newValue);
+        vm.SetFramePositionCommand.Execute(frameIndex - 1);
+    }
+
+    private void OnFrameSliderPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    {
+        if (DataContext is PreviewPageViewModel vm)
+        {
+            _sliderDragging = true;
+            vm.StartSliderDrag();
+        }
+    }
+
+    private void OnFrameSliderPointerReleased(object? sender, Avalonia.Input.PointerReleasedEventArgs e)
+    {
+        if (DataContext is PreviewPageViewModel vm && _sliderDragging)
+        {
+            _sliderDragging = false;
+            vm.EndSliderDrag();
+            _sliderDragEndTimer?.Dispose();
+            _sliderDragEndTimer = null;
+        }
+    }
+
+    private void EndSliderDragCallback(object? state)
+    {
+        if (state is PreviewPageViewModel vm && _sliderDragging)
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                _sliderDragging = false;
+                vm.EndSliderDrag();
+                _sliderDragEndTimer?.Dispose();
+                _sliderDragEndTimer = null;
+            });
+        }
+    }
+
+    private void OnSliderThumbDragStarted(object? sender, Avalonia.Input.VectorEventArgs e)
+    {
+        if (DataContext is PreviewPageViewModel vm)
+        {
+            _sliderDragging = true;
+            vm.StartSliderDrag();
+            // Cancel the timer since we have explicit drag events
+            _sliderDragEndTimer?.Dispose();
+            _sliderDragEndTimer = null;
+        }
+    }
+
+    private void OnSliderThumbDragCompleted(object? sender, Avalonia.Input.VectorEventArgs e)
+    {
+        if (DataContext is PreviewPageViewModel vm && _sliderDragging)
+        {
+            _sliderDragging = false;
+            vm.EndSliderDrag();
         }
     }
 }

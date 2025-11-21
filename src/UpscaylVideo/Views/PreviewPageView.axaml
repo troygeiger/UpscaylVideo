@@ -105,7 +105,7 @@
                     Grid.Column="1"
                     Minimum="1" 
                     Maximum="{Binding TotalFrames}"
-                    Value="{Binding CurrentFrameIndex, Mode=OneWay}"
+                    Value="{Binding CurrentFrameIndex, Mode=TwoWay}"
                     TickFrequency="1"
                     IsSnapToTickEnabled="True"
                     IsVisible="{Binding HasFrames}"

@@ -54,6 +54,9 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
     // Periodic cache refresh to pick up new frames
     private CancellationTokenSource? _cacheRefreshCts;
     private const int CacheRefreshIntervalSeconds = 3;
+    
+    // Track when user is actively dragging the slider to pause refreshes
+    [ObservableProperty] private bool _isSliderDragging;
 
     public PreviewPageViewModel() : base(UpscaylVideo.Localization.PreviewPage_Title)
     {
@@ -191,20 +194,29 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
         TimeSpan waitTime = TimeSpan.FromSeconds(CustomRefreshInterval);
         while (!token.IsCancellationRequested)
         {
-            // Jump to the most recent available frame
-            if (tickStopwatch.Elapsed >= waitTime)
+            // Pause auto-refresh while user is dragging the slider
+            if (IsSliderDragging)
             {
-                await StepAsync(int.MaxValue);
-                tickStopwatch.Restart();
+                tickStopwatch.Restart(); // Reset timer so it doesn't immediately fire when drag ends
                 SecondsUntilRefresh = CustomRefreshInterval;
-                waitTime = TimeSpan.FromSeconds(CustomRefreshInterval); // Update in case it changed
             }
-            // Use for countdown display
-            var remaining = waitTime - tickStopwatch.Elapsed;
-            var secs = (int)Math.Ceiling(Math.Max(0, remaining.TotalSeconds));
-            if (secs != SecondsUntilRefresh)
+            else
             {
-                SecondsUntilRefresh = secs;
+                // Jump to the most recent available frame
+                if (tickStopwatch.Elapsed >= waitTime)
+                {
+                    await StepAsync(int.MaxValue);
+                    tickStopwatch.Restart();
+                    SecondsUntilRefresh = CustomRefreshInterval;
+                    waitTime = TimeSpan.FromSeconds(CustomRefreshInterval); // Update in case it changed
+                }
+                // Use for countdown display
+                var remaining = waitTime - tickStopwatch.Elapsed;
+                var secs = (int)Math.Ceiling(Math.Max(0, remaining.TotalSeconds));
+                if (secs != SecondsUntilRefresh)
+                {
+                    SecondsUntilRefresh = secs;
+                }
             }
             try { await TaskHelpers.Wait(1_000, token); } catch { }
         }
@@ -218,8 +230,8 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
             {
                 await TaskHelpers.Wait(CacheRefreshIntervalSeconds * 1000, token);
                 
-                // Only refresh if we're actively processing and have a job
-                if (_jobService.IsProcessing && _jobService.CurrentJob?.WorkingFolder != null)
+                // Only refresh if we're actively processing, have a job, and not dragging slider
+                if (_jobService.IsProcessing && _jobService.CurrentJob?.WorkingFolder != null && !IsSliderDragging)
                 {
                     await RefreshFrameCacheAsync();
                 }
@@ -256,7 +268,11 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
             if (newFiles.Length != TotalFrames)
             {
                 _cachedFrameFiles = newFiles;
-                TotalFrames = newFiles.Length;
+                // Don't update TotalFrames during slider dragging to prevent slider interference
+                if (!IsSliderDragging)
+                {
+                    TotalFrames = newFiles.Length;
+                }
                 
                 // If we don't have any current frame loaded, load the latest
                 if (CurrentFrameIndex == 0 && newFiles.Length > 0)
@@ -322,8 +338,8 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
         var files = _cachedFrameFiles;
         if (files.Length == 0) return;
 
-        // Update total frames if changed
-        if (TotalFrames != files.Length)
+        // Update total frames if changed (but not during slider dragging)
+        if (TotalFrames != files.Length && !IsSliderDragging)
         {
             TotalFrames = files.Length;
         }
@@ -382,7 +398,7 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
         var files = _cachedFrameFiles;
         if (files.Length == 0) return;
 
-        if (TotalFrames != files.Length)
+        if (TotalFrames != files.Length && !IsSliderDragging)
         {
             TotalFrames = files.Length;
         }
@@ -397,8 +413,11 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
         if (job?.WorkingFolder is null) return;
 
         var selectedAfter = files[index];
-        // Update current frame index
-        CurrentFrameIndex = index + 1; // 1-based for UI display
+        // Update current frame index (but not if slider is being dragged to prevent circular updates)
+        if (!IsSliderDragging)
+        {
+            CurrentFrameIndex = index + 1; // 1-based for UI display
+        }
 
         // Derive before frame number from filename, fallback to closest  
         var fileName = Path.GetFileNameWithoutExtension(selectedAfter);
@@ -472,6 +491,28 @@ public partial class PreviewPageViewModel : PageBase, IDisposable
     private void Back()
     {
         UpscaylVideo.Services.PageManager.Instance.SetPage(typeof(MainPageViewModel));
+    }
+
+    /// <summary>
+    /// Called by the View when the frame slider drag starts
+    /// </summary>
+    public void StartSliderDrag()
+    {
+        IsSliderDragging = true;
+    }
+
+    /// <summary>
+    /// Called by the View when the frame slider drag ends
+    /// </summary>
+    public void EndSliderDrag()
+    {
+        IsSliderDragging = false;
+        
+        // Update TotalFrames now that dragging has ended, in case it was deferred
+        if (_cachedFrameFiles != null && TotalFrames != _cachedFrameFiles.Length)
+        {
+            TotalFrames = _cachedFrameFiles.Length;
+        }
     }
 
     public void Dispose()
