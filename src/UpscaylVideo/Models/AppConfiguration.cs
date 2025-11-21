@@ -127,6 +127,9 @@ public partial class AppConfiguration : ObservableValidator
     [JsonIgnore, ObservableProperty]
     private bool _isUpscaylThreadConfigInvalid = false;
 
+    [ObservableProperty]
+    private int _previewAutoRefreshInterval = 30; // Default 30 seconds
+
     public void Save()
     {
         ConfigurationHelper.SaveConfig(this, AppConfigurationJsonContext.Default.AppConfiguration);

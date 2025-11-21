@@ -1,6 +1,7 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
@@ -32,8 +33,15 @@ public partial class PreviewPageView : UserControl
         _clipBorder = this.FindControl<Border>("ClipBorder");
         _afterImage = this.FindControl<Image>("AfterImage");
         _overlay = this.FindControl<Canvas>("Overlay");
-    _splitLine = this.FindControl<Border>("SplitLine");
+        _splitLine = this.FindControl<Border>("SplitLine");
         _splitHandle = this.FindControl<Border>("SplitHandle");
+        
+        // Wire up frame navigation slider
+        var frameSlider = this.FindControl<Slider>("FrameSlider");
+        if (frameSlider != null)
+        {
+            frameSlider.ValueChanged += OnFrameSliderValueChanged;
+        }
         if (_overlay != null && _splitHandle != null)
         {
             _overlay.PointerPressed += OverlayOnPointerPressed;
@@ -92,6 +100,14 @@ public partial class PreviewPageView : UserControl
             _vm = null;
         }
         this.DataContextChanged -= OnDataContextChanged;
+        
+        // Clean up frame slider event
+        var frameSlider = this.FindControl<Slider>("FrameSlider");
+        if (frameSlider != null)
+        {
+            frameSlider.ValueChanged -= OnFrameSliderValueChanged;
+        }
+        
         if (_overlay != null)
         {
             _overlay.PointerPressed -= OverlayOnPointerPressed;
@@ -270,5 +286,19 @@ public partial class PreviewPageView : UserControl
             ratio = Math.Clamp(p.X / w, 0, 1);
         }
         vm.SplitPosition = ratio;
+    }
+
+    private void OnFrameSliderValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (sender is not Slider slider || DataContext is not PreviewPageViewModel vm)
+            return;
+
+        // Only respond to user-initiated changes, not programmatic updates
+        var newValue = e.NewValue;
+        if (Math.Abs(newValue - vm.CurrentFrameIndex) > 0.5)
+        {
+            var frameIndex = (int)Math.Round(newValue);
+            vm.SetFramePositionCommand.Execute(frameIndex - 1); // Convert to 0-based index
+        }
     }
 }

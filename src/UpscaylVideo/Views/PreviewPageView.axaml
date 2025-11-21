@@ -11,7 +11,7 @@
     <Design.DataContext>
         <vm:PreviewPageViewModel />
     </Design.DataContext>
-    <Grid Margin="8" RowDefinitions="Auto,*">
+    <Grid Margin="8" RowDefinitions="Auto,*,Auto">
         <!-- Fixed info bar at the top -->
         <Border Grid.Row="0" CornerRadius="4" Padding="6,4">
             <Grid ColumnDefinitions="*, Auto" VerticalAlignment="Center">
@@ -24,14 +24,35 @@
 
                 <!-- Right: Auto-Refresh + Prev/Next -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <ToggleSwitch IsChecked="{Binding AutoRefresh}"
-                                  Content="{Binding SecondsUntilRefresh, StringFormat={x:Static resx:Localization.PreviewPage_AutoRefreshFormat}}"/>
+                    <CheckBox IsChecked="{Binding AutoRefresh}"
+                              Content="{x:Static resx:Localization.PreviewPage_AutoRefresh}"/>
+                    
+                    <TextBlock Text="{Binding SecondsUntilRefresh, StringFormat='({0}s)'}"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding AutoRefresh}"/>
+                    
+                    <ComboBox SelectedItem="{Binding SelectedRefreshInterval}"
+                              ItemsSource="{Binding RefreshIntervalOptions}"
+                              Width="100">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    
+                    <NumericUpDown Value="{Binding CustomRefreshInterval}"
+                                   Minimum="1" 
+                                   Maximum="300"
+                                   Width="80"
+                                   IsVisible="{Binding IsCustomRefreshInterval}"
+                                   ToolTip.Tip="{x:Static resx:Localization.PreviewPage_CustomInterval_Tooltip}"/>
                     
                     <Button Content="{materialIcons:MaterialIconExt Kind=ChevronLeft}"
-                ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_PreviousFrame}"
+                            ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_PreviousFrame}"
                             Command="{Binding StepLeftCommand}"/>
                     <Button Content="{materialIcons:MaterialIconExt Kind=ChevronRight}"
-                ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_NextFrame}"
+                            ToolTip.Tip="{x:Static resx:Localization.PreviewPage_Tooltip_NextFrame}"
                             Command="{Binding StepRightCommand}"/>
                 </StackPanel>
             </Grid>
@@ -63,7 +84,45 @@
                                                     Height="24" />
                     </Border>
                 </Canvas>
-            </Grid></ScrollViewer>
+            </Grid>
+        </ScrollViewer>
+        
+        <!-- Frame navigation slider -->
+        <Grid Grid.Row="2" Margin="0,8,0,0" ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Grid.Column="0" 
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"
+                       IsVisible="{Binding HasFrames}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{x:Static resx:Localization.PreviewPage_FrameCount}">
+                        <Binding Path="CurrentFrameIndex"/>
+                        <Binding Path="TotalFrames"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            
+            <Slider Name="FrameSlider"
+                    Grid.Column="1"
+                    Minimum="1" 
+                    Maximum="{Binding TotalFrames}"
+                    Value="{Binding CurrentFrameIndex, Mode=OneWay}"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True"
+                    IsVisible="{Binding HasFrames}"
+                    ToolTip.Tip="Frame Navigation Slider">
+                <Slider.Styles>
+                    <Style Selector="Slider">
+                        <Setter Property="Height" Value="24"/>
+                    </Style>
+                </Slider.Styles>
+            </Slider>
+            
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding TotalFrames}"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"
+                       IsVisible="{Binding HasFrames}"/>
+        </Grid>
         
     </Grid>
 </UserControl>

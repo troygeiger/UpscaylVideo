@@ -310,4 +310,14 @@
     <data name="PreviewPage_AfterFileFormat" xml:space="preserve"><value>After: {0}</value></data>
     <data name="PreviewPage_Tooltip_PreviousFrame" xml:space="preserve"><value>Previous Frame</value></data>
     <data name="PreviewPage_Tooltip_NextFrame" xml:space="preserve"><value>Next Frame</value></data>
+    <data name="PreviewPage_RefreshInterval" xml:space="preserve"><value>Refresh Interval</value></data>
+    <data name="PreviewPage_RefreshInterval_5s" xml:space="preserve"><value>5 seconds</value></data>
+    <data name="PreviewPage_RefreshInterval_10s" xml:space="preserve"><value>10 seconds</value></data>
+    <data name="PreviewPage_RefreshInterval_15s" xml:space="preserve"><value>15 seconds</value></data>
+    <data name="PreviewPage_RefreshInterval_30s" xml:space="preserve"><value>30 seconds</value></data>
+    <data name="PreviewPage_RefreshInterval_60s" xml:space="preserve"><value>60 seconds</value></data>
+    <data name="PreviewPage_RefreshInterval_Custom" xml:space="preserve"><value>Custom</value></data>
+    <data name="PreviewPage_CustomInterval_Tooltip" xml:space="preserve"><value>Enter custom refresh interval in seconds</value></data>
+    <data name="PreviewPage_FrameSlider_Tooltip" xml:space="preserve"><value>Frame {0} of {1} - Drag to navigate through frames</value></data>
+    <data name="PreviewPage_FrameCount" xml:space="preserve"><value>Frame {0} of {1}</value></data>
 </root>
